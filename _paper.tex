@@ -1,0 +1,249 @@
+%\documentclass[10pt,preprint,nocopyrightspace,nonatbib]{sigplanconf}
+%\documentclass[9pt,preprint]{sig-alternate-no-permission}
+%\documentclass[9pt,preprint]{sig-alternate}
+%\documentclass[letterpaper,twocolumn,10pt]{article}
+%\usepackage{usenix}
+%\documentclass[pageno]{jpaper}
+%\documentclass[10pt,preprint]{sigplanconf}
+\documentclass[sigplan,10pt,anonymous]{acmart}\settopmatter{printfolios=true}
+\usepackage{mathptmx} % This is Times font
+
+\setcopyright{none}             %% For review submission
+%\conferenceinfo{SOSP'15}{October 4--7, 2015, Monterey, CA}
+%\copyrightyear{2015}
+% The following \documentclass options may be useful:
+
+% preprint      Remove this option only once the paper is in final form.
+% 10pt          To set in 10-point type instead of 9-point.
+% 11pt          To set in 11-point type instead of 9-point.
+% authoryear    To obtain author/year citation style instead of numeric.
+
+\usepackage{minted}
+\usepackage{epsfig}
+%\usepackage[utf8x]{inputenc}
+\usepackage{algorithm}
+\usepackage{amsmath, amssymb}
+\usepackage[noend]{algpseudocode}
+\usepackage{enumitem}      % adjust spacing in enums
+%\usepackage{subfig}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{wrapfig}
+\usepackage{tabu}
+
+\let\bibhang\relax
+\let\citename\relax
+\let\bibfont\relax
+\let\citeauthor\relax
+\let\Citeauthor\relax
+\let\citefullauthor\relax
+\let\citetext\relax
+\let\defcitealias\relax
+\let\citet\relax
+\let\citep\relax
+\let\Citep\relax
+\let\Citealt\relax
+\let\citealt\relax
+\let\citealp\relax
+\let\Citealp\relax
+\let\Citet\relax
+
+\expandafter\let\csname ver@natbib.sty\endcsname\relax
+
+\DeclareCaptionFormat{subfig}{\figurename~#1#2#3}
+\DeclareCaptionSubType*{figure}
+\captionsetup[subfigure]{format=subfig,labelsep=colon,labelformat=simple}
+
+\usepackage[natbib=true,backend=bibtex,firstinits=true,style=numeric-comp,sorting=nyt,defernumbers,maxnames=99,maxcitenames=99]{biblatex}
+\usepackage{balance}
+\usepackage{adjustbox}
+
+\usepackage{pgfplots}
+% options for pgfplots
+\pgfplotsset{compat=1.8,compat/show suggested version=false}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{calc}
+%\pgfplotsset{compat=newest}
+\pgfplotsset{
+   /pgfplots/bar  cycle  list/.style={/pgfplots/cycle  list={%
+        {black,fill=black!30!white,mark=none},%
+        {black,fill=red!30!white,mark=none},%
+        {black,fill=green!30!white,mark=none},%
+        {black,fill=yellow!30!white,mark=none},%
+        {black,fill=brown!30!white,mark=none},%
+     }
+   },
+}
+% begin of externalization
+\usetikzlibrary{external}
+\tikzexternalize[prefix=out/]
+\tikzexternalize
+% don't externalize todonotes
+%\makeatletter
+%\renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
+%\makeatother
+% end of externalization
+\usetikzlibrary{patterns}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{
+every axis label/.append style={font=\small},
+tick label style={font=\small},
+}
+% options for paragraphs and lists
+\setlist{noitemsep,topsep=0pt}
+% options for biblatex
+\bibliography{refs}
+%\renewcommand{\bibfont}{\footnotesize}
+
+
+\usepackage{fancyhdr}
+
+% Ensure letter paper
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+
+%%%%%%%%%%%---SETME-----%%%%%%%%%%%%%
+\newcommand{\microsubmissionnumber}{440}
+\newcommand{\asplossubmissionnumber}{440}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\fancypagestyle{firstpage}{
+%   \fancyhf{}
+% \setlength{\headheight}{50pt}
+% \renewcommand{\headrulewidth}{0pt}
+%   \fancyhead[C]{\normalsize{ASPLOS 2018 Submission
+%       \textbf{\#\asplossubmissionnumber} -- Confidential Draft -- Do NOT Distribute!!}} 
+%   \pagenumbering{arabic}
+}
+
+\pagenumbering{arabic}
+
+
+\setlength{\itemsep}{0pt}
+%\setlength{\topsep}{0pt}
+%\setlength{\partopsep}{0pt}
+%\setlength{\parsep}{1pt}
+%\setlength{\parskip}{1pt}
+\setlength{\abovecaptionskip}{1pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{5pt}
+%\setlength{\bibitemsep}{0pt}
+
+\sloppy
+
+\newif{\ifanonymous}
+\anonymoustrue
+
+%\newcommand{\comment}[[1]{\textcolor{red}{#1}}
+\newcommand{\myworries}[1]{\textcolor{red}{#1}}
+\newcommand{\cutout}[1]{}
+\newcommand{\smallcaption}[1]{\caption[#1]{{\protect\small \protect\bf #1}}}
+\newcommand{\dids}{{\sc dids}}
+
+\graphicspath{{./figs/}}
+\date{}
+
+\algnewcommand{\LineComment}[1]{\(\triangleright\) #1}
+
+% some useful shortcuts
+\newcommand{\ie}{\textit{i.e., }}
+\newcommand{\eg}{\textit{e.g., }}
+\newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.5ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.5ex}{\tiny\bf +}}
+
+% units for results
+\newcommand{\us}{\,$\mu$s}
+\newcommand{\ms}{\,ms}
+\newcommand{\KB}{\,KB}
+\newcommand{\MB}{\,MB}
+\newcommand{\GB}{\,GB}
+\newcommand{\MHz}{\,MHz}
+\newcommand{\GHz}{\,GHz}
+
+% new latex commands:
+%   Remove long section
+\newcommand{\PUNT}[1]{}
+\newcommand{\TABLETWO}[1]{}
+%   Label work to be done
+\definecolor{gray}{gray}{0.75}
+\newcommand{\TODO}[1]{\textcolor{gray}{\textbf{\ [TODO:\ #1]\ }}}
+\newcommand{\TR}[1]{#1}
+%\newcommand{\TR}[1]{}
+%\newcommand{\TODO}[1]{}
+\newcommand{\FIX}[1] {\textcolor{red}{\textbf{\ [FIX:\ #1]\ }}}
+%   Referencing various pieces of the document:
+\newcommand{\figref}[1]{Fig.~\ref{fig:#1}}
+\newcommand{\figsref}[2]{Figures~\ref{fig:#1} and~\ref{fig:#2}}
+\newcommand{\figrref}[2]{Figures~\ref{fig:#1}--\ref{fig:#2}}
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+\newcommand{\secsref}[2]{Sections~\ref{sec:#1} and~\ref{sec:#2}}
+\newcommand{\eqnref}[1]{Eqn.~\ref{eqn:#1}}
+\newcommand{\eqnsref}[2]{Equations~\ref{eqn:#1} and~\ref{eqn:#2}}
+\newcommand{\eqnrref}[2]{Equations~\ref{eqn:#1}--\ref{eqn:#2}}
+\newcommand{\insref}[1]{Instruction~\ref{ins:#1}}
+\newcommand{\tblref}[1]{Table~\ref{tbl:#1}}
+\newcommand{\appref}[1]{Appendix~\ref{app:#1}}
+
+\newcommand{\algoref}[1]{Algorithm~\ref{algo:#1}}
+
+% Custom hyphenation rules
+
+%\DeclareMathOperator{\minimize}{minimize}
+%\DeclareMathOperator{\st}{s.t.}
+%\DeclareMathOperator*{\argmin}{arg\,min}
+%\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\argmin}{\arg\!\min}
+\newcommand{\argmax}{\arg\!\max}
+\newcommand{\minimize}{minimize}
+\newcommand{\optimize}{optimize}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\st}{s.t.}
+
+\newcommand{\SYSTEM}{DNSCHK}
+
+\pdfstringdefDisableCommands{
+    \def\\{}
+    \def\unskip{}
+    \def\texttt#1{<#1>}
+}
+
+%-------------------------------------------------------------------------
+\begin{document}
+
+\date{}
+\title[\SYSTEM{}]{\SYSTEM{}: \TODO{Needs After Colon Title}}
+
+\author{
+% Not used?
+}
+
+\input{0_abstract}
+
+\maketitle
+\thispagestyle{firstpage}
+\pagestyle{plain}
+
+
+
+%\vskip -100pt
+
+
+%\category{C.1.3}{Other Architectural Styles}{Adaptable architectures}
+%\category{I.2.8}{ Problem Solving, Control Methods, and Search}{Heuristic methods}
+%\category{D.4.8}{Performance}{Measurements}
+%\terms{Performance, Design, Experimentation}
+%\keywords{Adaptive Systems, Power Management, Decision-tree}
+
+
+\input{1_intro}
+\input{2_motivation}
+\input{3_design}
+\input{4_implementation}
+\input{5_evaluation}
+\input{6_related}
+\input{7_conclusion}
+
+\clearpage
+\printbibliography 
+\end{document}

@@ -1,0 +1,8 @@
+\section{Specification} \label{sec:specification}
+
+\SYSTEM{} acts as a translation layer sitting between the drive and the
+operating system. It provides confidentiality and integrity guarantees while
+minimizing performance loss due to metadata management overhead. \SYSTEM{}
+accomplishes this by leveraging the speed of stream ciphers over the AES block
+cipher and taking advantage of the append-mostly nature of Log-structured
+Filesystems (LFS) and modern Flash Translation Layers (FTL)~\cite{SSD}.
