@@ -1,4 +1,10 @@
 *.log
 *.f*
 *.aux*
+*.out
+*.blg
+*.bbl
+*.xml
+*blx.bib
+_minted*
 out
