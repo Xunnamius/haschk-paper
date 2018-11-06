@@ -1,10 +1,11 @@
 *
-!.vscode/
-!img/
-!figs/
+!.vscode/*
+!img/*
+!figs/*
 !*.tex
 !*.md
 !*.bib
 !*.pdf
+!*.cls
 !Makefile
 !.gitignore
