@@ -1,11 +1,3 @@
-*
-!.vscode
-!img
-!figs
-!*.tex
-!*.md
-!*.bib
-!*.pdf
-!*.cls
-!Makefile
-!.gitignore
+*.log
+*.f*
+*.aux*
