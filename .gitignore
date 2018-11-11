@@ -5,6 +5,8 @@
 *.blg
 *.bbl
 *.xml
+*.pdf
 *blx.bib
 _minted*
 out
+!dickens-dnschk.pdf
