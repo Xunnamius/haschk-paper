@@ -1,27 +1,27 @@
 \section{Discussion} \label{sec:discussion}
 
+In this section we ...
+
 \subsection{Related Work}
 
-\textbf{DNS-Based Authentication of Named Entities (DANE)}
+Short blurb about how other research exists.
 
-The DNS-Based Authentication of Named Entities (DANE) specification [RFC6698]
-introduces the DNS "TLSA" resource record (RR) type ("TLSA" is not an acronym).
-TLSA records associate a certificate or a public key of an end-entity or a
-trusted issuing authority with the corresponding Transport Layer Security (TLS)
-[RFC5246] or Datagram Transport Layer Security (DTLS) [RFC6347] transport
-endpoint. DANE relies on the DNS Security Extensions (DNSSEC) [RFC4033]. DANE
-TLSA records validated by DNSSEC can be used to augment or replace the use of
-trusted public Certification Authorities (CAs).
+\textbf{DNS-Based Authentication of Named Entities (DANE).}    The DNS-Based
+Authentication of Named Entities (DANE) specification [RFC6698] introduces the
+DNS "TLSA" resource record (RR) type ("TLSA" is not an acronym). TLSA records
+associate a certificate or a public key of an end-entity or a trusted issuing
+authority with the corresponding Transport Layer Security (TLS) [RFC5246] or
+Datagram Transport Layer Security (DTLS) [RFC6347] transport endpoint. DANE
+relies on the DNS Security Extensions (DNSSEC) [RFC4033]. DANE TLSA records
+validated by DNSSEC can be used to augment or replace the use of trusted public
+Certification Authorities (CAs).
 
-DANE + OpenPGP: tools.ietf.org/html/rfc7929
+DANE + OpenPGP: tools.ietf.org/html/rfc7929; Different concern.
+tools.ietf.org/html/rfc7671
 
-Different concern. tools.ietf.org/html/rfc7671
-
-\textbf{PGP}
-
-Notoriously hard to use. Similar problems as checksums and DNSSEC in that its
-hard to use correctly. Solves a fundamentally different problem in a different
-domain (email).
+\textbf{PGP.}   Notoriously hard to use. Similar problems as checksums and
+DNSSEC in that its hard to use correctly. Solves a fundamentally different
+problem in a different domain (email).
 
 \subsection{Deployment and Scalability}
 
@@ -35,15 +35,16 @@ solution anyway.
 
 \subsection{Limitations}
 
-\textbf{DNSSEC Adoption is Slow}
+Short blurb on limitations.
 
-DNSSEC is hard to use and harder to use correctly. It does not make the DNS
-network, i.e. properly configured DNS servers protected with DNSSEC, any more
-vulnerable to reflection (cite Neustar) and amplification (cite
-ieeexplore.ieee.org/document/4159821) attacks than it already is as a UDP-based
-content service (cite ss.vix.su/~vixie/isc-tn-2012-1.txt,
-us-cert.gov/ncas/alerts/TA14-017A) but does arguably make services significantly
-more fragile because DNSSEC is hard to get right.
+\textbf{DNSSEC Adoption is Slow.}    DNSSEC is hard to use and harder to use
+correctly. It does not make the DNS network, i.e. properly configured DNS
+servers protected with DNSSEC, any more vulnerable to reflection (cite Neustar)
+and amplification (cite ieeexplore.ieee.org/document/4159821) attacks than it
+already is as a UDP-based content service (cite
+ss.vix.su/~vixie/isc-tn-2012-1.txt, us-cert.gov/ncas/alerts/TA14-017A) but does
+arguably make services significantly more fragile because DNSSEC is hard to get
+right.
 
 The metrics of signed DNSSEC zones are not easy to come by for the entire
 Internet (apnic). DNSSEC adoption across is small and slow. Worldwide, less than
@@ -73,13 +74,11 @@ registrar, or if they are aware and could sign their zone, then they don’t
 appear to judge that the perceived benefit of DNSSEC-signing their zone
 adequately offsets the cost of maintaining the signed zone.
 
-\textbf{DNS-Specific Protocol Limitations}
-
-Whether we created our own DNS resource record type or settled for a well-known
-TXT record, there are other DNS records that could be far larger. Resource
-records like CERT, IPSECKEY, OPENPGPKEY, and TLSA (with a full certificate) may
-hold several kilobytes of data, far more than any compliant security.txt file
-ever would.
+\textbf{DNS-Specific Protocol Limitations.}    Whether we created our own DNS
+resource record type or settled for a well-known TXT record, there are other DNS
+records that could be far larger. Resource records like CERT, IPSECKEY,
+OPENPGPKEY, and TLSA (with a full certificate) may hold several kilobytes of
+data, far more than any compliant security.txt file ever would.
 
 I do hope that all the major DNS server operators have implemented DNS-over-TCP
 or some sort of rate limiting by now, but I feel that's out of the scope of this
@@ -93,4 +92,4 @@ people and there is no need for additional requirements here.
 
 \subsection{Future Work}
 
-\TODO{(adapt wiki entry)}
+(adapt wiki entry)
