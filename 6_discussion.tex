@@ -23,9 +23,15 @@ Notoriously hard to use. Similar problems as checksums and DNSSEC in that its
 hard to use correctly. Solves a fundamentally different problem in a different
 domain (email).
 
-\subsection{Deployment}
+\subsection{Deployment and Scalability}
 
-\TODO{(discuss envisioned deployment strategies for resource providers)}
+Discuss envisioned deployment strategies for resource providers.
+
+Can this be scaled? Yes it can. What are the practical limits? EDNS0 means it
+ain't DNS size, though packet fragmentation is still a concern. How about max
+record length? Maximum number of records? A service could have thousands or
+millions of files it serves! Can DNS handle that? DHT failover is still a
+solution anyway.
 
 \subsection{Limitations}
 
