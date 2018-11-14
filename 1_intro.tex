@@ -11,19 +11,15 @@ downloading content over the internet can be risky.
 \TODO{(discuss "free": no interface changes, no addition to resource download
 time, no additional burden on the end user (qualified statement))}
 
+DNSSEC: Eastlake, D., "Domain Name System Security Extensions", RFC 2535, March
+1999.
+
 In summary, our primary contributions are:
 
 \begin{itemize}
 
-  \item \emph{Improved read performance:} \SYSTEM{} provides decreased read
-latencies across all tested filesystems in the majority of benchmarks when
-compared to dm-crypt; \eg under F2FS, \SYSTEM{} provides as much as a $2\times$
-($1.6\times$ average) speedup over AES-XTS.
+  \item \emph{1} \SYSTEM{}
 
-  \item \emph{Equivalent write performance:} despite having to maintain more
-metadata than FDE schemes based on AES-XTS, \SYSTEM{} achieves near parity or
-provides an improvement in observed write latencies in the majority of
-benchmarks; \eg under F2FS, \SYSTEM{} provides an average $1.2\times$ speedup
-over AES-XTS.
+  \item \emph{2} \SYSTEM{}
 
 \end{itemize}

@@ -1,31 +1,49 @@
 \section{Background} \label{sec:background}
 
-\TODO{(lay out the problem more formally, more in depth, and with precise
-language)}
+\TODO{Use the language of IETF RFC3552 to describe active attack}
 
 \subsection{Current Detection and Prevention Methods}
 
+There are several. Blah blah.
+
 \textbf{Anti-Malware Software}
 
-\TODO{(what it is, why it fails)}
-\TODO{(also talk about manual scanning of files for viruses)}
+(what it is, why it fails; also talk about manual scanning of files for
+viruses)
 
 \textbf{HTTPS / Encrypted Channel}
 
-\TODO{(what it is, why it fails)}
+Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P. and T.
+Berners-Lee, "HyperText Transfer Protocol", RFC 2616, June 1999.
+
+Dierks, T. and C. Allen, "The TLS Protocol Version 1.0", RFC 2246, January 1999.
+
+Rescorla, E., "HTTP over TLS", RFC 2818, May 2000.
+
+Blake-Wilson, S., Nystrom, M., Hopwood, D. and J. Mikkelsen, "Transport Layer
+Security (TLS) Extensions", RFC 3546, May 2003.
 
 \textbf{Browser-based Heuristics and Blacklists}
 
-\TODO{(what it is, why it fails)}
+(what it is, why it fails)
 
 \textbf{Checksums}
 
-\TODO{(what it is, why it fails)}
+(what it is, why it fails)
 
 \textbf{Public Key Infrastructure}
 
-\TODO{(what it is, why it fails)}
+Including DANE and similar technologies.
 
 \subsection{Motivation: Case Studies}
 
-\TODO{(there are so many; enumerate them)}
+(there are so many; enumerate them)
+
+\subsection{"Free" Highly-Available Distributed Systems}
+
+There might have been DNS size concerns, but EDNS/EDNS0 assuages those fears.
+
+Others are considering this as well, such as securitytxt draft (cite). A widely
+deployed example is DKIM. (cite).
+
+tools.ietf.org/html/rfc6891

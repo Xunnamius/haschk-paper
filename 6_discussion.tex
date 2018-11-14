@@ -2,9 +2,26 @@
 
 \subsection{Related Work}
 
-\TODO{(adapt wiki entry)}
+\textbf{DNS-Based Authentication of Named Entities (DANE)}
 
-\TODO{(make sure to cite our collected usenix (and oakland?) papers)}
+The DNS-Based Authentication of Named Entities (DANE) specification [RFC6698]
+introduces the DNS "TLSA" resource record (RR) type ("TLSA" is not an acronym).
+TLSA records associate a certificate or a public key of an end-entity or a
+trusted issuing authority with the corresponding Transport Layer Security (TLS)
+[RFC5246] or Datagram Transport Layer Security (DTLS) [RFC6347] transport
+endpoint. DANE relies on the DNS Security Extensions (DNSSEC) [RFC4033]. DANE
+TLSA records validated by DNSSEC can be used to augment or replace the use of
+trusted public Certification Authorities (CAs).
+
+DANE + OpenPGP: tools.ietf.org/html/rfc7929
+
+Different concern. tools.ietf.org/html/rfc7671
+
+\textbf{PGP}
+
+Notoriously hard to use. Similar problems as checksums and DNSSEC in that its
+hard to use correctly. Solves a fundamentally different problem in a different
+domain (email).
 
 \subsection{Deployment}
 
@@ -12,7 +29,61 @@
 
 \subsection{Limitations}
 
-\TODO{(bulletpoints)}
+\textbf{DNSSEC Adoption is Slow}
+
+DNSSEC is hard to use and harder to use correctly. It does not make the DNS
+network, i.e. properly configured DNS servers protected with DNSSEC, any more
+vulnerable to reflection (cite Neustar) and amplification (cite
+ieeexplore.ieee.org/document/4159821) attacks than it already is as a UDP-based
+content service (cite ss.vix.su/~vixie/isc-tn-2012-1.txt,
+us-cert.gov/ncas/alerts/TA14-017A) but does arguably make services significantly
+more fragile because DNSSEC is hard to get right.
+
+The metrics of signed DNSSEC zones are not easy to come by for the entire
+Internet (apnic). DNSSEC adoption across is small and slow. Worldwide, less than
+14 percent of DNS requests have DNSSEC validated by the resolver (cite apnic)
+but thanks to community initiatives is on the rise (cite
+blog.cloudflare.com/automatically-provision-and-maintain-dnssec) (use graph as
+figure bit.ly/2zSR7A6).
+
+From SO: DNSSEC does have risks! It's hard to use, and harder to use correctly.
+Often it requires a new work flow for zone data changes, registrar management,
+installation of new server instances. All of that has to be tested and
+documented, and whenever something breaks that's related to DNS, the DNSSEC
+technology must be investigated as a possible cause. And the end result if you
+do everything right will be that, as a zone signer, your own online content and
+systems will be more fragile to your customers. As a far-end server operator,
+the result will be, that everyone else's content and systems will be more
+fragile to you. These risks are often seen to outweigh the benefits, since the
+only benefit is to protect DNS data from in-flight modification or substitution.
+That attack is so rare as to not be worth all this effort. We all hope DNSSEC
+becomes ubiquitous some day, because of the new applications it will enable. But
+the truth is that today, DNSSEC is all cost, no benefit, and with high risks.
+
+The overwhelming majority of domain name zone administrators appear to be just
+not aware of DNSSEC, or, even if they want to sign their zone, they cannot
+publish a signed zone because of limitations in the service provided by the
+registrar, or if they are aware and could sign their zone, then they don’t
+appear to judge that the perceived benefit of DNSSEC-signing their zone
+adequately offsets the cost of maintaining the signed zone.
+
+\textbf{DNS-Specific Protocol Limitations}
+
+Whether we created our own DNS resource record type or settled for a well-known
+TXT record, there are other DNS records that could be far larger. Resource
+records like CERT, IPSECKEY, OPENPGPKEY, and TLSA (with a full certificate) may
+hold several kilobytes of data, far more than any compliant security.txt file
+ever would.
+
+I do hope that all the major DNS server operators have implemented DNS-over-TCP
+or some sort of rate limiting by now, but I feel that's out of the scope of this
+project. All we can do is urge any company running a vulnerable DNS server to
+quickly create a security.txt file.
+
+DNS data can handle a lot more then the amount of data needed here. And
+amplification protection can be done simply by using TCP or insisting on
+DNS-COOKIES for these answers. This is a generic DNS problem is solved by DNS
+people and there is no need for additional requirements here.
 
 \subsection{Future Work}
 
