@@ -1,1 +1,1 @@
-DNSCHK Paper!
+Not your grandpa's checksums!

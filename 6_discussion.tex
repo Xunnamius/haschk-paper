@@ -8,7 +8,7 @@ Short blurb about how other research exists.
 
 \textbf{DNS-Based Authentication of Named Entities (DANE).}    The DNS-Based
 Authentication of Named Entities (DANE) specification \cite{DANE1, DANE2, DANE3}
-introduces the DNS "TLSA" resource record (RR) type ("TLSA" is not an acronym).
+introduces the DNS ``TLSA" resource record (RR) type (``TLSA" is not an acronym).
 TLSA records associate a certificate or a public key of an end-entity or a
 trusted issuing authority with the corresponding Transport Layer Security (TLS)
 or Datagram Transport Layer Security (DTLS) transport endpoint. DANE relies on
@@ -20,21 +20,15 @@ Authorities (CAs).
 DNSSEC in that its hard to use correctly. In practice, it's used to solve a
 fundamentally different problem in a different domain (email) \cite{OpenPGP1}.
 
-\subsection{Deployment and Scalability}
-
-Discuss envisioned deployment strategies for resource providers.
-
-Can this be scaled? Yes it can. What are the practical limits? EDNS0 means it
-ain't DNS size, though packet fragmentation is still a concern. How about max
-record length? Maximum number of records? A service could have thousands or
-millions of files it serves! Can DNS handle that? DHT failover is still a
-solution anyway.
+\textbf{More.}    (todo)
 
 \subsection{Limitations}
 
 Short blurb on limitations.
 
-\textbf{DNSSEC Adoption is Slow.}    DNSSEC is hard to use and harder to use
+\subsubsection{DNSSEC Adoption is Slow}
+
+DNSSEC is hard to use and harder to use
 correctly. It does not make the DNS network, i.e. properly configured DNS
 servers protected with DNSSEC, any more vulnerable to reflection \cite{Neustar}
 and amplification \cite{Ariya, DNSSEC-is-hard-1, DNSSEC-is-hard-2,
@@ -69,7 +63,9 @@ registrar, or if they are aware and could sign their zone, then they don’t
 appear to judge that the perceived benefit of DNSSEC-signing their zone
 adequately offsets the cost of maintaining the signed zone.
 
-\textbf{DNS-Specific Protocol Limitations.}    Whether we created our own DNS
+\subsubsection{DNS-Specific Protocol Limitations}
+
+Whether we created our own DNS
 resource record type or settled for a well-known TXT record, there are other DNS
 records that could be far larger. Resource records like CERT, IPSECKEY,
 OPENPGPKEY, and TLSA (with a full certificate) may hold several kilobytes of

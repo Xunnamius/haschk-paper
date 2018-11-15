@@ -8,7 +8,7 @@ downloading content over the internet can be risky.
 
 \TODO{(the rest; an expository summarization of research)}
 
-Discuss "free": no interface changes, no addition to resource download time, no
+Discuss ``free," \ie no interface changes, no addition to resource download time, no
 additional burden on the end user (qualified statement).
 
 \cite{DNSSEC}
@@ -17,17 +17,32 @@ In summary, our primary contributions are:
 
 \begin{itemize}
 
-  \item We propose to \TODO{the DNSCHK approach using DNS/DHT} ...
+  \item We propose a novel practical defense against receiving malicious,
+  corrupted, or compromised resources over the internet. Contrasted with current
+  solutions, our defense requires no UI or API interface changes at any level,
+  does not employ unreliable heuristics, does not interfere with other software
+  or extensions that also handle resource downloads, and can be transparently
+  deployed without adding to the \textit{fragility} of the system. It protects
+  end users whose software implements \SYSTEM{} while remaining unnoticeable to
+  users of whose software does not. Hence, \SYSTEM{} could be deployed
+  immediately.
 
-  \item We present our prototype DNSCHK implementations for Google Chrome and
-  FileZilla. To the best of our knowledge, this is the \emph{first} system
-  having such capabilities. Further, we release the DNSCHK solution to the
-  community as open source software (footnote with link).
+  \item We present our prototype \SYSTEM{} implementations for Google Chrome and
+  FileZilla and demonstrate its effectiveness in mitigating the consumption of
+  compromised resources, even when transmitted over a secure channel. To the
+  best of our knowledge, this is the \emph{first} system providing such
+  capabilities with little implementation cost and at no cost to the end user.
+  Further, we release the \SYSTEM{} solution to the community as open source
+  software \footnote{The Chrome extension is available at
+  https://tinyurl.com/dnschk-actual}.
 
   \item We carefully and extensively evaluate the security, scalability, and
   performance of our automated defense against resource corruption to
-  demonstrate the effectiveness and high practicality of the DNSCHK approach. We
-  further provide a publicly accessible demonstration of DNSCHK's utility via a
-  patched HotCRP instance (footnote with link).
+  demonstrate the effectiveness and high practicality of the \SYSTEM{} approach.
+  Specifically, we find no obstacles to efficient scalability given choice of
+  distributed system and no performance overhead compared to downloads without
+  \SYSTEM{}. We further provide a publicly accessible demonstration of
+  \SYSTEM{}'s utility via a patched HotCRP instance \footnote{The patched HotCRP
+  instance is available at https://tinyurl.com/dnschk-hotcrp}.
 
 \end{itemize}

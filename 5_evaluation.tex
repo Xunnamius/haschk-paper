@@ -1,12 +1,12 @@
 \section{Evaluation} \label{sec:evaluation}
 
-The primary goal of any DNSCHK implementation is to alert end-users when the
+The primary goal of any \SYSTEM{} implementation is to alert end-users when the
 resource they've downloaded is something other than what they were expecting. We
-tested the effectiveness of our approach using the DNSCHK extension for Google
-Chrome, a real-world deployment of HotCRP, and a random sampling of papers
-published in previous \CONFERENCE{} proceedings.
+tested the effectiveness of our approach using the \SYSTEM{} extension for
+Google Chrome, a real-world deployment of HotCRP, and a random sampling of
+papers published in previous \CONFERENCE{} proceedings.
 
-\subsubsection{Threat Model and Assumptions}
+\subsection{Threat Model and Assumptions}
 
 Include threat model for Chrome extension and FTP patch.
 
@@ -14,9 +14,19 @@ Include threat model for Chrome extension and FTP patch.
 
 It also seems from ACME that HTTP challenges are good enough of a proof to issue
 TLS certificates, so why not good enough for checksums? Threat model of ACME
-thoroughly goes through this, \cite{draft-ACME}.
+thoroughly goes through this \cite{draft-ACME}.
 
-\subsection{Overhead}
+\subsection{Deployment and Scalability}
+
+Discuss envisioned deployment strategies for resource providers.
+
+Can this be scaled? Yes it can. What are the practical limits? EDNS0 means it
+ain't DNS size, though packet fragmentation is still a concern. How about max
+record length? Maximum number of records? A service could have thousands or
+millions of files it serves! Can DNS handle that? DHT failover is still a
+solution anyway.
+
+\subsection{Performance Overhead}
 
 Additional Download Latency, Additional Network Load, Runtime overhead, etc. All
 nixed.
