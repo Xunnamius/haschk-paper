@@ -7,15 +7,18 @@
         "biblatex",
         "captionsetup",
         "edns",
+        "ipseckey",
         "labelformat",
         "labelsep",
         "natbib",
+        "openpgpkey",
         "pgfplots",
         "securitytxt",
         "subfig",
         "subfigure",
         "supercitedelim",
         "textcolor",
+        "tlsa",
         "todonotes",
         "unencrypted"
     ]

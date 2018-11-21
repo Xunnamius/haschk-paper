@@ -2,45 +2,49 @@
 
 In this section we ...
 
-\subsection{Related Work}
+\subsection{Additional Related Work}
 
-Short blurb about how other research exists.
+\noindent\textbf{Cryptographic Data in DNS Resource Records.}    Storing
+metadata in the DNS network is not a new idea. The DNS-Based Authentication of
+Named Entities (DANE) specification~\cite{DANE1, DANE2, DANE3} defines the
+``TLSA'' and ``OPENPGPKEY'' DNS resource records to store cryptographic data.
+These resource record types, along with ``CERT''~\cite{CERT},
+``IPSECKEY''~\cite{IPSECKEY}, those defined by DNS Security Extensions
+(DNSSEC)~\cite{DNSSEC}, and others demonstrate that storing useful cryptographic
+data retrievable through the DNS network is feasible at scale~\cite{DANE3,
+DANE1}. With \SYSTEM{}, however, we use ``TXT'' records to map resource
+identifiers to authoritative hashes. In accordance with RFC 5507~\cite{RFC5507},
+an actual \SYSTEM{} implementation would necessitate the creation of a new DNS
+resource record type.
 
-\textbf{DNS-Based Authentication of Named Entities (DANE).}    The DNS-Based
-Authentication of Named Entities (DANE) specification \cite{DANE1, DANE2, DANE3}
-introduces the DNS ``TLSA" resource record (RR) type (``TLSA" is not an acronym).
-TLSA records associate a certificate or a public key of an end-entity or a
-trusted issuing authority with the corresponding Transport Layer Security (TLS)
-or Datagram Transport Layer Security (DTLS) transport endpoint. DANE relies on
-the DNS Security Extensions (DNSSEC). DANE TLSA records validated by DNSSEC can
-be used to augment or replace the use of trusted public Certification
-Authorities (CAs).
+\noindent\textbf{PGP/OpenPGP.}    Despite PGP sufficiently addressing its threat
+model, it is notoriously hard for end users to use correctly, if they can manage
+it at all~\cite{PGPBad}. The same human factors that make the otherwise
+cryptographically solid PGP encryption solution so unpleasant and arduous for
+end users also exist in the context of download integrity verification and
+checksums. Users cannot and \textit{will not} be burdened with manually
+verifying a checksum, and to expect otherwise has proven dangerous (see:
+\secref{background}).
 
-\textbf{PGP.}   Notoriously hard to use. Similar problems as checksums and
-DNSSEC in that its hard to use correctly. In practice, it's used to solve a
-fundamentally different problem in a different domain (email) \cite{OpenPGP1}.
-
-\textbf{More.}    (todo)
+\noindent\textbf{More.}    (todo)
 
 \subsection{Limitations}
 
-Short blurb on limitations.
-
 \subsubsection{DNSSEC Adoption is Slow}
 
-DNSSEC is hard to use and harder to use
-correctly. It does not make the DNS network, i.e. properly configured DNS
-servers protected with DNSSEC, any more vulnerable to reflection \cite{Neustar}
-and amplification \cite{Ariya, DNSSEC-is-hard-1, DNSSEC-is-hard-2,
-DNSSEC-is-hard-3, DNSSEC-is-hard-4} attacks than it already is as a UDP-based
-content service \cite{USCERT, Vixie} but does arguably make services
-significantly more fragile because DNSSEC is hard to get right.
+DNSSEC is hard to use and harder to use correctly. It does not make the DNS
+network, i.e. properly configured DNS servers protected with DNSSEC, any more
+vulnerable to reflection~\cite{Neustar} and amplification~\cite{Ariya,
+DNSSEC-is-hard-1, DNSSEC-is-hard-2, DNSSEC-is-hard-3, DNSSEC-is-hard-4} attacks
+than it already is as a UDP-based content service~\cite{USCERT, Vixie} but does
+arguably make services significantly more fragile because DNSSEC is hard to get
+right.
 
 The metrics of signed DNSSEC zones are not easy to come by for the entire
-Internet \cite{APNIC}. DNSSEC adoption across is small and slow. Worldwide, less
-than 14 percent of DNS requests have DNSSEC validated by the resolver
-\cite{APNIC} but thanks to community initiatives is on the rise
-\cite{Cloudflare} (use graph as figure from bit.ly/2zSR7A6).
+Internet~\cite{APNIC}. DNSSEC adoption across is small and slow. Worldwide, less
+than 14 percent of DNS requests have DNSSEC validated by the
+resolver~\cite{APNIC} but thanks to community initiatives is on the
+rise~\cite{Cloudflare} (use graph as figure from bit.ly/2zSR7A6).
 
 From SO: DNSSEC does have risks! It's hard to use, and harder to use correctly.
 Often it requires a new work flow for zone data changes, registrar management,
@@ -65,21 +69,49 @@ adequately offsets the cost of maintaining the signed zone.
 
 \subsubsection{DNS-Specific Protocol Limitations}
 
-Whether we created our own DNS
-resource record type or settled for a well-known TXT record, there are other DNS
-records that could be far larger. Resource records like CERT, IPSECKEY,
-OPENPGPKEY, and TLSA (with a full certificate) may hold several kilobytes of
-data, far more than any compliant security.txt file ever would.
+DNS~\cite{DNS1} was not originally designed to transport or store relatively
+large amounts of data, though this has been addressed with EDNS0~\cite{EDNS}.
+The fingerprints stored in DNS shouldn't be much longer than 128 bytes or the
+output of the SHA512 function. Regardless, DNS resource record extensions exist
+that store much more than 128 bytes of data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
 
-I do hope that all the major DNS server operators have implemented DNS-over-TCP
-or some sort of rate limiting by now, but I feel that's out of the scope of this
-project. All we can do is urge any company running a vulnerable DNS server to
-quickly create a security.txt file.
+Others are considering this as well, such as securitytxt draft
+~\cite{draft-sectxt}. A widely deployed example is DKIM~\cite{DKIM}.
+Whether we created our own DNS resource record type or settled for a well-known
+TXT record, there are other DNS records that could be far larger. Resource
+records like CERT, and OPENPGPKEY TLSA with a complete certificate~\cite{DANE1} all may hold several kilobytes of data
 
 DNS data can handle a lot more then the amount of data needed here. And
 amplification protection can be done simply by using TCP or insisting on
 DNS-COOKIES for these answers. This is a generic DNS problem is solved by DNS
 people and there is no need for additional requirements here.
+
+\subsubsection{Chrome Implementation}
+
+Our current JavaScript proof-of-concept implementation, as a Chrome extension,
+isn't allowed to touch the resource file downloaded by Chrome and so can't
+prevent the potentially-malicious resource file from being executed by the end
+user—a feature Chrome/Chromium reserves for its own internal use. The Chrome
+\textit{app} API~\cite{AppAPI} might have been of assistance as it allowed for some limited
+filesystem traversal via a now deprecated native app API; there is also a
+non-standard HTML5/WebExtensions API that would provide similar functionality
+were it to be widely considered~\cite{deadSpec}.
+
+\SYSTEM{} would be even more effective as a browser extension if Chrome/Chromium
+and the WebExtensions API allowed for an explicit \texttt{onComplete} event hook
+in the downloads API. This hook would fire immediately before a file download
+completed and the file became executable, \ie had its \texttt{.crdownload} or
+\texttt{.download} extension removed. The hook would consume a
+\texttt{Promise}/\texttt{AsyncFunction} that kept the download in its
+non-complete state until said \texttt{Promise} completed. This would allow
+\SYSTEM{}'s background page to do something like alter the download's
+\texttt{DangerType} property and alert the end user to the dangerous download
+naturally. This would have the advantage of communicating intent through the
+browser's familiar UI while preventing the potentially-malicious download from
+becoming immediately executable. Unfortunately, the closest the
+Chrome/WebExtensions API comes to allowing \texttt{DangerType} mutations is the
+\texttt{acceptDanger} method on the downloads API, but it is not suitable for
+use with \SYSTEM{} as it is a background page based extension.
 
 \subsection{Future Work}
 

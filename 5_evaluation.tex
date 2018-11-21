@@ -8,13 +8,15 @@ papers published in previous \CONFERENCE{} proceedings.
 
 \subsection{Threat Model and Assumptions}
 
-Include threat model for Chrome extension and FTP patch.
+Include threat model for Chrome extension and FTP patch. Note the additional
+Chrome vulnerability solved with a timer and the fact that we're assuming
+Chrome is giving us an accurate referrer URL on its \texttt{DownloadItem}s.
 
 \subsection{Real-World Resource Corruption Detection with Google Chrome and HotCRP}
 
 It also seems from ACME that HTTP challenges are good enough of a proof to issue
 TLS certificates, so why not good enough for checksums? Threat model of ACME
-thoroughly goes through this \cite{draft-ACME}.
+thoroughly goes through this~\cite{draft-ACME}.
 
 \subsection{Deployment and Scalability}
 
