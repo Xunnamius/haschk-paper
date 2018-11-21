@@ -15,7 +15,7 @@ data retrievable through the DNS network is feasible at scale~\cite{DANE3,
 DANE1}. With \SYSTEM{}, however, we use ``TXT'' records to map resource
 identifiers to authoritative hashes. In accordance with RFC 5507~\cite{RFC5507},
 an actual \SYSTEM{} implementation would necessitate the creation of a new DNS
-resource record type.
+resource record type. \\
 
 \noindent\textbf{PGP/OpenPGP.}    Despite PGP sufficiently addressing its threat
 model, it is notoriously hard for end users to use correctly, if they can manage
@@ -26,30 +26,27 @@ checksums. Users cannot and \textit{will not} be burdened with manually
 verifying a checksum, and to expect otherwise has proven dangerous (see:
 \secref{background}).
 
-\noindent\textbf{More.}    (todo)
-
 \subsection{Limitations}
 
 \subsubsection{DNSSEC Adoption is Slow}
 
-DNSSEC is hard to use and harder to use correctly. It does not make the DNS
-network, i.e. properly configured DNS servers protected with DNSSEC, any more
-vulnerable to reflection~\cite{Neustar} and amplification~\cite{Ariya,
-DNSSEC-is-hard-1, DNSSEC-is-hard-2, DNSSEC-is-hard-3, DNSSEC-is-hard-4} attacks
-than it already is as a UDP-based content service~\cite{USCERT, Vixie} but does
-arguably make services significantly more fragile because DNSSEC is hard to get
-right.
+DNSSEC is hard to configure correctly~\cite{DNSSEC-is-hard-1, DNSSEC-is-hard-2,
+DNSSEC-is-hard-3, DNSSEC-is-hard-4}. However, it does not make the DNS network,
+i.e. properly configured DNS servers protected with DNSSEC, any more vulnerable
+to amplification or other types of reflection attacks~\cite{Ariya} than it
+already is as a UDP-based content delivery service~\cite{USCERT, Vixie}. DNSSEC
+does arguably make services that rely on it significantly more fragile because
+DNSSEC is hard to configure correctly.
 
-The metrics of signed DNSSEC zones are not easy to come by for the entire
-Internet~\cite{APNIC}. DNSSEC adoption across is small and slow. Worldwide, less
+Further, DNSSEC adoption across is small and slow. Worldwide, less
 than 14 percent of DNS requests have DNSSEC validated by the
 resolver~\cite{APNIC} but thanks to community initiatives is on the
 rise~\cite{Cloudflare} (use graph as figure from bit.ly/2zSR7A6).
 
-From SO: DNSSEC does have risks! It's hard to use, and harder to use correctly.
-Often it requires a new work flow for zone data changes, registrar management,
-installation of new server instances. All of that has to be tested and
-documented, and whenever something breaks that's related to DNS, the DNSSEC
+\TODO{From SO: DNSSEC does have risks! It's hard to use, and harder to use
+correctly. Often it requires a new work flow for zone data changes, registrar
+management, installation of new server instances. All of that has to be tested
+and documented, and whenever something breaks that's related to DNS, the DNSSEC
 technology must be investigated as a possible cause. And the end result if you
 do everything right will be that, as a zone signer, your own online content and
 systems will be more fragile to your customers. As a far-end server operator,
@@ -59,32 +56,27 @@ only benefit is to protect DNS data from in-flight modification or substitution.
 That attack is so rare as to not be worth all this effort. We all hope DNSSEC
 becomes ubiquitous some day, because of the new applications it will enable. But
 the truth is that today, DNSSEC is all cost, no benefit, and with high risks.
-
 The overwhelming majority of domain name zone administrators appear to be just
 not aware of DNSSEC, or, even if they want to sign their zone, they cannot
 publish a signed zone because of limitations in the service provided by the
 registrar, or if they are aware and could sign their zone, then they don’t
 appear to judge that the perceived benefit of DNSSEC-signing their zone
-adequately offsets the cost of maintaining the signed zone.
+adequately offsets the cost of maintaining the signed zone.}
 
 \subsubsection{DNS-Specific Protocol Limitations}
 
 DNS~\cite{DNS1} was not originally designed to transport or store relatively
 large amounts of data, though this has been addressed with EDNS0~\cite{EDNS}.
-The fingerprints stored in DNS shouldn't be much longer than 128 bytes or the
+The checksums stored in DNS shouldn't be much longer than 128 bytes or the
 output of the SHA512 function. Regardless, DNS resource record extensions exist
 that store much more than 128 bytes of data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
 
-Others are considering this as well, such as securitytxt draft
-~\cite{draft-sectxt}. A widely deployed example is DKIM~\cite{DKIM}.
-Whether we created our own DNS resource record type or settled for a well-known
-TXT record, there are other DNS records that could be far larger. Resource
-records like CERT, and OPENPGPKEY TLSA with a complete certificate~\cite{DANE1} all may hold several kilobytes of data
-
-DNS data can handle a lot more then the amount of data needed here. And
-amplification protection can be done simply by using TCP or insisting on
-DNS-COOKIES for these answers. This is a generic DNS problem is solved by DNS
-people and there is no need for additional requirements here.
+Several working groups are considering DNS as a storage medium for
+checksums/hash output as well, such as securitytxt~\cite{draft-sectxt}. A widely
+deployed example of DNS ``TXT'' resource records being used this way is
+DKIM~\cite{DKIM}. \SYSTEM{} does not add to the danger of amplification and
+other reflection attacks on DNS; these are generic DNS issues addressable at
+other layers of the protocol.
 
 \subsubsection{Chrome Implementation}
 
@@ -92,13 +84,13 @@ Our current JavaScript proof-of-concept implementation, as a Chrome extension,
 isn't allowed to touch the resource file downloaded by Chrome and so can't
 prevent the potentially-malicious resource file from being executed by the end
 user—a feature Chrome/Chromium reserves for its own internal use. The Chrome
-\textit{app} API~\cite{AppAPI} might have been of assistance as it allowed for some limited
-filesystem traversal via a now deprecated native app API; there is also a
-non-standard HTML5/WebExtensions API that would provide similar functionality
-were it to be widely considered~\cite{deadSpec}.
+\textit{app} API~\cite{AppAPI} might have been of assistance as it allowed for
+some limited filesystem traversal via a now deprecated native app API; there is
+also a non-standard HTML5/WebExtensions FileSystem API that would provide
+similar functionality were it to be widely considered~\cite{deadSpec}.
 
 \SYSTEM{} would be even more effective as a browser extension if Chrome/Chromium
-and the WebExtensions API allowed for an explicit \texttt{onComplete} event hook
+or the WebExtensions API allowed for an explicit \texttt{onComplete} event hook
 in the downloads API. This hook would fire immediately before a file download
 completed and the file became executable, \ie had its \texttt{.crdownload} or
 \texttt{.download} extension removed. The hook would consume a
@@ -107,7 +99,7 @@ non-complete state until said \texttt{Promise} completed. This would allow
 \SYSTEM{}'s background page to do something like alter the download's
 \texttt{DangerType} property and alert the end user to the dangerous download
 naturally. This would have the advantage of communicating intent through the
-browser's familiar UI while preventing the potentially-malicious download from
+browser's familiar UI and preventing the potentially-malicious download from
 becoming immediately executable. Unfortunately, the closest the
 Chrome/WebExtensions API comes to allowing \texttt{DangerType} mutations is the
 \texttt{acceptDanger} method on the downloads API, but it is not suitable for
