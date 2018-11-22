@@ -1,30 +1,44 @@
 \section{Discussion} \label{sec:discussion}
 
-In this section we ...
+In this section, we examine current and previous DNS-based and other
+cryptographic schemes, most of which are based on public key cryptography.
+Further, we note PGP's limiting human factors, how those factors also apply to
+the checksum solution, and how the \SYSTEM{} solution avoids them. Thereafter,
+we discuss some limitations of the \SYSTEM{} methodology, implementation, and
+DNS itself.
 
 \subsection{Additional Related Work}
 
 \noindent\textbf{Cryptographic Data in DNS Resource Records.}    Storing
-metadata in the DNS network is not a new idea. The DNS-Based Authentication of
-Named Entities (DANE) specification~\cite{DANE1, DANE2, DANE3} defines the
-``TLSA'' and ``OPENPGPKEY'' DNS resource records to store cryptographic data.
-These resource record types, along with ``CERT''~\cite{CERT},
-``IPSECKEY''~\cite{IPSECKEY}, those defined by DNS Security Extensions
-(DNSSEC)~\cite{DNSSEC}, and others demonstrate that storing useful cryptographic
-data retrievable through the DNS network is feasible at scale~\cite{DANE3,
-DANE1}. With \SYSTEM{}, however, we use ``TXT'' records to map resource
-identifiers to authoritative hashes. In accordance with RFC 5507~\cite{RFC5507},
-an actual \SYSTEM{} implementation would necessitate the creation of a new DNS
-resource record type. \\
+cryptographic data in the DNS network is not a new idea. The DNS-Based
+Authentication of Named Entities (DANE) specification~\cite{DANE1, DANE2, DANE3}
+defines the ``TLSA'' and ``OPENPGPKEY'' DNS resource records to store
+cryptographic data. These resource record types, along with
+``CERT''~\cite{CERT}, ``IPSECKEY''~\cite{IPSECKEY}, those defined by DNS
+Security Extensions (DNSSEC)~\cite{DNSSEC}, and others demonstrate that storing
+useful cryptographic data retrievable through the DNS network is feasible at
+scale~\cite{DANE3, DANE1}. With \SYSTEM{}, however, we use ``TXT'' records to
+map resource identifiers to authoritative hashes. In accordance with RFC
+5507~\cite{RFC5507}, an actual \SYSTEM{} implementation would necessitate the
+creation of a new DNS resource record type. \\
 
-\noindent\textbf{PGP/OpenPGP.}    Despite PGP sufficiently addressing its threat
-model, it is notoriously hard for end users to use correctly, if they can manage
-it at all~\cite{PGPBad}. The same human factors that make the otherwise
-cryptographically solid PGP encryption solution so unpleasant and arduous for
-end users also exist in the context of download integrity verification and
-checksums. Users cannot and \textit{will not} be burdened with manually
-verifying a checksum, and to expect otherwise has proven dangerous (see:
+\noindent\textbf{PGP/OpenPGP.}    Though PGP addresses a fundamentally different
+threat model than \SYSTEM{}, it is useful to note: many of the same human and UX
+factors that make the cryptographically solid OpenPGP standard and its various
+implementations so unpleasant for end users also exist in the context of
+download integrity verification and checksums. End users of all backgrounds
+cannot and \textit{will not} be burdened with manually verifying a checksum; as
+was the case with PGP 5.0~\cite{PGPBad}, some users are likely confused by the
+very notion of a checksum, if they are aware of checksums at all. As with all
+mechanisms that further complicate a task, even users capable of manually
+verifying the checksum of a file they've downloaded . To assume otherwise (see:
 \secref{background}).
+
+\noindent\textbf{Link Fingerprints.}    (about)~\cite{}
+
+\noindent\textbf{Content-MD5 HTTP Header}    (about)~\cite{}
+
+\noindent\textbf{Subresource Integrity (SRI)}    (about)~\cite{}
 
 \subsection{Limitations}
 
