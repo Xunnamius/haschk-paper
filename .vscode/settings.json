@@ -21,5 +21,8 @@
         "tlsa",
         "todonotes",
         "unencrypted"
-    ]
+    ],
+    "latex-workshop.hoverPreview.cursor.enabled": false,
+    "latex-workshop.hoverPreview.enabled": false,
+    "latex-workshop.view.autoActivateLatex.enabled": false
 }
