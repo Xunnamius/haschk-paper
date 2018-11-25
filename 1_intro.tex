@@ -6,7 +6,20 @@ browser) requests a server resource at some URL. The server responds with the
 resource. The browser completes downloading the resource. Unfortunately,
 downloading content over the internet can be risky.
 
-\TODO{(the rest; an expository summarization of research)}
+Supply Chain Attacks (SCA) are the compromise of software source code via cyber
+attack, insider threat, or other attack on one or more phases of the development
+and deployment life cycle. These attacks are made possible due to proximity and
+have the goal of infecting and exploiting one or more victims---usually the
+software company's customer base. \SYSTEM{} only protects against SCAs that
+occur after the Authoritative Hash (AH) is calculated. AH calculation is
+necessarily more likely to occur later in the software development life cycle or
+very early in the deployment process. If an attacker is able to execute a
+successful SCA before the AH is calculated, \SYSTEM{} would propagate the
+compromised Authoritative Hash.
+
+Although early Supply Chain Attacks are devastating, they are not the only
+popular form of the attack. Many devastating supply chain attacks occur late in
+the software development and deployment process, including \TODO{(choose three examples)}. Further, \TODO{(popular attacks at various levels, including CDNs)}.
 
 Discuss ``free," \ie no interface changes, no addition to resource download
 time, no additional burden on the end user (qualified statement).
