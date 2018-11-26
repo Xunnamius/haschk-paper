@@ -41,61 +41,57 @@ attacks to data theft, communication forgery, and sender repudiation.
 
 Unfortunately, HTTPS and related protocols (HSTS, DNSSEC, etc) are not a
 panacea. Unlike authenticity and confidentiality, \textit{resource integrity}
-deals with the content of a communication; specifically: the bytes received at
-the end of a transaction are the bytes we expected to receive. For example, a
-binary expected to be 10MiB, when downloaded over the internet, should not be
-received as an 11MiB executable, even if the communication was confidential
-between parties and the receiver can verify that the resource came from the
-intended source. Similarly, it would be ill advised to execute a 10MiB binary
-that, for one reason or another, had half its bits flipped by the time it was
-received. This can occur despite the integrity guarantee provided by TLS/HTTPS
-because, as a \textit{communication} protocol, TLS only guarantees the integrity
-of each \textit{end to end communication} as an opaque payload via message
-authentication code (MAC). The integrity of the original payload as it pertains
-to the Application layer rather than the Transport layer is outside of the model
-addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
+deals with the content of a communication; specifically: ensuring the bytes
+received at the end of a transaction are the bytes we expected to receive. For
+example, a binary expected to be 10MiB, when downloaded over the internet,
+should not be received as an 11MiB executable, even if the communication was
+confidential between parties and the receiver can verify that the resource came
+from the intended source. Similarly, it would be ill advised to execute a 10MiB
+binary that, for one reason or another, had half its bits flipped by the time it
+was received. This can occur despite the integrity guarantee provided by
+TLS/HTTPS because, as a \textit{communication} protocol, TLS only guarantees the
+integrity of each \textit{end to end communication} as an opaque payload via
+message authentication code (MAC). The integrity of the original payload as it
+pertains to the Application layer rather than the Transport layer is outside of
+the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 
-Hence, despite the resilient nature of HTTPS and the powerful properties it
-guarantees, end users are still vulnerable to attacks on resource integrity.
-This can occur at the point of distribution, such as a compromised node in a
-third party CDN that delivers compromised malicious resources masquerading as
-popular public software libraries. \TODO{(choose an example from background
-section)}. It can occur when an adversary gains control of some aspect of the
-software deployment process, such as \TODO{(talk about NotPetya?)}. Moreover, an
-adversary can render HTML-based additions to HTTPS such as Subresource Integrity
-(SRI) and Content-MD5 HTTP headers ineffective by compromising the system that
-hosts the software or its update/maintenance mechanism. Protected encrypted
+Hence, despite the resilient nature of HTTPS and the powerful security
+properties it guarantees, end users are still vulnerable to attacks on resource
+integrity. This can occur at the point of distribution, such as a compromised
+node in a third party CDN that delivers compromised malicious resources
+masquerading as popular public software libraries. \TODO{(choose an example from
+background section)}. It can occur when an adversary gains control of some
+aspect of the software deployment process, such as \TODO{(talk about
+NotPetya?)}. Moreover, an adversary can render HTML-based additions to HTTPS
+such as Content-MD5 header~\cite{MD5Header} and Subresource Integrity
+(SRI)~\cite{SRI} ineffective by compromising the system that hosts the software
+or its download portal or update/maintenance mechanism. Protected encrypted
 communications mean nothing if the contents of those communications are
 themselves corrupted before the fact.
 
-More broadly, these kinds of attacks are known as \textbf{Supply Chain Attacks}
-(SCA). SCAs are the compromise of software source code via cyber attack, insider
-threat, or other attack on one or more phases of the software development and
-deployment life cycle. These attacks are generally made possible due to
-proximity and have the goal of infecting and exploiting one or more
-victims---usually a software company's customer base. Software developers and
-distributors are most at risk of suffering from such attacks, and the global
-software community is at risk having the trust between software distributor and
-customer broken irreconcilably.
+More broadly, these kinds of resource integrity attacks are known as
+\textbf{Supply Chain Attacks} (SCA)~\cite{}. SCAs are the compromise of software
+source code via cyber attack, insider threat, or other attack on one or more
+phases of the software development life cycle (see \figref{attacks}). These
+attacks have the goal of infecting and exploiting one or more target victims.
 
-SCAs are a well known problem as old as the internet itself. \TODO{(short blurb
-about a few of the solutions that we go into in depth in background)}. The state
-of the art is checksums. \TODO{(expoud on checksums and a bit about why they are
-ineffective)}. \TODO{(use Linux Mint example here?)}.
+Ensuring the integrity of resources exchanged over the internet despite SCAs and
+other active attacks is an incredibly well studied problem~\cite{MD5Header,
+HTTP1.1, HTTPS, SRI, LF, OpenPGP1, DNSSEC}. The state of the art is checksums.
+\TODO{(expoud on checksums; link it to the attacks figure)}.
+
+However, checksums are not a viable solution. \TODO{(expound on ineffectiveness;
+use Linux Mint example here?)}.
 
 In this paper, we propose \SYSTEM{}, \TODO{(deliniate between approach and
-implementations?)}. Unlike \TODO{(compare and contrast)}. \SYSTEM{} only
-protects against SCAs that occur after the Authoritative Hash (AH) is calculated
-(see \tblref{attacks}). AH calculation is necessarily more likely to occur later
-in the software development life cycle or very early in the deployment process.
-If an attacker is able to execute a successful SCA before the AH is calculated,
-\SYSTEM{} would propagate the compromised Authoritative Hash.
+implementations?)}. Unlike \TODO{(compare and contrast)}.
 
-\TODO{Although early Supply Chain Attacks are devastating, they are not the only
-popular form of the attack. Many devastating supply chain attacks occur late in
-the software development and deployment process, including \TODO{(choose three
-examples)}. Further, \TODO{(popular attacks at various levels, including
-CDNs)}.}
+As a replacement for manual checksum verification, \SYSTEM{} addresses a similar
+security model and   (see \tblref{attacks}). AH calculation is necessarily more
+likely to occur later in the software development life cycle or very early in
+the deployment process. If an attacker is able to execute a successful SCA
+before the AH is calculated, \SYSTEM{} would propagate the compromised
+Authoritative Hash.
 
 \TODO{Discuss ``free," \ie no interface changes, no addition to resource
 download time, no additional burden on the end user (qualified
