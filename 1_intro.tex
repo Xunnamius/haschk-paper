@@ -1,5 +1,17 @@
 \section{Introduction} \label{sec:introduction}
 
+\begin{table*}[th]
+  \centering
+  \begin{tabular}{|*{10}{c|}}
+    \hline\textbf{Concept}
+        & \textbf{Design} & \textbf{Development} & \textbf{Integration} &
+        \textbf{Deployment} & \textbf{Maintenance} & \textbf{Retirement}\\\hline
+    X&X&X&X&\ding{51}&\ding{51}&\ding{51}\\\hline
+  \end{tabular}
+  \caption{Supply Chain Attack mitigation opportunities for \SYSTEM{} in the
+  software development and deployment life cycle}\label{tbl:attacks}
+\end{table*}
+
 Using the internet to receive data is a remarkably simple and painless process
 for application developers and end users alike. When using a browser such as
 Google Chrome, this standard and familiar process can be summarized as: 1) a
@@ -55,18 +67,6 @@ adversary can render HTML-based additions to HTTPS such as Subresource Integrity
 hosts the software or its update/maintenance mechanism. Protected encrypted
 communications mean nothing if the contents of those communications are
 themselves corrupted before the fact.
-
-\begin{table*}[t]
-  \centering
-  \begin{tabular}{|*{10}{c|}}
-    \hline\textbf{Concept}
-        & \textbf{Design} & \textbf{Development} & \textbf{Integration} &
-        \textbf{Deployment} & \textbf{Maintenance} & \textbf{Retirement}\\\hline
-    X&X&X&X&\ding{51}&\ding{51}&\ding{51}\\\hline
-  \end{tabular}
-  \caption{Supply Chain Attack mitigation opportunities for \SYSTEM{} in the
-  software development and deployment life cycle}\label{tbl:attacks}
-\end{table*}
 
 More broadly, these kinds of attacks are known as \textbf{Supply Chain Attacks}
 (SCA). SCAs are the compromise of software source code via cyber attack, insider
@@ -137,5 +137,5 @@ In summary, our primary contributions are:
 \end{itemize}
 
 We release the \SYSTEM{} solution to the community as open source software to
-prompt exploration of the \SYSTEM{} approach.\footnote{The Chrome extension is
-available at https://tinyurl.com/dnschk-actual}.
+prompt exploration of the \SYSTEM{} approach\footnote{The \SYSTEM{} Chrome
+extension is available at https://tinyurl.com/dnschk-actual}.
