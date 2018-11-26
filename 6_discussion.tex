@@ -49,9 +49,9 @@ have to compromise the DNS zone or whichever distributed system hosted the
 mappings between Resource Identifers and Authoritative Hashes. \\
 
 \noindent\textbf{Content-MD5 Header.} The Content-MD5 header field is a
-deprecated HTTP header that delivers a checksum similar to that of Subresource
-Integrity. It was removed from the HTTP/1.1 specification because of the
-inconsistent implementation of partial response handling between
+deprecated HTTP header that delivers a checksum similar to those used by
+Subresource Integrity. It was removed from the HTTP/1.1 specification because of
+the inconsistent implementation of partial response handling between
 vendors~\cite{HTTP1.1}. Further, the header could be easily stripped off or
 modified by proxies and other intermediaries~\cite{MD5Header}.
 
@@ -60,37 +60,37 @@ modified by proxies and other intermediaries~\cite{MD5Header}.
 \subsubsection{DNSSEC Adoption is Slow}
 
 DNSSEC is hard to configure correctly~\cite{DNSSEC-is-hard-1, DNSSEC-is-hard-2,
-DNSSEC-is-hard-3, DNSSEC-is-hard-4}. However, it does not make the DNS network,
-i.e. properly configured DNS servers, any more vulnerable to amplification or
-other types of reflection attacks~\cite{Ariya} than it already is as a UDP-based
-content delivery service~\cite{USCERT, Vixie}. DNSSEC does arguably make
-services that rely on it significantly more fragile because DNSSEC is hard to
-configure correctly.
+DNSSEC-is-hard-3, DNSSEC-is-hard-4}, which make services that attempt to deploy
+it significantly more \textit{fragile}. For instance, services deploying DNSSEC
+become vulnerable to small DNSSEC resource record misconfigurations that can
+take entire services offline with varying levels of conspicuousness. Further,
+any DNS-related issue becomes harder to diagnose with DNSSEC enabled. Some
+registrars and DNS operators do not offer DNSSEC capability at all, restrict
+access behind a paywall, or lack an interface for proper key
+management~\cite{Cloudflare}. Despite ongoing efforts to simply DNSSEC
+deployment, adoption remains low for these reasons. Only around 3\% of Fortune
+1000 and 9\% of university domains, a number that is very slowly on the
+rise~\cite{NIST}.
 
-Further, DNSSEC adoption across is small and slow. Worldwide, less than 14\% of
-DNS requests have DNSSEC validated by the resolver~\cite{APNIC} but thanks to
-community initiatives is on the rise~\cite{Cloudflare} (use graph as figure from
-bit.ly/2zSR7A6).
+On the client side, adoption of DNSSEC validation by DNS resolvers is low and
+growth is slow. \figref{apnic} shows that, worldwide, some 14\% of DNS requests
+have DNSSEC extensions validated by the resolver towards the end of
+2018~\cite{APNIC}. The overall trend is positive thanks to large public
+resolvers like Google (8.8.8.8 and 8.8.4.4) and Cloudflare/APNIC (1.1.1.1), as
+well as the increasing number of compliant local/ISP resolvers.
 
-\TODO{From SO: DNSSEC does have risks! It's hard to use, and harder to use
-correctly. Often it requires a new work flow for zone data changes, registrar
-management, installation of new server instances. All of that has to be tested
-and documented, and whenever something breaks that's related to DNS, the DNSSEC
-technology must be investigated as a possible cause. And the end result if you
-do everything right will be that, as a zone signer, your own online content and
-systems will be more fragile to your customers. As a far-end server operator,
-the result will be, that everyone else's content and systems will be more
-fragile to you. These risks are often seen to outweigh the benefits, since the
-only benefit is to protect DNS data from in-flight modification or substitution.
-That attack is so rare as to not be worth all this effort. We all hope DNSSEC
-becomes ubiquitous some day, because of the new applications it will enable. But
-the truth is that today, DNSSEC is all cost, no benefit, and with high risks.
-The overwhelming majority of domain name zone administrators appear to be just
-not aware of DNSSEC, or, even if they want to sign their zone, they cannot
-publish a signed zone because of limitations in the service provided by the
-registrar, or if they are aware and could sign their zone, then they don’t
-appear to judge that the perceived benefit of DNSSEC-signing their zone
-adequately offsets the cost of maintaining the signed zone.}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{apnic.png}
+    \caption{APNIC estimate of global DNS resolvers (Google PDNS as well as
+    local resolvers) performing DNSSEC validation from January 2016 to December
+    2018.}\label{fig:apnic}
+\end{figure}
+
+It should be noted that DNSSEC does not necessarily make the DNS network, i.e.
+properly configured DNS servers, more vulnerable to amplification or other types
+of reflection attacks~\cite{Ariya} than it already is as a UDP-based content
+delivery service~\cite{USCERT, Vixie}.
 
 \subsubsection{DNS-Specific Protocol Limitations}
 
@@ -154,7 +154,7 @@ Authoritative Hashes with purely URN-based DNS lookups that return specially
 formatted TXT records upon success. This would further simplify the deployment
 process for service administrators since DNS updates would be based upon the
 resource's contents instead of both its contents \textit{and where it is located
-physically on a distribution server}. It could additionally allow for additional
+physically on a distribution server}. It may also allow for additional
 confirmation methods of the identical resources in different domains and in
 different locations.
 
