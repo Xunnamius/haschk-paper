@@ -1,4 +1,53 @@
 \begin{abstract}
+  \TODO{This abstract is way to long. There is a lot of good stuff in
+    here, but much of it needs to be moved to the introduction.  The
+    goal should be to try to get the whole thing into 6 sentences.
+    Doing so will be hard, but that is sort of the point---the process
+    forces you to think about what is really key in your work. I
+    always start by answering the following: (1) What problem are we
+    trying to solve? (2) What has prior work done in this area? (3)
+    Why is it not sufficient to solve the problem? (4) What are we
+    proposing as an alternative? (5) How did we evaluate our approach?
+    (6) What is its potential impact?  Note that in the abstract, we
+    answer each of those questions with a sentence.  In the
+    introduction, each of those sentences gets blown into a paragraph
+    (where you can use a lot of the details in the original abstract).
+    Then in the rest of the paper, each one of those paragraphs gets
+    blown into a whole subsection.  \\ \\
+    Here is my attempt to distill the current abstract into six
+    sentences, each of which answers a corresponding question above (some answers I am not sure of, so we need to iterate on this):\\ \\
+    Downloading resources over the internet comes with many risks,
+    including the chance that a malicious actor has replaced the
+    resource you think you are accessing with a compromised version.
+    The current standard for addressing this risk is the use of
+    \emph{checksums} coupled with a secure transport layer: users
+    download a resource and compare its checksum with a posted
+    checksum from the developers to ensure a match.  Among the many
+    problems with the current use of checksums are: (1) user
+    apathy---for most users hand-calculating the checksum and
+    comparing to the published version are too tedious---and (2) a
+    malicious actor who compromised the resource could often easily
+    compromise the checksum as well.  In this paper we propose
+    \SYSTEM{}, a novel resource validation scheme---meant as a
+    complete replacement for current checksum based approaches---that
+    automates the tedious parts of verification to eliminate user
+    apathy, while leveraging \emph{<I am not sure what to put here>}
+    to separate the resource from its authentication code. We evaluate
+    \SYSTEM{} by implementing extensions to both a web browser
+    (Chrome) and FTP client (FileZilla) while \emph{<something about
+      the backend>}.  \emph{<Need some sentence on the
+      impact here---in a straight systems paper I would talk about performance win or energy savings, etc.>} \\ \\
+    Note that I had trouble in the last part of this abstract because,
+    in the original abstract, it is not clear what the proposed
+    solution actually is. Additionally, I think that the solution
+    should be described in two parts: the user-facing part
+    (implemented as the Chrome or FileZilla extension) and the
+    back-end part (implemented on DNSSEC or a DHT).  If you are okay
+    with the challenges I listed (user apathy and ease of compromising
+    the resource and the checksum) then this structure is a nice
+    mirror of the challenges and we should carry it through the
+    paper.}
+
 
 Downloading resources over the internet comes with considerable risk due to the
 general inability of the end user to verify the integrity of the resource
