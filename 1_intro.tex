@@ -24,9 +24,7 @@ popular form of the attack. Many devastating supply chain attacks occur late in
 the software development and deployment process, including \TODO{(choose three examples)}. Further, \TODO{(popular attacks at various levels, including CDNs)}.
 
 Discuss ``free," \ie no interface changes, no addition to resource download
-time, no additional burden on the end user (qualified statement).
-
-~\cite{DNSSEC}
+time, no additional burden on the end user (qualified statement).~\cite{DNSSEC}
 
 In summary, our primary contributions are:
 
@@ -34,22 +32,22 @@ In summary, our primary contributions are:
 
   \item We propose a novel practical defense against receiving malicious,
   corrupted, or compromised resources over the internet. Contrasted with current
-  solutions, our defense requires no UI or API interface changes at any level,
-  does not employ unreliable heuristics, does not interfere with other software
-  or extensions that also handle resource downloads, and can be transparently
-  deployed without adding to the \textit{fragility} of the system. It protects
-  end users whose software implements \SYSTEM{} while remaining unnoticeable to
-  users of whose software does not. Hence, \SYSTEM{} could be deployed
-  immediately.
+  solutions, our defense requires no source code or infrastructure changes at
+  any level other than DNS, does not employ unreliable heuristics, does not
+  interfere with other software or extensions that also handle resource
+  downloads, and can be transparently deployed without adding to the
+  \textit{fragility} of DNSSEC-enabled systems; it protects end users whose
+  software implements \SYSTEM{} while remaining unnoticeable to users of whose
+  software does not.
 
   \item We present our prototype \SYSTEM{} implementations for Google Chrome and
-  FileZilla and demonstrate its effectiveness in mitigating the consumption of
-  compromised resources, even when transmitted over a secure channel. To the
-  best of our knowledge, this is the \emph{first} system providing such
-  capabilities with little implementation cost and at no cost to the end user.
-  Further, we release the \SYSTEM{} solution to the community as open source
-  software \footnote{The Chrome extension is available at
-  https://tinyurl.com/dnschk-actual}.
+  FileZilla and demonstrate its effectiveness in automatically and transparently
+  mitigating the accidental consumption of compromised resources from a
+  compromised server hosting a compromised web portal. To the best of our
+  knowledge, this is the \emph{first} system providing such capabilities with
+  little implementation cost and at no cost to the end user. Further, we release
+  the \SYSTEM{} solution to the community as open source software\footnote{The
+  Chrome extension is available at https://tinyurl.com/dnschk-actual}.
 
   \item We carefully and extensively evaluate the security, scalability, and
   performance of our automated defense against resource corruption to
@@ -57,7 +55,7 @@ In summary, our primary contributions are:
   Specifically, we find no obstacles to efficient scalability given choice of
   distributed system and no performance overhead compared to downloads without
   \SYSTEM{}. We further provide a publicly accessible demonstration of
-  \SYSTEM{}'s utility via a patched HotCRP instance \footnote{The patched HotCRP
+  \SYSTEM{}'s utility via a patched HotCRP instance\footnote{The patched HotCRP
   instance is available at https://tinyurl.com/dnschk-hotcrp}.
 
 \end{itemize}
