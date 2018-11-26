@@ -2,31 +2,107 @@
 
 Using the internet to receive data is a remarkably simple and painless process
 for application developers and end users alike. When using a browser such as
-Google Chrome, this process can be summarized as: a user requests a server
-resource at some URL, the server responds with the desired resource, and then
-the browser completes downloading the resource.
+Google Chrome, this standard and familiar process can be summarized as: 1) a
+user requests a server resource at some URL, 2) the server responds with the
+desired resource, and finally 3) the browser completes downloading the resource.
 
-Unfortunately, downloading content over the internet can be risky.
+Unfortunately, and as most are already aware, downloading content over the
+internet can be extremely risky no matter the protocol. We can generally divide
+this risk into three categories: response authentication, communication
+confidentiality, and resource integrity. Response authentication allows us to
+determine (usually asymmetrically) if a response received at some destination
+indeed originates from its purported source. This is typically accomplished
+through the adoption of some Public Key Infrastructure (PKI) scheme.
+Communication confidentiality, on the other hand, allows us to keep the data
+transacted between two or more parties private except to said parties. This is
+typically accomplished through some combination of symmetric and asymmetric
+encryption. Finally, resource integrity allows us to verify that the data we are
+receiving is the data we are expecting to receive.
 
-Supply Chain Attacks (SCA) are the compromise of software source code via cyber
-attack, insider threat, or other attack on one or more phases of the development
-and deployment life cycle. These attacks are made possible due to proximity and
-have the goal of infecting and exploiting one or more victims---usually the
-software company's customer base. \SYSTEM{} only protects against SCAs that
-occur after the Authoritative Hash (AH) is calculated. AH calculation is
-necessarily more likely to occur later in the software development life cycle or
-very early in the deployment process. If an attacker is able to execute a
-successful SCA before the AH is calculated, \SYSTEM{} would propagate the
-compromised Authoritative Hash.
+When it comes to response authentication and communication confidentiality, the
+state of the art in production attack mitigation is Transport Layer Security
+(TLS) and its Hyper Text Transfer Protocol (HTTP)/PKI based implementation,
+HTTPS~\cite{TLS1.2, TLS1, TLS0}. Assuming well behaved certificate authorities
+and modern browsing software, a web server with HTTPS properly deployed
+mitigates myriad attack classes ranging from DNS-related and Man-in-the-Middle
+attacks to data theft, communication forgery, and sender repudiation.
 
-\TODO{(include table of supply chain stages that \SYSTEM{} is effective in)}
+Unfortunately, HTTPS and related protocols (HSTS, DNSSEC, etc) are not a
+panacea. Unlike authenticity and confidentiality, \textit{resource integrity}
+deals with the content of a communication; specifically: the bytes received at
+the end of a transaction are the bytes we expected to receive. For example, a
+binary expected to be 10MiB, when downloaded over the internet, should not be
+received as an 11MiB executable, even if the communication was confidential
+between parties and the receiver can verify that the resource came from the
+intended source. Similarly, it would be ill advised to execute a 10MiB binary
+that, for one reason or another, had half its bits flipped by the time it was
+received. This can occur despite the integrity guarantee provided by TLS/HTTPS
+because, as a \textit{communication} protocol, TLS only guarantees the integrity
+of each \textit{end to end communication} as an opaque payload via message
+authentication code (MAC). The integrity of the original payload as it pertains
+to the Application layer rather than the Transport layer is outside of the model
+addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 
-Although early Supply Chain Attacks are devastating, they are not the only
+Hence, despite the resilient nature of HTTPS and the powerful properties it
+guarantees, end users are still vulnerable to attacks on resource integrity.
+This can occur at the point of distribution, such as a compromised node in a
+third party CDN that delivers compromised malicious resources masquerading as
+popular public software libraries. \TODO{(choose an example from background
+section)}. It can occur when an adversary gains control of some aspect of the
+software deployment process, such as \TODO{(talk about NotPetya?)}. Moreover, an
+adversary can render HTML-based additions to HTTPS such as Subresource Integrity
+(SRI) and Content-MD5 HTTP headers ineffective by compromising the system that
+hosts the software or its update/maintenance mechanism. Protected encrypted
+communications mean nothing if the contents of those communications are
+themselves corrupted before the fact.
+
+\begin{table*}[t]
+  \centering
+  \begin{tabular}{|*{10}{c|}}
+    \hline\textbf{Concept}
+        & \textbf{Design} & \textbf{Development} & \textbf{Integration} &
+        \textbf{Deployment} & \textbf{Maintenance} & \textbf{Retirement}\\\hline
+    X&X&X&X&\ding{51}&\ding{51}&\ding{51}\\\hline
+  \end{tabular}
+  \caption{Supply Chain Attack mitigation opportunities for \SYSTEM{} in the
+  software development and deployment life cycle}\label{tbl:attacks}
+\end{table*}
+
+More broadly, these kinds of attacks are known as \textbf{Supply Chain Attacks}
+(SCA). SCAs are the compromise of software source code via cyber attack, insider
+threat, or other attack on one or more phases of the software development and
+deployment life cycle. These attacks are generally made possible due to
+proximity and have the goal of infecting and exploiting one or more
+victims---usually a software company's customer base. Software developers and
+distributors are most at risk of suffering from such attacks, and the global
+software community is at risk having the trust between software distributor and
+customer broken irreconcilably.
+
+SCAs are a well known problem as old as the internet itself. \TODO{(short blurb
+about a few of the solutions that we go into in depth in background)}. The state
+of the art is checksums. \TODO{(expoud on checksums and a bit about why they are
+ineffective)}. \TODO{(use Linux Mint example here?)}.
+
+In this paper, we propose \SYSTEM{}, \TODO{(deliniate between approach and
+implementations?)}. Unlike \TODO{(compare and contrast)}. \SYSTEM{} only
+protects against SCAs that occur after the Authoritative Hash (AH) is calculated
+(see \tblref{attacks}). AH calculation is necessarily more likely to occur later
+in the software development life cycle or very early in the deployment process.
+If an attacker is able to execute a successful SCA before the AH is calculated,
+\SYSTEM{} would propagate the compromised Authoritative Hash.
+
+\TODO{Although early Supply Chain Attacks are devastating, they are not the only
 popular form of the attack. Many devastating supply chain attacks occur late in
-the software development and deployment process, including \TODO{(choose three examples)}. Further, \TODO{(popular attacks at various levels, including CDNs)}.
+the software development and deployment process, including \TODO{(choose three
+examples)}. Further, \TODO{(popular attacks at various levels, including
+CDNs)}.}
 
-Discuss ``free," \ie no interface changes, no addition to resource download
-time, no additional burden on the end user (qualified statement).~\cite{DNSSEC}
+\TODO{Discuss ``free," \ie no interface changes, no addition to resource
+download time, no additional burden on the end user (qualified
+statement)}~\cite{DNSSEC}.
+
+\TODO{Although the process sounds simple and intuitive, X practical questions
+must be addressed (grab from and potentially shrink the new abstract?)}
 
 In summary, our primary contributions are:
 
@@ -47,17 +123,19 @@ In summary, our primary contributions are:
   mitigating the accidental consumption of compromised resources from a
   compromised server hosting a compromised web portal. To the best of our
   knowledge, this is the \emph{first} system providing such capabilities with
-  little implementation cost and at no cost to the end user. Further, we release
-  the \SYSTEM{} solution to the community as open source software\footnote{The
-  Chrome extension is available at https://tinyurl.com/dnschk-actual}.
+  little implementation cost and at no cost to the end user.
 
   \item We carefully and extensively evaluate the security, scalability, and
   performance of our automated defense against resource corruption to
   demonstrate the effectiveness and high practicality of the \SYSTEM{} approach.
   Specifically, we find no obstacles to efficient scalability given choice of
   distributed system and no performance overhead compared to downloads without
-  \SYSTEM{}. We further provide a publicly accessible demonstration of
-  \SYSTEM{}'s utility via a patched HotCRP instance\footnote{The patched HotCRP
-  instance is available at https://tinyurl.com/dnschk-hotcrp}.
+  \SYSTEM{}. We further provide a publicly accessible empirical demonstration of
+  \SYSTEM{}'s protective utility via a patched HotCRP instance\footnote{The
+  patched HotCRP instance is available at https://tinyurl.com/dnschk-hotcrp}.
 
 \end{itemize}
+
+We release the \SYSTEM{} solution to the community as open source software to
+prompt exploration of the \SYSTEM{} approach.\footnote{The Chrome extension is
+available at https://tinyurl.com/dnschk-actual}.

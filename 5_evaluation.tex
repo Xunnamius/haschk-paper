@@ -65,10 +65,15 @@ zone(s) that allow \SYSTEM{} to function. Therefore, the adversary can make the
 user download a compromised resource and also return a (compromised) AH that
 legally corresponds to said compromised resource.
 
-\TODO{Include threat model for Chrome extension and FTP patch. Note the
-additional Chrome vulnerability solved with a timer and the fact that we're
-assuming Chrome is giving us an accurate referrer URL on its
-\texttt{DownloadItem}s, perhaps in limitations?}
+\subsubsection{Determining the Origin Domain}
+
+If an adversary manages to compromise a web page/server, they have two options. They can mutate the resource directly, which would be observable via DNSCHK. They could also mutate the web/download page itself, replacing the anchor with a malicious one that points to a compromised resource on the adversary's remote system. This system could be configured with valid DNSCHK DNS TXT records, allowing the adversary to trick DNSCHK into green lighting the resource without complaint. Similarly, an adversary could redirect the user to an valid and innocuous (but compromised) page that very quickly redirects the user again to the compromised resource with the goal of tricking DNSCHK.
+
+In order to prevent such implementation-level attacks, we make a distinction between the domain that the hyperlink containing the desired resource references and the OD—or the domain of the document within which said hyperlink exists. The extension must be implemented such that the OD is resolved as early as possible in the page loading process. The scope of the OD is at the tab level, meaning there is one OD determined for each open browser tab. Once determined for a tab, the OD should not be recalculated for some period of time. If the browser is navigated within this time period, the user will be asked to verify that the OD is what they expect it to be (should be a familiar URL).
+
+We implement this mitigation using chrome Download API's DownloadItem::referrer property as the OD. We catch redirection attacks by assuming any page that begins a download in under 3 seconds is suspicious and requires affirmation by the user.
+
+\TODO{Figuring out OD for FTP is really easy, though}
 
 \subsection{Real-World Resource Corruption Detection with Google Chrome and HotCRP}
 
