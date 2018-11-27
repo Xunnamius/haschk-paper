@@ -12,24 +12,40 @@
   software development and deployment life cycle}\label{tbl:attacks}
 \end{table*}
 
+\TODO{I have some notes scattered through the intro, but I think this
+  whole section needs a bit of reorganization to tighten it up. I think you need the following structure:
+\\ \\
+Para1: Downloading is easy but risky and the risk is dividided into three categories. \\ \\
+Para2: Narrow scope of the paper to third risk, and relate to supply chain attacks.  \\ \\
+Para3: State of the art dealing with supply chain attacks: checksums. \\ \\
+Para4: Why checksums are bad (may be folded into previous para): (1) tedious for users and (2) easily compromised by many existing supply chain attacks (not sure about the last one). \\ \\
+Para5: DNSCHK as replacement for checksums that addresses both problems through (1) simple extensions to browsers or other tools and (2) whatever the general name is for the backend stuff which can be implemented on DNSSEC or a DHT (or maybe even something else we haven't thought of). \\ \\
+Para6: How do we evaluate it. \\ \\ 
+Para7: List of contributions at end of current intro. }
+
+
 Using the internet to receive data is a remarkably simple and painless process
 for application developers and end users alike. When using a browser such as
 Google Chrome, this standard and familiar process can be summarized as: 1) a
 user requests a server resource at some URL, 2) the server responds with the
 desired resource, and finally 3) the browser completes downloading the resource.
 
-Unfortunately, and as most are already aware, downloading content over the
-internet can be extremely risky no matter the protocol. We can generally divide
-this risk into three categories: response authentication, communication
-confidentiality, and resource integrity. Response authentication allows us to
-determine (usually asymmetrically) if a response received at some destination
-indeed originates from its purported source. This is typically accomplished
-through the adoption of some Public Key Infrastructure (PKI) scheme.
-Communication confidentiality, on the other hand, allows us to keep the data
-transacted between two or more parties private except to said parties. This is
-typically accomplished through some combination of symmetric and asymmetric
-encryption. Finally, resource integrity allows us to verify that the data we are
-receiving is the data we are expecting to receive.
+Unfortunately, and as most are already aware, downloading content over
+the internet can be extremely risky no matter the protocol.
+\TODO{Following sentence needs one or more citations to back up the
+  claim that this is generally how things are done}. We can generally
+divide this risk into three categories: response authentication,
+communication confidentiality, and resource integrity. Response
+authentication allows us to determine (usually asymmetrically) if a
+response received at some destination indeed originates from its
+purported source. This is typically accomplished through the adoption
+of some Public Key Infrastructure (PKI) scheme.  Communication
+confidentiality, on the other hand, allows us to keep the data
+transacted between two or more parties private except to said parties.
+This is typically accomplished through some combination of symmetric
+and asymmetric encryption. Finally, resource integrity allows us to
+verify that the data we are receiving is the data we are expecting to
+receive.
 
 When it comes to response authentication and communication confidentiality, the
 state of the art in production attack mitigation is Transport Layer Security
@@ -39,21 +55,34 @@ and modern browsing software, a web server with HTTPS properly deployed
 mitigates myriad attack classes ranging from DNS-related and Man-in-the-Middle
 attacks to data theft, communication forgery, and sender repudiation.
 
-Unfortunately, HTTPS and related protocols (HSTS, DNSSEC, etc) are not a
-panacea. Unlike authenticity and confidentiality, \textit{resource integrity}
-deals with the content of a communication; specifically: ensuring the bytes
-received at the end of a transaction are the bytes we expected to receive. For
-example, a binary expected to be 10MiB, when downloaded over the internet,
-should not be received as an 11MiB executable, even if the communication was
-confidential between parties and the receiver can verify that the resource came
-from the intended source. Similarly, it would be ill advised to execute a 10MiB
-binary that, for one reason or another, had half its bits flipped by the time it
-was received. This can occur despite the integrity guarantee provided by
-TLS/HTTPS because, as a \textit{communication} protocol, TLS only guarantees the
-integrity of each \textit{end to end communication} as an opaque payload via
-message authentication code (MAC). The integrity of the original payload as it
-pertains to the Application layer rather than the Transport layer is outside of
-the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
+\TODO{I know this is pedantic as hell, but you don't want to start two
+  paragraphs in the intro with ``Unfortunately,'' because that word is
+  a signal that you are about to introduce the problem the paper
+  solves.  I think the issue is easily fixed in this instance by
+  changing the first sentence of the second paragraph to just start
+  with ``Downloading content over the internet can be extremely
+  risky...'' }  Unfortunately, HTTPS and related protocols (HSTS,
+DNSSEC, etc) are not a panacea. Unlike authenticity and
+confidentiality, \textit{resource integrity} deals with the content of
+a communication; specifically: ensuring the bytes received at the end
+of a transaction are the bytes we expected to receive. For example, a
+binary expected to be 10MiB, when downloaded over the internet, should
+not be received as an 11MiB executable, even if the communication was
+confidential between parties and the receiver can verify that the
+resource came from the intended source. Similarly, it would be ill
+advised to execute a 10MiB binary that, for one reason or another, had
+half its bits flipped by the time it was received. This can occur
+despite the integrity guarantee provided by TLS/HTTPS because, as a
+\textit{communication} protocol, TLS only guarantees the integrity of
+each \textit{end to end communication} as an opaque payload via
+message authentication code (MAC). The integrity of the original
+payload as it pertains to the Application layer rather than the
+Transport layer is outside of the model addressed by TLS and
+HTTPS~\cite{TLS1.2, HTTPS}.  \TODO{I actually think you still don't
+  want the ``Unfortunately'' on this paragraph either.  I believe you
+  want the problem to be the current use of checksums to solve the
+  resource integrity problem, so the next paragraph should be the one
+  that gets the ``Unfortunately...''}
 
 Hence, despite the resilient nature of HTTPS and the powerful security
 properties it guarantees, end users are still vulnerable to attacks on resource
