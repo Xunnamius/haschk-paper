@@ -1,33 +1,5 @@
 \section{Introduction} \label{sec:introduction}
 
-\begin{table*}[th]
-  \centering
-  \begin{tabular}{|*{10}{c|}}
-    \hline\textbf{Concept}
-        & \textbf{Design} & \textbf{Development} & \textbf{Integration} &
-        \textbf{Deployment} & \textbf{Maintenance} & \textbf{Retirement}\\\hline
-    X&X&X&X&\ding{51}&\ding{51}&\ding{51}\\\hline
-  \end{tabular}
-  \caption{Supply Chain Attack mitigation opportunities for \SYSTEM{} in the
-  software development and deployment life cycle}\label{tbl:attacks}
-\end{table*}
-
-\TODO{DELETE: With this research, we explore a novel method of verifying the
-integrity of resources downloaded over the internet that is a complete
-replacement for traditional checksums. We approach the problem with three key
-concerns in mind: a) implementations provide security guarantees transparently
-without adding any extra burden on the end user, \ie neither grappling with a
-new user interface nor any additional labor is required during standard usage;
-b) configuring the validation method is simple for service administrators and
-system operators to integrate and deploy; and c) no new HTML or JavaScript
-language additions, application source changes, or web server/infrastructure
-alterations are necessary. Hence, we propose \SYSTEM{}, a novel automated
-resource validation method that is transparent to end users and simple for
-administrators to deploy. We implement \SYSTEM{} as a proof-of-concept Google
-Chrome extension as well as a patch to the FileZilla FTP client. We evaluate the
-security, scalability, and performance of the \SYSTEM{} approach and provide a
-publicly accessible demonstration of its utility via a patched HotCRP instance.}
-
 \TODO{Downloading is easy but risky and the risk is dividided into three
 categories.}
 
@@ -36,12 +8,13 @@ to lead into this next line?} Downloading resources over the internet comes with
 considerable risk. \TODO{\sout{Following sentence needs one or more citations to
 back up the claim that this is generally how things are done.} Changed it to be
 less declarative since this is an abstraction that we are using to describe
-\SYSTEM{}'s utility}. We divide this risk into three categories: response
-authentication, communication confidentiality, and resource integrity.
+\SYSTEM{}'s utility, does that work?}. We divide this risk into three
+categories: response authentication, communication confidentiality, and resource
+integrity.
 
 Response authentication allows us to determine if a response received indeed
 originates from its purported source. This can be accomplished through the
-adoption of a Public Key Infrastructure (PKI) scheme. Communication
+adoption of a Public Key Infrastructure (PKI) scheme~\cite{PKI}. Communication
 confidentiality, on the other hand, allows us to keep the data transacted
 between two or more parties private except to said parties. This is can be
 accomplished through some form of symmetric or asymmetric encryption. Finally,
@@ -54,7 +27,7 @@ attacks.}
 When it comes to response authentication and communication confidentiality
 concerns on the internet, the state of the art in attack mitigation is Transport
 Layer Security (TLS) and its Hyper Text Transfer Protocol (HTTP)/PKI based
-implementation, HTTPS~\cite{TLS1.2, TLS1, TLS0, HTTPS}. Assuming well behaved
+implementation, HTTPS~\cite{TLS1.2, TLS1, TLS0, HTTPS, PKI}. Assuming well behaved
 certificate authorities and modern browsing software, TLS and related protocols,
 when properly deployed, mitigate myriad authentication and confidentiality
 attack classes ranging from DNS-related and Man-in-the-Middle attacks to data
@@ -65,15 +38,13 @@ of each \textit{end to end communication} via message authentication code
 (MAC)~\cite{TLS1.2}. But protected encrypted communications mean nothing if the
 contents of those communications are corrupted before the fact. Hence, the
 integrity of resources at the application layer rather than the transport layer
-is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}; \ie
-Protected encrypted communications mean nothing if the contents of those
-communications are themselves corrupted before the fact.
+is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 
-More broadly, attacks on resource integrity are known as \textbf{Supply Chain
-Attacks} (SCA)~\cite{SCA}. SCAs are the compromise of software source code via
-cyber attack, insider threat, or other attack on one or more phases of the
-software development life cycle (see \figref{attacks}). These attacks have the
-goal of infecting and exploiting one or more victims.
+Attacks on resource integrity are a subset of \emph{Supply Chain Attacks}
+(SCA)~\cite{SCA}. SCAs are the compromise of software source code via cyber
+attack, insider threat, or other attack on one or more phases of the software
+development life cycle (see \figref{attacks}). These attacks have the goal of
+infecting and exploiting one or more victims.
 
 \TODO{State of the art dealing with supply chain attacks: checksums.}
 
@@ -160,6 +131,22 @@ In summary, our primary contributions are:
 We release the \SYSTEM{} solution to the community as open source software to
 prompt exploration of the \SYSTEM{} approach\footnote{The \SYSTEM{} Chrome
 extension is available at https://tinyurl.com/dnschk-actual}.
+
+\TODO{DELETE: With this research, we explore a novel method of verifying the
+integrity of resources downloaded over the internet that is a complete
+replacement for traditional checksums. We approach the problem with three key
+concerns in mind: a) implementations provide security guarantees transparently
+without adding any extra burden on the end user, \ie neither grappling with a
+new user interface nor any additional labor is required during standard usage;
+b) configuring the validation method is simple for service administrators and
+system operators to integrate and deploy; and c) no new HTML or JavaScript
+language additions, application source changes, or web server/infrastructure
+alterations are necessary. Hence, we propose \SYSTEM{}, a novel automated
+resource validation method that is transparent to end users and simple for
+administrators to deploy. We implement \SYSTEM{} as a proof-of-concept Google
+Chrome extension as well as a patch to the FileZilla FTP client. We evaluate the
+security, scalability, and performance of the \SYSTEM{} approach and provide a
+publicly accessible demonstration of its utility via a patched HotCRP instance.}
 
 \TODO{DELETE: Hence, despite the resilient nature of HTTPS and the powerful
 security properties it guarantees, end users are still vulnerable to attacks on
