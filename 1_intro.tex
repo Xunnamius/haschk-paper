@@ -60,16 +60,24 @@ when properly deployed, mitigate myriad authentication and confidentiality
 attack classes ranging from DNS-related and Man-in-the-Middle attacks to data
 theft, communication forgery, and sender repudiation.
 
-More broadly, these kinds of resource integrity attacks are known as
-\textbf{Supply Chain Attacks} (SCA)~\cite{SCA}. SCAs are the compromise of
-software source code via cyber attack, insider threat, or other attack on one or
-more phases of the software development life cycle (see \figref{attacks}). These
-attacks have the goal of infecting and exploiting one or more target victims.
+However, as a \textit{communication} protocol, TLS only guarantees the integrity
+of each \textit{end to end communication} via message authentication code
+(MAC)~\cite{TLS1.2}. But protected encrypted communications mean nothing if the
+contents of those communications are corrupted before the fact. Hence, the
+integrity of resources at the application layer rather than the transport layer
+is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}; \ie
+Protected encrypted communications mean nothing if the contents of those
+communications are themselves corrupted before the fact.
+
+More broadly, attacks on resource integrity are known as \textbf{Supply Chain
+Attacks} (SCA)~\cite{SCA}. SCAs are the compromise of software source code via
+cyber attack, insider threat, or other attack on one or more phases of the
+software development life cycle (see \figref{attacks}). These attacks have the
+goal of infecting and exploiting one or more victims.
 
 Ensuring the integrity of resources exchanged over the internet despite SCAs and
 other active attacks is a well studied problem~\cite{MD5Header, HTTP1.1, HTTPS,
-SRI, LF, OpenPGP1, DNSSEC}. The state of the art is checksums. \TODO{(expoud on
-checksums; link it to the attacks figure)}.
+SRI, LF, OpenPGP1, DNSSEC}. The state of the art  is checksums.
 
 \TODO{State of the art dealing with supply chain attacks: checksums.}
 
@@ -95,12 +103,7 @@ as an 11MiB executable, even if the communication was confidential between
 parties and the receiver can verify that the resource came from the intended
 source. Similarly, it would be ill advised to execute a 10MiB binary that, for
 one reason or another, had half its bits flipped by the time it was received.
-This can occur despite the integrity guarantee provided by TLS/HTTPS because, as
-a \textit{communication} protocol, TLS only guarantees the integrity of each
-\textit{end to end communication} as an opaque payload via message
-authentication code (MAC). The integrity of the original payload as it pertains
-to the Application layer rather than the Transport layer is outside of the model
-addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
+This can occur despite the integrity guarantee provided by TLS/HTTPS because, 
 
 \TODO{Why checksums are bad (may be folded into previous para): (1) tedious for
 users and (2) easily compromised by many existing supply chain attacks (not sure
@@ -116,9 +119,7 @@ aspect of the software deployment process, such as \TODO{(talk about
 NotPetya?)}. Moreover, an adversary can render HTML-based additions to HTTPS
 such as Content-MD5 header~\cite{MD5Header} and Subresource Integrity
 (SRI)~\cite{SRI} ineffective by compromising the system that hosts the software
-or its download portal or update/maintenance mechanism. Protected encrypted
-communications mean nothing if the contents of those communications are
-themselves corrupted before the fact.
+or its download portal or update/maintenance mechanism.
 
 \TODO{DNSCHK as replacement for checksums that addresses both problems through
 (1) simple extensions to browsers or other tools and (2) whatever the general
