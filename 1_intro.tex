@@ -27,24 +27,23 @@ attacks.}
 When it comes to response authentication and communication confidentiality
 concerns on the internet, the state of the art in attack mitigation is Transport
 Layer Security (TLS) and its Hyper Text Transfer Protocol (HTTP)/PKI based
-implementation, HTTPS~\cite{TLS1.2, TLS1, TLS0, HTTPS, PKI}. Assuming well behaved
-certificate authorities and modern browsing software, TLS and related protocols,
-when properly deployed, mitigate myriad authentication and confidentiality
-attack classes ranging from DNS-related and Man-in-the-Middle attacks to data
-theft, communication forgery, and sender repudiation.
+implementation, HTTPS~\cite{TLS1.2, TLS1, TLS0, HTTPS, PKI}. Assuming well
+behaved certificate authorities and modern browsing software, TLS and related
+protocols, when properly deployed, mitigate myriad attacks on authentication
+confidentiality.
 
 However, as a \textit{communication} protocol, TLS only guarantees the integrity
 of each \textit{end to end communication} via message authentication code
 (MAC)~\cite{TLS1.2}. But protected encrypted communications mean nothing if the
 contents of those communications are corrupted before the fact. Hence, the
-integrity of resources at the application layer rather than the transport layer
-is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
+integrity of resources at the application layer (rather than the transport
+layer) is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 
-Attacks on resource integrity are a subset of \emph{Supply Chain Attacks}
-(SCA)~\cite{SCA}. SCAs are the compromise of software source code via cyber
-attack, insider threat, or other attack on one or more phases of the software
-development life cycle (see \figref{attacks}). These attacks have the goal of
-infecting and exploiting one or more victims.
+Attacks on resource integrity can be considered a subset of \emph{Supply Chain
+Attacks} (SCA)~\cite{SCA}. SCAs are the compromise of software source code via
+cyber attack, insider threat, or other attack on one or more phases of the
+software development life cycle (see \figref{attacks}). These attacks have the
+goal of indirectly infecting and exploiting one or more victims.
 
 \TODO{State of the art dealing with supply chain attacks: checksums.}
 
@@ -77,7 +76,7 @@ In this paper, we propose \SYSTEM{}, \TODO{(deliniate between approach and
 implementations?)}. Unlike \TODO{(compare and contrast)}.
 
 As a replacement for manual checksum verification, \SYSTEM{} addresses a similar
-security model and   (see \tblref{attacks}). AH calculation is necessarily more
+security model and (see \tblref{attacks}). AH calculation is necessarily more
 likely to occur later in the software development life cycle or very early in
 the deployment process. If an attacker is able to execute a successful SCA
 before the AH is calculated, \SYSTEM{} would propagate the compromised
