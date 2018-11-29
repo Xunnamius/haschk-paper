@@ -39,14 +39,14 @@ less declarative since this is an abstraction that we are using to describe
 \SYSTEM{}'s utility}. We divide this risk into three categories: response
 authentication, communication confidentiality, and resource integrity.
 
-Response authentication allows us to determine (usually asymmetrically) if a
-response received indeed originates from its purported source. This can be
-accomplished through the adoption of a Public Key Infrastructure (PKI) scheme.
-Communication confidentiality, on the other hand, allows us to keep the data
-transacted between two or more parties private except to said parties. This is
-can be accomplished through some form of symmetric or asymmetric encryption.
-Finally, resource integrity allows us to verify that the data we are receiving
-is the data we are expecting to receive.
+Response authentication allows us to determine if a response received indeed
+originates from its purported source. This can be accomplished through the
+adoption of a Public Key Infrastructure (PKI) scheme. Communication
+confidentiality, on the other hand, allows us to keep the data transacted
+between two or more parties private except to said parties. This is can be
+accomplished through some form of symmetric or asymmetric encryption. Finally,
+resource integrity allows us to verify that the data we are receiving is the
+data we are expecting to receive.
 
 \TODO{Narrow scope of the paper to third risk, and relate to supply chain
 attacks.}
@@ -59,6 +59,17 @@ certificate authorities and modern browsing software, TLS and related protocols,
 when properly deployed, mitigate myriad authentication and confidentiality
 attack classes ranging from DNS-related and Man-in-the-Middle attacks to data
 theft, communication forgery, and sender repudiation.
+
+More broadly, these kinds of resource integrity attacks are known as
+\textbf{Supply Chain Attacks} (SCA)~\cite{SCA}. SCAs are the compromise of
+software source code via cyber attack, insider threat, or other attack on one or
+more phases of the software development life cycle (see \figref{attacks}). These
+attacks have the goal of infecting and exploiting one or more target victims.
+
+Ensuring the integrity of resources exchanged over the internet despite SCAs and
+other active attacks is a well studied problem~\cite{MD5Header, HTTP1.1, HTTPS,
+SRI, LF, OpenPGP1, DNSSEC}. The state of the art is checksums. \TODO{(expoud on
+checksums; link it to the attacks figure)}.
 
 \TODO{State of the art dealing with supply chain attacks: checksums.}
 
@@ -91,6 +102,10 @@ authentication code (MAC). The integrity of the original payload as it pertains
 to the Application layer rather than the Transport layer is outside of the model
 addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 
+\TODO{Why checksums are bad (may be folded into previous para): (1) tedious for
+users and (2) easily compromised by many existing supply chain attacks (not sure
+about the last one).}
+
 Hence, despite the resilient nature of HTTPS and the powerful security
 properties it guarantees, end users are still vulnerable to attacks on resource
 integrity. This can occur at the point of distribution, such as a compromised
@@ -104,12 +119,6 @@ such as Content-MD5 header~\cite{MD5Header} and Subresource Integrity
 or its download portal or update/maintenance mechanism. Protected encrypted
 communications mean nothing if the contents of those communications are
 themselves corrupted before the fact.
-
-\TODO{Why checksums are bad (may be folded into previous para): (1) tedious for
-users and (2) easily compromised by many existing supply chain attacks (not sure
-about the last one).}
-
-
 
 \TODO{DNSCHK as replacement for checksums that addresses both problems through
 (1) simple extensions to browsers or other tools and (2) whatever the general
@@ -126,16 +135,7 @@ maybe even something else we haven't thought of).}
 
 
 
-More broadly, these kinds of resource integrity attacks are known as
-\textbf{Supply Chain Attacks} (SCA)~\cite{}. SCAs are the compromise of software
-source code via cyber attack, insider threat, or other attack on one or more
-phases of the software development life cycle (see \figref{attacks}). These
-attacks have the goal of infecting and exploiting one or more target victims.
 
-Ensuring the integrity of resources exchanged over the internet despite SCAs and
-other active attacks is an incredibly well studied problem~\cite{MD5Header,
-HTTP1.1, HTTPS, SRI, LF, OpenPGP1, DNSSEC}. The state of the art is checksums.
-\TODO{(expoud on checksums; link it to the attacks figure)}.
 
 Unfortunately, checksums are not a viable solution. \TODO{(expound on ineffectiveness;
 use Linux Mint example here?)}.
