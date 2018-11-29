@@ -10,29 +10,27 @@ United States~\cite{SCA-HAVEX}. In 2012, hackers compromised an official
 phpMyAdmin download mirror hosted by reputable software provider SourceForge.
 The backdoored version of the popular database frontend was downloaded by
 hundreds of users, potentially allowing attackers to gain access to private
-customer data~\cite{SCA-PMA}. In 2016, hackers broke into the Linux Mint
-distribution server and replaced a legitimate Mint ISO with one containing a
-backdoor, infecting hundreds of machines with the malware~\cite{SCA-MINT1,
+customer data~\cite{SCA-PMA1, SCA-PMA2}. In 2016, hackers broke into the Linux
+Mint distribution server and replaced a legitimate Mint ISO with one containing
+a backdoor, infecting hundreds of machines with the malware~\cite{SCA-MINT1,
 SCA-MINT2}. Over a four day period in 2017, users of the popular HandBrake open
 source video transcoder on Mac/OSX were made aware that, along with their
 expected video software, they may have also downloaded a trojan that was
-uploading their sensitive data to a remote server. HandBreak developers
-recommended users perform checksum validation to determine if their install was
-compromised.
+uploading their sensitive data to a remote server~\cite{SCA-HB1}. HandBreak
+developers recommended users perform checksum validation to determine if their
+install was compromised~\cite{SCA-HB2}.
 
-As every internet user is most certainly aware, downloading resources over the
-internet comes with considerable risk. We divide this risk into three
+As every internet user is certainly aware, downloading resources over the
+internet comes with considerable risk. This risk can be divided into three
 categories: response authentication, communication confidentiality, and resource
-integrity.
-
-Response authentication allows us to determine if a response received indeed
-originates from its purported source. This can be accomplished through the
-adoption of a Public Key Infrastructure (PKI) scheme~\cite{PKI}. Communication
-confidentiality, on the other hand, allows us to keep the data transacted
-between two or more parties private except to said parties. This is can be
-accomplished through some form of symmetric or asymmetric encryption. Finally,
-resource integrity allows us to verify that the data we are receiving is the
-data we are expecting to receive.
+integrity. Response authentication allows us to determine if a response received
+indeed originates from its purported source. This can be accomplished through,
+for instance, the adoption of a Public Key Infrastructure (PKI)
+scheme~\cite{PKI}. Communication confidentiality, on the other hand, allows us
+to keep the data transacted between two or more parties private except to said
+parties. This is can be accomplished through some form of encryption, such as
+AES~\cite{AES}. Finally, resource integrity allows us to verify that the data we
+are receiving is the data we are expecting to receive.
 
 \TODO{Narrow scope of the paper to third risk, and relate to supply chain
 attacks.}
@@ -53,13 +51,13 @@ integrity of resources at the application layer (rather than the transport
 layer) is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 
 Attacks on resource integrity can be considered a subset of \emph{Supply Chain
-Attacks} (SCA). Rather than attack an organization directly, SCAs are
-the compromise of an organization's software source code (or any product) via
-cyber attack, insider threat, upstream asset compromise, trusted hardware/vendor
+Attacks} (SCA). Rather than attack an organization directly, SCAs are the
+compromise of an organization's software source code (or any product) via cyber
+attack, insider threat, upstream asset compromise, trusted hardware/vendor
 compromise, or other attack on one or more phases of the software development
-life cycle. These attacks are hard to prevent, hard to detect, and have the goal
-of infecting and exploiting victims by abusing the trust between consumer and
-software vendor~\cite{SCA}.
+life cycle. These attacks are hard to detect, even harder to prevent, and have
+the goal of infecting and exploiting victims by abusing the trust between
+consumer and software vendor~\cite{SCA}.
 
 \TODO{State of the art dealing with supply chain attacks: checksums.}
 
@@ -76,7 +74,8 @@ used to verify a resource’s integrity to an end user.
 users and (2) easily compromised by many existing supply chain attacks (not sure
 about the last one).}
 
-\TODO{Back to the Linux Mint example. The hacker changed the checksum too, because they hacked the host via a common wordpress vulnerability.}
+\TODO{Back to the Linux Mint example? The hacker changed the checksum too,
+because they hacked the host via a common wordpress vulnerability.}
 
 Checksums are problematic for a whole host of reasons, the foremost being that
 the clear majority of end users will not be burdened with manually calculating
@@ -101,6 +100,8 @@ before the AH is calculated, \SYSTEM{} would propagate the compromised
 Authoritative Hash.
 
 \TODO{How do we evaluate it.}
+
+\TODO{Massage this:}
 
 We carefully and extensively evaluate the security, scalability, and performance
 of our automated defense against resource corruption to demonstrate the
@@ -132,7 +133,8 @@ In summary, our primary contributions are:
   knowledge, this is the \emph{first} system providing such capabilities with
   little implementation cost and at no cost to the end user.
 
-  \item We carefully and extensively evaluate the security, scalability, and
+  \item \TODO{Massage this (a lot can be cut out since it's talked about
+  above):} We carefully and extensively evaluate the security, scalability, and
   performance of our automated defense against resource corruption to
   demonstrate the effectiveness and high practicality of the \SYSTEM{} approach.
   Specifically, we find no obstacles to efficient scalability given choice of
@@ -173,15 +175,3 @@ NotPetya?)}. Moreover, an adversary can render HTML-based additions to HTTPS
 such as Content-MD5 header~\cite{MD5Header} and Subresource Integrity
 (SRI)~\cite{SRI} ineffective by compromising the system that hosts the software
 or its download portal or update/maintenance mechanism.}
-
-\TODO{DELETE: HTTPS and related protocols (HSTS, DNSSEC, etc) are not a panacea,
-however. Unlike authenticity and confidentiality, \textit{resource integrity}
-deals with the content of a communication; specifically: ensuring the bytes
-received at the end of a transaction are the bytes we expected to receive. For
-example, a binary expected to be 10MiB, when downloaded over the internet,
-should not be received as an 11MiB executable, even if the communication was
-confidential between parties and the receiver can verify that the resource came
-from the intended source. Similarly, it would be ill advised to execute a 10MiB
-binary that, for one reason or another, had half its bits flipped by the time it
-was received. This can occur despite the integrity guarantee provided by
-TLS/HTTPS because,}
