@@ -12,16 +12,6 @@
   software development and deployment life cycle}\label{tbl:attacks}
 \end{table*}
 
-\TODO{I have some notes scattered through the intro, but I think this whole section needs a bit of reorganization to tighten it up. I think you need the following structure:
-\\ \\
-Para1: Downloading is easy but risky and the risk is dividided into three categories. \\ \\
-Para2: Narrow scope of the paper to third risk, and relate to supply chain attacks.  \\ \\
-Para3: State of the art dealing with supply chain attacks: checksums. \\ \\
-Para4: Why checksums are bad (may be folded into previous para): (1) tedious for users and (2) easily compromised by many existing supply chain attacks (not sure about the last one). \\ \\
-Para5: DNSCHK as replacement for checksums that addresses both problems through (1) simple extensions to browsers or other tools and (2) whatever the general name is for the backend stuff which can be implemented on DNSSEC or a DHT (or maybe even something else we haven't thought of). \\ \\
-Para6: How do we evaluate it. \\ \\
-Para7: List of contributions at end of current intro.}
-
 \TODO{DELETE: With this research, we explore a novel method of verifying the
 integrity of resources downloaded over the internet that is a complete
 replacement for traditional checksums. We approach the problem with three key
@@ -37,6 +27,9 @@ administrators to deploy. We implement \SYSTEM{} as a proof-of-concept Google
 Chrome extension as well as a patch to the FileZilla FTP client. We evaluate the
 security, scalability, and performance of the \SYSTEM{} approach and provide a
 publicly accessible demonstration of its utility via a patched HotCRP instance.}
+
+\TODO{Downloading is easy but risky and the risk is dividided into three
+categories.}
 
 \TODO{Perhaps open here with the various Linux Mint and other citable examples
 to lead into this next line?} Downloading resources over the internet comes with
@@ -55,6 +48,9 @@ can be accomplished through some form of symmetric or asymmetric encryption.
 Finally, resource integrity allows us to verify that the data we are receiving
 is the data we are expecting to receive.
 
+\TODO{Narrow scope of the paper to third risk, and relate to supply chain
+attacks.}
+
 When it comes to response authentication and communication confidentiality
 concerns on the internet, the state of the art in attack mitigation is Transport
 Layer Security (TLS) and its Hyper Text Transfer Protocol (HTTP)/PKI based
@@ -63,6 +59,8 @@ certificate authorities and modern browsing software, TLS and related protocols,
 when properly deployed, mitigate myriad authentication and confidentiality
 attack classes ranging from DNS-related and Man-in-the-Middle attacks to data
 theft, communication forgery, and sender repudiation.
+
+\TODO{State of the art dealing with supply chain attacks: checksums.}
 
 The de facto standard for addressing this risk is with the use of
 \textit{checksums} coupled with some secure transport medium like TLS/HTTPS.
@@ -106,6 +104,27 @@ such as Content-MD5 header~\cite{MD5Header} and Subresource Integrity
 or its download portal or update/maintenance mechanism. Protected encrypted
 communications mean nothing if the contents of those communications are
 themselves corrupted before the fact.
+
+\TODO{Why checksums are bad (may be folded into previous para): (1) tedious for
+users and (2) easily compromised by many existing supply chain attacks (not sure
+about the last one).}
+
+
+
+\TODO{DNSCHK as replacement for checksums that addresses both problems through
+(1) simple extensions to browsers or other tools and (2) whatever the general
+name is for the backend stuff which can be implemented on DNSSEC or a DHT (or
+maybe even something else we haven't thought of).}
+
+
+
+\TODO{How do we evaluate it.}
+
+
+
+\TODO{List of contributions at end of current intro.}
+
+
 
 More broadly, these kinds of resource integrity attacks are known as
 \textbf{Supply Chain Attacks} (SCA)~\cite{}. SCAs are the compromise of software
