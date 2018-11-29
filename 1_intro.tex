@@ -3,11 +3,14 @@
 \TODO{Downloading is easy but risky and the risk is dividided into three
 categories.}
 
-\TODO{Perhaps open here with the various Linux Mint and other citable examples
-to lead into this next line?} Downloading resources over the internet comes with
-considerable risk. \TODO{\sout{Following sentence needs one or more citations to
-back up the claim that this is generally how things are done.} Changed it to be
-less declarative since this is an abstraction that we are using to describe
+In 2016, hackers broke into the Linux Mint distribution server and replaced a
+legitimate Mint ISO with one containing the so-called Tsunami backdoor,
+infecting hundreds of machines with the malware~\cite{SCA-MINT1, SCA-MINT2}. 
+
+It is common knowledge that resources over the internet comes with considerable
+risk. \TODO{\sout{Following sentence needs one or more citations to back up the
+claim that this is generally how things are done.} Changed it to be less
+declarative since this is an abstraction that we are using to describe
 \SYSTEM{}'s utility, does that work?}. We divide this risk into three
 categories: response authentication, communication confidentiality, and resource
 integrity.
@@ -42,9 +45,8 @@ layer) is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 Attacks on resource integrity can be considered a subset of \emph{Supply Chain
 Attacks} (SCA)~\cite{SCA}. SCAs are the compromise of software source code via
 cyber attack, insider threat, or other attack on one or more phases of the
-software development life cycle (see \figref{attacks}). These attacks have the
-goal of infecting and exploiting victims by abusing the trust between consumer
-and vendor.
+software development life cycle. These attacks have the goal of infecting and
+exploiting victims by abusing the trust between consumer and vendor.
 
 \TODO{State of the art dealing with supply chain attacks: checksums.}
 
@@ -60,6 +62,8 @@ used to verify a resource’s integrity to an end user.
 \TODO{Why checksums are bad (may be folded into previous para): (1) tedious for
 users and (2) easily compromised by many existing supply chain attacks (not sure
 about the last one).}
+
+\TODO{Back to the Linux Mint example. The hacker changed the checksum too, because they hacked the host via a common wordpress vulnerability.}
 
 Checksums are problematic for a whole host of reasons, the foremost being that
 the clear majority of end users will not be burdened with manually calculating
