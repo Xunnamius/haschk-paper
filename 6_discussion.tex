@@ -41,15 +41,16 @@ assume otherwise can have disastrous consequences~\cite{PGPBad} (also see:
 \noindent\textbf{Link Fingerprints and Subresource Integrity.} The Link
 Fingerprints (LF) draft describes an early HTML anchor and URL based resource
 integrity verification scheme~\cite{LF}. Subresource Integrity (SRI) describes a
-similar production-ready HTML-based scheme designed with CDNs in mind. Like
-\SYSTEM{}, both LF and SRI employ cryptographic digests to ensure no changes of
-any kind have been made to a resource file~\cite{SRI}. Unlike \SYSTEM{}, LF and
-SRI rely on the server that hosts the HTML source to be secure; specifically,
-the checksums contained in the HTML source must be accurate for these schemes to
-work. An attacker that has control of the web server can alter the HTML and
-inject a malicious checksum. With \SYSTEM{}, however, an attacker would also
-have to compromise the DNS zone or whichever distributed system hosted the
-mappings between Resource Identifers and Authoritative Hashes. \\
+similar production-ready HTML-based scheme designed with CDNs and web assets
+(rather than generic resources) in mind. Like \SYSTEM{}, both LF and SRI employ
+cryptographic digests to ensure no changes of any kind have been made to a
+resource file~\cite{SRI}. Unlike \SYSTEM{}, LF and SRI rely on the server that
+hosts the HTML source to be secure; specifically, the checksums contained in the
+HTML source must be accurate for these schemes to work. An attacker that has
+control of the web server can alter the HTML and inject a malicious checksum.
+With \SYSTEM{}, however, an attacker would also have to compromise the DNS zone
+or whichever distributed system hosted the mappings between Resource Identifers
+and Authoritative Hashes. \\
 
 \noindent\textbf{Content-MD5 Header.} The Content-MD5 header field is a
 deprecated email and HTTP header that delivers a checksum similar to those used

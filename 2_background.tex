@@ -24,7 +24,7 @@ software phpMyAdmin~\cite{SCA-PMA3}. The administrator of the mirror in question
 confirmed the attack was due to a vulnerability not shared by SourceForge's
 other mirrors~\cite{SCA-PMA2}.
 
-Attackers mutated the software archive, injecting files that would allow any
+Attackers mutated the software image, injecting files that would allow any
 attacker aware of their existence to remotely execute arbitrary PHP code on the
 victim's system~\cite{SCA-PMA1}. SourceForge estimates approximately 400 unique
 users downloaded this corrupted version of phpMyAdmin before the mirror was
@@ -36,7 +36,7 @@ official phpMyAdmin website was entirely unaffected; the authoritative checksums
 listed on the site's download page were similarly unaffected~\cite{SCA-PMA2}.
 Hence, a user who was sufficiently motivated, had sufficient technical knowledge
 of checksums and how to calculate them, and was also privy to the location of
-the correct checksum for the official phpMyAdmin archive \emph{might} have
+the correct checksum for the official phpMyAdmin image \emph{might} have
 noticed the discrepancy between the two digests. Clearly, a majority of users do
 not meet these criteria. \\
 
@@ -63,12 +63,12 @@ beginning in 2010, Russian Intelligence Services targeted the industrial control
 systems of numerous aviation, national defense, critical infrastructure,
 pharmaceutical, petrochemical, and other companies and organizations with the
 Havex remote access trojan~\cite{SCA-HAVEX1, SCA-HAVEX2}. The attack was carried
-out in phases whereby innocuous archives hosted on disparate \emph{legitimate}
-vendor websites were targeted for replacement with versions infected with the
-Havex malware~\cite{SCA-HAVEX2}. The goal here, as is the case with all SCAs,
-was to infect victims indirectly by having the Havex malware bundled into opaque
-software dependencies, \ie a hardware driver or internal communication
-application.
+out in phases whereby innocuous software images hosted on disparate
+\emph{legitimate} vendor websites were targeted for replacement with versions
+infected with the Havex malware~\cite{SCA-HAVEX2}. The goal here, as is the case
+with all SCAs, was to infect victims indirectly by having the Havex malware
+bundled into opaque software dependencies, \ie a hardware driver or internal
+communication application.
 
 It is estimated that Havex successfully impacted hundreds or even thousands of
 corporations and organizations---mostly in United States and the
@@ -111,17 +111,35 @@ of checksums are available at all. On top of technical knowledge, a user in this
 confusing situation is then expected to ``do the right thing,'' whatever that
 happens to be in this context.
 
-\subsection{Current Detection and Mitigation Methods}
+\subsection{Other Detection and Mitigation Methods}
 
-Detecting and mitigating resource integrity SCAs and other active attacks is a
-non-trivial and well studied problem~\cite{MD5Header, HTTP1.1, HTTPS, SRI, LF,
+Detecting and/or mitigating resource integrity SCAs and other active attacks is
+a non-trivial and well studied problem~\cite{MD5Header, HTTP1.1, HTTPS, SRI, LF,
 OpenPGP1, DNSSEC, PKI}. What follows is a brief overview of current and popular
-methods to ensure the integrity of resources exchanged over the internet.
+methods to ensure the integrity of resources exchanged over the internet other
+than checksums.
 
 \subsubsection{Anti-Malware Software}
 
-\TODO{(what it is, why it fails; also talk about manual scanning of files for
-viruses)}
+Anti-malware software are heuristic-based programs designed for the specific
+purpose of detecting and removing various kinds of malware. However, updates to
+anti-malware definitions often lag behind or occur in response to the release of
+crippling malware. For example, during the 2016 compromise of the HandBrake
+distribution mirror, users who first ran the compromised HandBrake image
+through \textit{VirusTotal}---a web service that will run a resource through
+several dozen popular anti-malware products---received a report claiming no
+infections were detected, despite the empirically verifiable presence of the
+Proton Malware.
+
+Worse, not all resource compromises end up looking like malware. In the 2012
+compromise of SourceForge's CDN, where a malicious version of phpMyAdmin was
+delivered to hundreds of users, the PHP source itself was altered to enable
+remote code execution. However, the extraneous code was virtually
+indistinguishable from the rest of the raw PHP source in the phpmyAdmin image
+being distributed.
+
+At the time of writing (2018), VirusTotal correctly identifies the compromised
+version of the Handbrake image as malware.
 
 \subsubsection{HTTPS / Encrypted Channel}
 
@@ -151,19 +169,20 @@ integrity. This can occur at the point of distribution, such as a compromised
 node in a third party CDN that delivers malicious resources masquerading as
 popular software (see: cases 1-4 above). It can occur when an adversary gains
 control of some aspect of the software deployment process (see: case 3 above).
-Moreover, an adversary can render HTML-based protections such as co-located
-resource checksums, the content-MD5 header~\cite{MD5Header} and Subresource
-Integrity (SRI)~\cite{SRI} digests ineffective by trivially mutating the
-compromised download portal and/or update/maintenance mechanism.
+
+Moreover, an adversary can render HTTPS-protected HTML-based protections such as
+co-located resource checksums, the content-MD5 header~\cite{MD5Header} and
+Subresource Integrity (SRI)~\cite{SRI} digests ineffective by trivially mutating
+the compromised download portal and/or update/maintenance mechanism.
 
 \subsubsection{Browser-based Heuristics and Blacklists}
 
 \TODO{(what it is, why it fails)}
 
-\subsubsection{Checksums}
+\PUNT{\subsubsection{Checksums}
 
 \TODO{(what it is, why it fails; perhaps move part of abstract definition
-here?)}
+here?)}}
 
 \subsubsection{Public Key Infrastructure and Code Signing}
 
