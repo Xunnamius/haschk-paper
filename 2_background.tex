@@ -134,7 +134,7 @@ than checksums.
 Anti-malware software are heuristic-based programs designed for the specific
 purpose of detecting and removing various kinds of malware. However, updates to
 anti-malware definitions often lag behind or occur in response to the release of
-crippling malware. For example, during the 2016 compromise of the HandBrake
+crippling malware. For example, during the 2017 compromise of the HandBrake
 distribution mirror, users who first ran the compromised HandBrake image
 through \textit{VirusTotal}---a web service that will run a resource through
 several dozen popular anti-malware products---received a report claiming no
@@ -188,14 +188,15 @@ the compromised download portal and/or update/maintenance mechanism.
 \subsubsection{Browser-based Heuristics and Blacklists}
 
 Modern browsers employ heuristic and blacklist based detection and prevention
-schemes to protect users from falling prey to malicious content on the internet.
-Implementations include Google Chrome's \textit{Safe Browsing} feature, Mozilla
-Firefox's \textit{Phishing/Download Protection}, and Microsoft Edge's
-anti-malware \textit{sniffing} Windows Defender bundle.
+schemes in an attempt to protect users from encountering malicious content on
+the internet. Implementations include Google Chrome's \textit{Safe Browsing}
+feature, Mozilla Firefox's \textit{Phishing/Download Protection}, and Microsoft
+Edge's \textit{malware sniffing} Windows Defender browser bundle.
 
-Similar to anti-malware software, browser-based heuristics and blacklists are
-reactive rather than proactive and, hence, ineffective at shielding users from
-attacks on the integrity of the resources downloaded over the internet.
+Similar to anti-malware software, browser-based heuristics and blacklists are a
+reactive rather than proactive solution; hence, they are ineffective at
+shielding users from attacks on the integrity of the resources downloaded over
+the internet.
 
 \PUNT{\subsubsection{Checksums}
 
