@@ -25,17 +25,18 @@ an actual \SYSTEM{} implementation would necessitate the creation of a new DNS
 resource record type. \\
 
 \noindent\textbf{PGP/OpenPGP.} Though PGP addresses a fundamentally different
-threat model than \SYSTEM{}, it is useful to note: many of the same human and UX
-factors that make the cryptographically solid OpenPGP standard and its various
-implementations so unpleasant for end users also exist in the context of
-download integrity verification and checksums. End users cannot and \textit{will
-not} be burdened with manually verifying a checksum; as was the case with PGP
-5.0~\cite{PGPBad}, some users are likely confused by the very notion of a
-checksum, if they are aware of checksums at all. If PGP's adoption issues are
-any indication, users of a security solution that significantly complicate an
-otherwise simple task are more likely to bypass said solution rather than be
-burdened with it. To assume otherwise can have disastrous
-consequences~\cite{PGPBad} (also see: \secref{background}). \\
+authentication-focused threat model compared with \SYSTEM{}, it is useful to
+note: many of the same human and UX factors that make the cryptographically
+solid OpenPGP standard and its various implementations so unpleasant for end
+users also exist in the context of download integrity verification and
+checksums. End users cannot and \textit{will not} be burdened with manually
+verifying a checksum; as was the case with PGP 5.0~\cite{PGPBad}, some users are
+likely confused by the very notion and function of a checksum, if they are aware
+that checksums exist at all. If PGP's adoption issues are any indication, users
+of a security solution that significantly complicate an otherwise simple task
+are more likely to bypass said solution rather than be burdened with it. To
+assume otherwise can have disastrous consequences~\cite{PGPBad} (also see:
+\secref{background}). \\
 
 \noindent\textbf{Link Fingerprints and Subresource Integrity.} The Link
 Fingerprints (LF) draft describes an early HTML anchor and URL based resource
@@ -121,18 +122,10 @@ layers of the protocol.
   limitations at all.  Not sure anything needs to change here, but it
   is a striking contrast.
 
-}  \PUNT{\subsubsection{Supply Chain Attack
-    Diversity}
-
-Is this subsubsection necessary? \TODO{There are many types of SCAs
-that can occur at any phase of the software development life cycle. \SYSTEM{}
-only protects against attacks in the latter 3 categories. (Maybe bring the table
-back?) (Maybe talk about CCleaner falling out of scope?)}}
-
 \subsubsection{Chrome Implementation}
 
 Our current JavaScript proof-of-concept implementation, as a Chrome extension,
-is not allowed to touch the resource file downloaded by Chrome and so cannnot
+is not allowed to touch the resource file downloaded by Chrome and so cannot
 prevent the potentially-malicious resource file from being executed by the end
 user---a feature Chrome/Chromium reserves for its own internal use. The Chrome
 \textit{app} API~\cite{AppAPI} might have been of assistance as it allowed for

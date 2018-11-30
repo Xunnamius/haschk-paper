@@ -5,23 +5,118 @@ studies that frame the threat posed by Supply Chain Attacks (SCAs). We then
 examine current methods to detect and prevent resource corruption including
 checksums, HTTPS, anti-malware, PKI, and others.
 
-\subsection{Motivation: Case Studies}
+\subsection{Supply Chain Attacks on Resource Integrity}
 
-\TODO{Blurb about case studies. Information on breaches is spotty and incomplete
-because corps are scant on the details of their failure, so we are working with
-limited data.} \\
+Every year, supply chain attacks and their impacts are being felt more and more
+widely. \TODO{(more; use NIST citations)}
 
-\noindent\textbf{Case 1: Linux Mint.} \TODO{Explain} \\
+\subsection{Motivation: Cases}
 
-\noindent\textbf{Case 2: Havex.} \TODO{Explain} \\
+Here we select four historic attacks we believe most effectively articulate the
+threat posed by resource integrity SCAs and how \SYSTEM{} might have been used
+to more efficiently mitigate fallout. We examine each attack, noting the
+critical points of failure in their checksum-based resource security model. \\
 
-\noindent\textbf{Case 3: PhpMyAdmin.} \TODO{Explain} \\
+\noindent\textbf{Case 1: PhpMyAdmin.} For an unspecified amount of time circa
+2012, a compromised download mirror in SourceForge's official HTTPS-protected
+CDN was distributing a malicious version of the popular database administration
+software phpMyAdmin~\cite{SCA-PMA3}. The administrator of the mirror in question
+confirmed the attack was due to a vulnerability not shared by SourceForge's
+other mirrors~\cite{SCA-PMA2}.
 
-\noindent\textbf{Case 4: HandBrake.} \TODO{Explain} \\
+Attackers mutated the software archive, injecting files that would allow any
+attacker aware of their existence to remotely execute arbitrary PHP code on the
+victim's system~\cite{SCA-PMA1}. SourceForge estimates approximately 400 unique
+users downloaded this corrupted version of phpMyAdmin before the mirror was
+disconnected from their CDN, potentially allowing attackers access to the
+private customer data of any number of organizations~\cite{SCA-PMA2}.
 
-\subsection{Current Detection and Prevention Methods}
+While the attackers were able to penetrate a mirror in SourceForge's CDN, the
+official phpMyAdmin website was entirely unaffected; the authoritative checksums
+listed on the site's download page were similarly unaffected~\cite{SCA-PMA2}.
+Hence, a user who was sufficiently motivated, had sufficient technical knowledge
+of checksums and how to calculate them, and was also privy to the location of
+the correct checksum for the official phpMyAdmin archive \emph{might} have
+noticed the discrepancy between the two digests. Clearly, a majority of users do
+not meet these criteria. \\
 
-\TODO{There are several. Blah blah.}
+\noindent\textbf{Case 2: Linux Mint.} In 2016, the Linux Mint team discovered an
+intrusion into their official HTTPS-protected distribution
+server~\cite{SCA-MINT1}. Attackers mutated download links originally pointing to
+the Linux Mint 17.3 Cinnamon edition ISO, redirecting unsuspecting users to a
+disparate system hosting a custom Mint ISO compiled with the IRC-based Linux
+backdoor malware \emph{Tsunami}~\cite{SCA-MINT2}. The attack affected several
+hundred of the downloads during that day, with the attackers claiming that a
+``few hundred'' Linux Mint installs were explicitly under their control. The
+primary motivation behind the intrusion was the construction of a
+botnet~\cite{SCA-MINT3}. The authoritative checksum displayed on the official
+website was also mutated to corroborate the backdoored ISO~\cite{SCA-MINT3}.
+
+Storing the checksum elsewhere may have prevented mutations on the checksum;
+still, as demonstrated by the first case, such an effort is not itself a
+solution. Hosting a checksum on a secondary system is not very useful if users
+downloading the resource protected by that checksum are not actually
+\emph{checking} it against a manual calculation. \\
+
+\noindent\textbf{Case 3: Havex.} As part of a widespread espionage campaign
+beginning in 2010, Russian Intelligence Services targeted the industrial control
+systems of numerous aviation, national defense, critical infrastructure,
+pharmaceutical, petrochemical, and other companies and organizations with the
+Havex remote access trojan~\cite{SCA-HAVEX1, SCA-HAVEX2}. The attack was carried
+out in phases whereby innocuous archives hosted on disparate \emph{legitimate}
+vendor websites were targeted for replacement with versions infected with the
+Havex malware~\cite{SCA-HAVEX2}. The goal here, as is the case with all SCAs,
+was to infect victims indirectly by having the Havex malware bundled into opaque
+software dependencies, \ie a hardware driver or internal communication
+application.
+
+It is estimated that Havex successfully impacted hundreds or even thousands of
+corporations and organizations---mostly in United States and the
+Europe~\cite{SCA-HAVEX2}. The motivation behind the Havex malware was
+intelligence exfiltration and espionage~\cite{SCA-HAVEX1}. How many of these
+vendors employed checksums and other mitigations as part of their software
+release cycle is not well reported, though investigators note said vendors'
+distribution mechanisms were insecure~\cite{SCA-HAVEX2}; however, an automated
+resource validation method could very plausibly have partially mitigated the
+delivery of compromised software to end users. \\
+
+\noindent\textbf{Case 4: HandBrake.} In May of 2017, users of HandBrake, a
+popular open source video transcoder for Mac/OSX, were made aware that they may
+have downloaded and installed a trojan riding atop their transcoding software.
+Attackers breached a HTTPS-protected HandBrake download mirror, replacing the
+legitimate software with a version containing a novel variant of the
+\emph{Proton} malware~\cite{SCA-HB1}. The number of users potentially affected
+is unreported.
+
+The goal of the attack was the exfiltration of victims' sensitive data,
+including entire keychains (unlocked), private keys, browser password databases,
+1Password/Lastpass vaults, decrypted files, and victims' personal videos and
+other media~\cite{SCA-HB1}. The HandBrake developers recommended users perform
+manual checksum validation to determine if their installation media was
+compromised~\cite{SCA-HB2}.
+
+Despite the attackers mutating the HandBrake binary, the authoritative checksums
+listed on the official HandBrake download page were reportedly left
+untouched~\cite{SCA-HB2}. Further, the developers of HandBrake store their
+authoritative checksums both on their official website and in their official
+GitHub repository~\cite{SCA-HB2}. A sufficiently knowledgeable, sufficiently
+motivated user \emph{might} have noticed the discrepancy between their
+calculated checksum and the authoritative checksum listed on the download page.
+
+Suppose, however, that the attackers \textit{had} managed to mutate the
+checksums on the official website. Then there would be a discrepancy between the
+authoritative checksums on the official site and the authoritative checksums in
+the GitHub repository---that's \emph{if} users are even aware that a second set
+of checksums are available at all. On top of technical knowledge, a user in this
+confusing situation is then expected to ``do the right thing,'' whatever that
+happens to be in this context.
+
+\subsection{Current Detection and Mitigation Methods}
+
+Detecting and mitigating resource integrity SCAs and other active attacks is a
+non-trivial and well studied problem~\cite{MD5Header, HTTP1.1, HTTPS, SRI, LF,
+OpenPGP1, DNSSEC, PKI}. What follows is a brief overview of current and popular
+methods to ensure the integrity of resources exchanged over the internet.
 
 \subsubsection{Anti-Malware Software}
 
@@ -30,7 +125,36 @@ viruses)}
 
 \subsubsection{HTTPS / Encrypted Channel}
 
-\TODO{(what it is, why it fails)}~\cite{HTTP, HTTPS, TLS1, TLS1.2, TLS0, DTLS}
+The state of the art in secure communications is the Transport Layer Security
+(TLS) standard and its Hyper Text Transfer Protocol (HTTP)/PKI based
+implementation, HTTPS~\cite{TLS1.2, HTTPS, PKI}. Assuming well behaved
+certificate authorities, modern browsing software, and proper deployment, TLS
+and HTTPS mitigate many authentication and confidentiality related concerns
+through the establishment of an encrypted authenticated communication channel
+between parties~\cite{HTTPS, TLS1.2, DTLS}.
+
+HTTPS and related protocols are not a panacea, however. Unlike concerns relating
+to authenticity and confidentiality, \textit{resource integrity} deals with the
+content of a communication; specifically: ensuring the bytes received at the end
+of a transaction are the bytes we expected to receive. For example, a binary
+expected to be 10MiB, when downloaded over the internet, should not be received
+as an 11MiB executable---even if the compromised resource remained confidential
+in transit between authenticated parties. Similarly, it would be ill advised to
+knowingly execute a 10MiB binary that, for one reason or another, had half its
+bits flipped by the time it was received. This can occur despite the integrity
+guarantee provided by TLS/HTTPS because resource integrity attacks and other
+SCAs fall outside of the threat model addressed by TLS/HTTPS.
+
+Hence, despite the resilient nature of HTTPS and the powerful security
+properties it guarantees, end users are still vulnerable to attacks on resource
+integrity. This can occur at the point of distribution, such as a compromised
+node in a third party CDN that delivers malicious resources masquerading as
+popular software (see: cases 1-4 above). It can occur when an adversary gains
+control of some aspect of the software deployment process (see: case 3 above).
+Moreover, an adversary can render HTML-based protections such as co-located
+resource checksums, the content-MD5 header~\cite{MD5Header} and Subresource
+Integrity (SRI)~\cite{SRI} digests ineffective by trivially mutating the
+compromised download portal and/or update/maintenance mechanism.
 
 \subsubsection{Browser-based Heuristics and Blacklists}
 
@@ -45,9 +169,8 @@ here?)}
 
 \TODO{(what it is, why it fails)}~\cite{DANE1, DANE2, DANE3, OpenPGP1}
 
-\TODO{(specific case rather than the generic
-one; I think we should address the differences explicitly: we're simpler; we
-don't make the system more fragile; no central authority; applicable to more
-than just software binaries)}
+\TODO{(specific case rather than the generic one; I think we should address the
+differences explicitly: we're simpler; we do not make the system more fragile;
+no central authority; applicable to more than just software binaries)}
 
 
