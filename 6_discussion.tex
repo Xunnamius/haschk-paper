@@ -9,7 +9,9 @@ DNS itself.
 
 \subsection{Additional Related Work}
 
-\noindent\textbf{Cryptographic Data in DNS Resource Records.} Storing
+\noindent\textbf{Cryptographic Data in DNS Resource Records.} 
+\TODO{Suggestion here: eliminate the first sentence---it just sounds negative.  Starting with the second sentence is just listing the facts.  BUT: add a last sentence that clearly states what IS new, which I believe is using DNSSEC to store a cryptographic record (authoritative hash) that is associated with some other resource.  You can probably state that better yourself. }
+Storing
 cryptographic data in the DNS network is not a new idea. The DNS-Based
 Authentication of Named Entities (DANE) specification~\cite{DANE1, DANE2, DANE3}
 defines the ``TLSA'' and ``OPENPGPKEY'' DNS resource records to store
@@ -87,16 +89,22 @@ well as the increasing number of compliant local/ISP resolvers.
     2018.}\label{fig:apnic}
 \end{figure}
 
-It should be noted that DNSSEC does not necessarily make the DNS network, i.e.
-properly configured DNS servers, more vulnerable to amplification or other types
+It should be noted that DNSSEC does not necessarily make the DNS network---\ie{}
+properly configured DNS servers---more vulnerable to amplification or other types
 of reflection attacks~\cite{Ariya} than it already is as a UDP-based content
 delivery service~\cite{USCERT, Vixie}.
+
+\TODO{This section sounds super negative.  Maybe end by noting that
+  DNSSEC is just one way to support the backend of this idea and that
+  even if DNSSEC isn't adopted, then the key idea is still valid and
+  can be implemented by storing the authoritative hash in a DHT (or
+  maybe something else as well)?}
 
 \subsubsection{DNS-Specific Protocol Limitations}
 
 DNS~\cite{DNS1} was not originally designed to transport or store relatively
 large amounts of data, though this has been addressed with EDNS0~\cite{EDNS}.
-The checksums stored in DNS shouldn't be much longer than 128 bytes or the
+The checksums stored in DNS should not be much longer than 128 bytes or the
 output of the SHA512 function. Regardless, DNS resource record extensions exist
 that store much more than 128 bytes of data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
 
@@ -109,7 +117,12 @@ Additionally, \SYSTEM{} does not add to the danger of amplification and other
 reflection attacks on DNS; these are generic DNS issues addressable at other
 layers of the protocol.
 
-\PUNT{\subsubsection{Supply Chain Attack Diversity}
+\TODO{In contrast to the previous section, this one doesn't seem like
+  limitations at all.  Not sure anything needs to change here, but it
+  is a striking contrast.
+
+}  \PUNT{\subsubsection{Supply Chain Attack
+    Diversity}
 
 Is this subsubsection necessary? \TODO{There are many types of SCAs
 that can occur at any phase of the software development life cycle. \SYSTEM{}
@@ -119,7 +132,7 @@ back?) (Maybe talk about CCleaner falling out of scope?)}}
 \subsubsection{Chrome Implementation}
 
 Our current JavaScript proof-of-concept implementation, as a Chrome extension,
-isn't allowed to touch the resource file downloaded by Chrome and so can't
+is not allowed to touch the resource file downloaded by Chrome and so cannnot
 prevent the potentially-malicious resource file from being executed by the end
 user---a feature Chrome/Chromium reserves for its own internal use. The Chrome
 \textit{app} API~\cite{AppAPI} might have been of assistance as it allowed for
@@ -147,11 +160,12 @@ use with \SYSTEM{} as a background page based extension.
 
 \subsubsection{Merkle Trees and Early Resource Validation}
 
-Using Merkle Trees instead of pure hashing functions to offer partial
-verification of large files, i.e. if the file we're downloading is 10TiB, we
-don't have to wait for it to finish downloading before we render a failing
+Using Merkle Trees instead of pure hashing functions would enable partial
+verification of large files; \ie{} if the file we are downloading is 10TiB, we
+do not have to wait for it to finish downloading before we render a failing
 judgement. This saves the user time. Perhaps using the Tiger hash, since Tiger
 Merkle Trees seem to be popular among large P2P and file sharing applications.
+\TODO{LAst sentence is incomplete}.
 
 \subsubsection{Replacing RIs with URNs}
 
@@ -171,4 +185,4 @@ Assigned Numbers Authority. Going forward, we can potentially adopt a URN scheme
 that already exists, such as Magnet links~\cite{MagnetLinks} or the informal
 IETF draft for hash-based URN namespaces~\cite{draft-URN}. With URNs, we can
 ensure our naming scheme is based solely on a resource's contents rather than
-both its contents and it's location on a web server.
+both its contents and its location on a web server.
