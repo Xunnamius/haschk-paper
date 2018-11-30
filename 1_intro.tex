@@ -65,15 +65,16 @@ function over their version of the resource, yield a local checksum, and match
 it with the authoritative checksum given to them from said source.
 
 However, checksums have come up short as a viable solution to the resource
-integrity problem. Foremost is a harsh reality: the clear majority of end users
-will not be burdened with manually calculating checksums for the resources they
-download. And even if they did, said user must search for the corresponding
+integrity problem. Foremost is a harsh reality: the clear majority of users will
+not be burdened with manually calculating checksums for the resources they
+download. And even if they did, a user must search for the corresponding
 authoritative checksum to verify their calculation. As there is no standard
-storage or retrieval methods for checksums, end users are not guaranteed to find
-an authoritative checksum, even if they exist. If they manage to find the
-authoritative checksum and also recognize the checksums are different, the user
-is then expected to ``do the right thing,'' whatever that happens to be in
-context.
+storage or retrieval methods for checksums, they could be anywhere, or even in
+multiple different locations that must then be kept consistent; users are not
+guaranteed to find an authoritative checksum, even if they're published online
+somewhere. If they do manage to find the authoritative checksum and also
+recognize the checksums are different, the user is then expected to ``do the
+right thing,'' whatever that happens to be in context.
 
 Then there's the futility of co-locating a resource and its checksum on the same
 distribution system. While cost effective compared to hosting two or more
@@ -84,28 +85,28 @@ irrelevant. Among many examples of such breaches are the 2012 hack of
 phpMyAdmin~\cite{SCA-PMA1, SCA-PMA2}, the 2016 hack of Linux
 Mint~\cite{SCA-MINT1, SCA-MINT2}, and the 2017 hack of HandBrake~\cite{SCA-HB2}.
 
-Clearly, checksums as they are employed currently are not effective at
-guaranteeing resource integrity. Recognizing this, some corporations and large
-organizations rely instead on PKI-based solutions such as digital signature
-validation and code signing~\cite{PKI}. These solutions have been deployed
-successfully to mitigate resource integrity attacks in mature software package
-ecosystems (\eg Debian/apt, Red Hat/yum, Arch/pacman) and walled-garden app
-stores like Google Play, Apple App Store, and the Microsoft Store.
+Checksums as they are employed currently are not effective at guaranteeing
+resource integrity. Recognizing this, some corporations and large organizations
+rely instead on PKI-based solutions such as digital signature validation and
+code signing~\cite{PKI}. These solutions have been deployed successfully to
+mitigate resource integrity attacks in mature software package ecosystems (\eg
+Debian/apt, Red Hat/yum, Arch/pacman) and walled-garden app stores like Google
+Play, Apple App Store, and the Microsoft Store.
 
 Unfortunately, not all resources available on the internet are acquired through
 software package ecosystems with builtin PKI support; moreover, these PKI
 schemes are not compatible with one another and cannot scale to secure arbitrary
 resources on the internet without significant cost and effort. Worse,
 roll-your-own PKI is \emph{hard to get right}~\cite{PKI}, implying systems built
-atop them are inherently more \emph{fragile}, by which we mean susceptible to
-malfunction due to small errors or misconfigurations.
+atop them are inherently more \emph{fragile}---susceptible to malfunction due
+to small errors or misconfigurations.
 
 In this paper, we propose \SYSTEM{}, a novel method of verifying the integrity
 of resources downloaded over the internet that is a complete replacement for
 traditional checksums. We approach the problem with four key concerns in mind:
 a) implementations provide security guarantees transparently without adding any
-extra burden on the end user, \ie neither grappling with a new user interface
-nor any additional labor is required during standard usage; b) configuring the
+extra burden on the end user, \ie neither grappling with a new UI nor any
+additional labor is required during standard usage; b) configuring the
 validation method is simple for service administrators and system operators to
 integrate and deploy while ensuring configuration of a potentially-expensive
 discrete secondary system to host checksums is unnecessary; c) the validation
@@ -134,9 +135,9 @@ In summary, our primary contributions are:
   any level other than DNS, does not employ unreliable heuristics, does not
   interfere with other software or extensions that also handle resource
   downloads, and can be transparently deployed without adding to the
-  \textit{fragility} of DNSSEC-enabled systems; it protects end users whose
-  software implements \SYSTEM{} while remaining unnoticeable to users of whose
-  software does not.
+  \textit{fragility} of DNSSEC-enabled systems; it protects users whose software
+  implements \SYSTEM{} while remaining unnoticeable to users of whose software
+  does not.
 
   \item We present our prototype \SYSTEM{} implementations for Google Chrome and
   FileZilla and demonstrate its effectiveness in automatically and transparently

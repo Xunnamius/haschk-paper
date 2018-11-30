@@ -53,12 +53,7 @@ deprecated email and HTTP header that delivers a checksum similar to those used
 by Subresource Integrity. It was removed from the HTTP/1.1 specification because
 of the inconsistent implementation of partial response handling between
 vendors~\cite{HTTP1.1}. Further, the header could be easily stripped off or
-modified by proxies and other intermediaries~\cite{MD5Header}. \\
-
-\noindent\textbf{Code Signing.} \TODO{(specific case rather than the generic
-one; I think we should address the differences explicitly: we're simpler; we
-don't make the system more fragile; no central authority; applicable to more
-than just software binaries)}
+modified by proxies and other intermediaries~\cite{MD5Header}.
 
 \subsection{Limitations}
 
@@ -114,19 +109,19 @@ Additionally, \SYSTEM{} does not add to the danger of amplification and other
 reflection attacks on DNS; these are generic DNS issues addressable at other
 layers of the protocol.
 
-\subsubsection{Supply Chain Attack Diversity}
+\PUNT{\subsubsection{Supply Chain Attack Diversity}
 
-\TODO{There are many types of SCAs that can occur at any phase of the software
-development life cycle. \SYSTEM{} only protects against attacks in the latter 3
-categories. (Maybe bring the table back?) (Maybe talk about CCleaner falling out
-of scope?)}
+Is this subsubsection necessary? \TODO{There are many types of SCAs
+that can occur at any phase of the software development life cycle. \SYSTEM{}
+only protects against attacks in the latter 3 categories. (Maybe bring the table
+back?) (Maybe talk about CCleaner falling out of scope?)}}
 
 \subsubsection{Chrome Implementation}
 
 Our current JavaScript proof-of-concept implementation, as a Chrome extension,
 isn't allowed to touch the resource file downloaded by Chrome and so can't
 prevent the potentially-malicious resource file from being executed by the end
-user—a feature Chrome/Chromium reserves for its own internal use. The Chrome
+user---a feature Chrome/Chromium reserves for its own internal use. The Chrome
 \textit{app} API~\cite{AppAPI} might have been of assistance as it allowed for
 some limited filesystem traversal via a now deprecated native app API; there is
 also a non-standard HTML5/WebExtensions FileSystem API that would provide
