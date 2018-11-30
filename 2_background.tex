@@ -60,22 +60,25 @@ downloading the resource protected by that checksum are not actually
 
 \noindent\textbf{Case 3: Havex.} As part of a widespread espionage campaign
 beginning in 2010, Russian Intelligence Services targeted the industrial control
-systems of numerous banking, aviation, national defense, critical
-infrastructure, pharmaceutical, petrochemical, and other companies and
-organizations with the Havex remote access trojan~\cite{SCA-HAVEX1, SCA-HAVEX2}.
-The attack was carried out in phases whereby innocuous software archives hosted
-on disparate \emph{legitimate} vendor websites were targeted for replacement
-with versions infected with the Havex malware~\cite{SCA-HAVEX2}. The goal here,
-as is the case with all SCAs, was to infect victims indirectly by having the
-malware get bundled within some opaque software dependency.
+systems of numerous aviation, national defense, critical infrastructure,
+pharmaceutical, petrochemical, and other companies and organizations with the
+Havex remote access trojan~\cite{SCA-HAVEX1, SCA-HAVEX2}. The attack was carried
+out in phases whereby innocuous archives hosted on disparate \emph{legitimate}
+vendor websites were targeted for replacement with versions infected with the
+Havex malware~\cite{SCA-HAVEX2}. The goal here, as is the case with all SCAs,
+was to infect victims indirectly by having the Havex malware bundled into opaque
+software dependencies, \ie a hardware driver or internal communication
+application.
 
-It is estimated that Havex successfully impacted thousands of corporations and
-organizations---mostly in United States and the Europe. The motivation behind
-the Havex malware was intelligence exfiltration and espionage~\cite{SCA-HAVEX1}.
-How many of these organizations employed checksums and other mitigations as part
-of their software release cycle is not well reported; however, an automated
-resource validation method could very plausibly have mitigated to some extent
-the delivery of compromised software archives to end users. \\
+It is estimated that Havex successfully impacted hundreds or even thousands of
+corporations and organizations---mostly in United States and the
+Europe~\cite{SCA-HAVEX2}. The motivation behind the Havex malware was
+intelligence exfiltration and espionage~\cite{SCA-HAVEX1}. How many of these
+vendors employed checksums and other mitigations as part of their software
+release cycle is not well reported, though investigators note said vendors'
+distribution mechanisms were insecure~\cite{SCA-HAVEX2}; however, an automated
+resource validation method could very plausibly have partially mitigated the
+delivery of compromised software to end users. \\
 
 \noindent\textbf{Case 4: HandBrake.} In May of 2017, users of HandBrake, a
 popular open source video transcoder for Mac/OSX, were made aware that they may
