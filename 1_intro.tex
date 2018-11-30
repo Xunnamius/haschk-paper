@@ -82,8 +82,8 @@ discrete systems---one hosting the resource and one hosting the resource's
 checksum---an adversary that compromises a single distribution system hosting
 both a resource and its checksum can mutate both, rendering the checksum
 irrelevant. Among many examples of such breaches are the 2012 hack of
-phpMyAdmin~\cite{SCA-PMA1, SCA-PMA2}, the 2016 hack of Linux
-Mint~\cite{SCA-MINT1, SCA-MINT2}, and the 2017 hack of HandBrake~\cite{SCA-HB2}.
+phpMyAdmin~\cite{SCA-PMA1, SCA-PMA2} and the 2016 hack of Linux
+Mint~\cite{SCA-MINT1, SCA-MINT2}.
 
 Checksums as they are employed currently are not effective at guaranteeing
 resource integrity. Recognizing this, some corporations and large organizations
@@ -93,13 +93,16 @@ mitigate resource integrity attacks in mature software package ecosystems (\eg
 Debian/apt, Red Hat/yum, Arch/pacman) and walled-garden app stores like Google
 Play, Apple App Store, and the Microsoft Store.
 
+\PUNT{Unfortunately, ... --> (solution proposal)}
+
 Unfortunately, not all resources available on the internet are acquired through
-software package ecosystems with builtin PKI support; moreover, these PKI
-schemes are not compatible with one another and cannot scale to secure arbitrary
-resources on the internet without significant cost and effort. Worse,
-roll-your-own PKI is \emph{hard to get right}~\cite{PKI}, implying systems built
-atop them are inherently more \emph{fragile}---susceptible to malfunction due
-to small errors or misconfigurations.
+software package ecosystems with builtin PKI support, nor are all resources
+software binaries; moreover, these PKI schemes are not compatible with one
+another and cannot scale to secure arbitrary resources on the internet without
+significant cost and effort. Worse, roll-your-own PKI is \emph{hard to get
+right}~\cite{PKI}, implying systems built atop them are inherently more
+\emph{fragile}---susceptible to malfunction due to small errors or
+misconfigurations.
 
 In this paper, we propose \SYSTEM{}, a novel method of verifying the integrity
 of resources downloaded over the internet that is a complete replacement for
@@ -116,14 +119,14 @@ user-facing web server/infrastructure alterations are necessary. We implement
 \SYSTEM{} as a proof-of-concept Google Chrome extension as well as a patch to
 the FileZilla FTP client.
 
-We carefully and extensively evaluate the security, scalability, and performance
-of our automated defense against resource corruption to demonstrate the
-effectiveness and high practicality of the \SYSTEM{} approach. Specifically, we
-find no obstacles to efficient scalability given choice of distributed system
-and no performance overhead compared to downloads without \SYSTEM{}. We further
-provide a publicly accessible empirical demonstration of \SYSTEM{}'s protective
-utility via a patched HotCRP instance\footnote{The patched HotCRP instance is
-available at https://tinyurl.com/dnschk-hotcrp}.
+We evaluate the security, scalability, and performance of our automated defense
+against resource corruption to demonstrate the effectiveness and high
+practicality of the \SYSTEM{} approach. Specifically, we find no obstacles to
+efficient scalability given choice of distributed system and no performance
+overhead compared to downloads without \SYSTEM{}. We further provide a publicly
+accessible empirical demonstration of \SYSTEM{}'s protective utility via a
+patched HotCRP instance\footnote{The patched HotCRP instance is available at
+https://tinyurl.com/dnschk-hotcrp}.
 
 In summary, our primary contributions are:
 
@@ -147,8 +150,8 @@ In summary, our primary contributions are:
   little implementation cost and at no cost to the end user.
 
   \item We carefully and extensively evaluate the security, scalability, and
-  performance of our automated defense against resource corruption and provide a
-  publicly accessible empirical demonstration of \SYSTEM{}'s protective utility.
+  performance of the \SYSTEM{} approach and provide a publicly accessible
+  empirical demonstration of its protective utility.
 
 \end{itemize}
 
