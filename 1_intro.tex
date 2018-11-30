@@ -81,9 +81,8 @@ distribution system. While cost effective compared to hosting two or more
 discrete systems---one hosting the resource and one hosting the resource's
 checksum---an adversary that compromises a single distribution system hosting
 both a resource and its checksum can mutate both, rendering the checksum
-irrelevant. Among many examples of such breaches are the 2012 hack of
-phpMyAdmin~\cite{SCA-PMA1, SCA-PMA2} and the 2016 hack of Linux
-Mint~\cite{SCA-MINT1, SCA-MINT2}.
+irrelevant; this was the case with the 2016 hack of Linux Mint's distribution
+server~\cite{SCA-MINT1, SCA-MINT2}.
 
 Checksums as they are employed currently are not effective at guaranteeing
 resource integrity. Recognizing this, some corporations and large organizations
@@ -132,22 +131,22 @@ In summary, our primary contributions are:
 
 \begin{itemize}
 
-  \item We propose a novel practical defense against receiving malicious,
-  corrupted, or compromised resources over the internet. Contrasted with current
-  solutions, our defense requires no source code or infrastructure changes at
-  any level other than DNS, does not employ unreliable heuristics, does not
-  interfere with other software or extensions that also handle resource
-  downloads, and can be transparently deployed without adding to the
-  \textit{fragility} of DNSSEC-enabled systems; it protects users whose software
-  implements \SYSTEM{} while remaining unnoticeable to users of whose software
-  does not.
+  \item We propose a novel practical defense against receiving corrupted or
+  compromised resources over the internet. Contrasted with current solutions,
+  our defense requires no source code or infrastructure changes at any level
+  (other than DNS), does not employ unreliable heuristics, does not interfere
+  with other software or extensions that also handle download security, and can
+  be transparently deployed without adding to the \textit{fragility} of
+  DNSSEC-enabled systems; \ie, it protects users whose software implements
+  \SYSTEM{} while remaining unnoticeable to users of whose software does not.
 
   \item We present our prototype \SYSTEM{} implementations for Google Chrome and
-  FileZilla and demonstrate its effectiveness in automatically and transparently
-  mitigating the accidental consumption of compromised resources from a
-  compromised server hosting a compromised web portal. To the best of our
+  FileZilla and demonstrate their effectiveness in automatically and
+  transparently mitigating the accidental consumption of compromised resources
+  from a compromised server hosting a compromised web portal. To the best of our
   knowledge, this is the \emph{first} system providing such capabilities with
-  little implementation cost and at no cost to the end user.
+  little implementation cost while requiring no additional work from the end
+  user.
 
   \item We carefully and extensively evaluate the security, scalability, and
   performance of the \SYSTEM{} approach and provide a publicly accessible
