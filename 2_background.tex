@@ -112,9 +112,8 @@ happens to be in this context.
 
 Detecting and mitigating resource integrity SCAs and other active attacks is a
 non-trivial and well studied problem~\cite{MD5Header, HTTP1.1, HTTPS, SRI, LF,
-OpenPGP1, DNSSEC, PKI}. What follows is a brief overview of the most current and
-popular methods to ensure the integrity of resources exchanged over the
-internet.
+OpenPGP1, DNSSEC, PKI}. What follows is a brief overview of current and popular
+methods to ensure the integrity of resources exchanged over the internet.
 
 \subsubsection{Anti-Malware Software}
 
@@ -123,7 +122,36 @@ viruses)}
 
 \subsubsection{HTTPS / Encrypted Channel}
 
-\TODO{(what it is, why it fails)}~\cite{HTTP, HTTPS, TLS1, TLS1.2, TLS0, DTLS}
+The state of the art in secure communications is the Transport Layer Security
+(TLS) standard and its Hyper Text Transfer Protocol (HTTP)/PKI based
+implementation, HTTPS~\cite{TLS1.2, HTTPS, PKI}. Assuming well behaved
+certificate authorities, modern browsing software, and proper deployment, TLS
+and HTTPS mitigate many authentication and confidentiality related concerns
+through the establishment of an encrypted authenticated communication channel
+between parties~\cite{HTTPS, TLS1.2, DTLS}.
+
+HTTPS and related protocols are not a panacea, however. Unlike concerns relating
+to authenticity and confidentiality, \textit{resource integrity} deals with the
+content of a communication; specifically: ensuring the bytes received at the end
+of a transaction are the bytes we expected to receive. For example, a binary
+expected to be 10MiB, when downloaded over the internet, should not be received
+as an 11MiB executable---even if the compromised resource remained confidential
+in transit between authenticated parties. Similarly, it would be ill advised to
+knowingly execute a 10MiB binary that, for one reason or another, had half its
+bits flipped by the time it was received. This can occur despite the integrity
+guarantee provided by TLS/HTTPS because resource integrity attacks and other
+SCAs fall outside of the threat model addressed by TLS/HTTPS.
+
+Hence, despite the resilient nature of HTTPS and the powerful security
+properties it guarantees, end users are still vulnerable to attacks on resource
+integrity. This can occur at the point of distribution, such as a compromised
+node in a third party CDN that delivers malicious resources masquerading as
+popular software (see: cases 1-4 above). It can occur when an adversary gains
+control of some aspect of the software deployment process (see: case 3 above).
+Moreover, an adversary can render HTML-based protections such as co-located
+resource checksums, the content-MD5 header~\cite{MD5Header} and Subresource
+Integrity (SRI)~\cite{SRI} digests ineffective by trivially mutating the
+compromised download portal and/or update/maintenance mechanism.
 
 \subsubsection{Browser-based Heuristics and Blacklists}
 
