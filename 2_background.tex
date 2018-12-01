@@ -75,7 +75,7 @@ Hence, a user who was sufficiently motivated, had sufficient technical knowledge
 of checksums and how to calculate them, and was also privy to the location of
 the correct checksum for the official phpMyAdmin image \emph{might} have noticed
 the discrepancy between the two digests. Clearly, a non-trivial number of users
-do not meet these criteria. \\
+do not meet these criteria, and this attack demonstrates the problem of \emph{user-apathy}. \\
 
 \noindent\textbf{Case 2: Linux Mint.} In 2016, the Linux Mint team discovered an
 intrusion into their official HTTPS-protected distribution
@@ -87,7 +87,7 @@ hundred of the downloads during that day, with the attackers claiming that a
 ``few hundred'' Linux Mint installs were explicitly under their control. The
 primary motivation behind the intrusion was the construction of a
 botnet~\cite{SCA-MINT3}. The authoritative checksum displayed on the official
-website was also mutated to corroborate the backdoored ISO~\cite{SCA-MINT3}.
+website was also mutated to corroborate the backdoored ISO~\cite{SCA-MINT3}, illustrating the \emph{co-hosting} problem.
 
 Storing the checksum elsewhere may have prevented mutations on the checksum;
 still, as demonstrated by the first case, such an effort is not itself a
@@ -114,7 +114,7 @@ intelligence exfiltration and espionage~\cite{SCA-HAVEX1}. How many of these
 vendors employed checksums and other mitigations as part of their software
 release cycle is not well reported, though investigators note said vendors'
 distribution mechanisms were insecure~\cite{SCA-HAVEX2}; however, an automated
-resource validation method could very plausibly have partially mitigated the
+resource validation method could have helped mitigate the
 delivery of compromised software to end users. \\
 
 \noindent\textbf{Case 4: HandBrake.} In May of 2017, users of HandBrake, a
