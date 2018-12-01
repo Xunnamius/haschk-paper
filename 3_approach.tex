@@ -44,14 +44,25 @@ With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
 the human factor altogether by providing a completely transparent and
 unobtrusive fully automated method of checksum calculation and verification. We
 achieve this through 1) the unique identification of individual hosted resources
-and 2) the globally available mapping of unique resource identifiers to
-checksums.
+and 2) a globally available mapping of unique resource identifiers to
+corresponding checksums.
 
-A typical flow can be summarized as (now we introduce some jargon)
+\SYSTEM{} can be imagined as a completely transparent security layer sitting
+between the user and the resource. Immediately after a resource is downloaded,
+the \SYSTEM{} layer will generate two cryptographic digests. One digest uniquely
+fingerprints said resource based on its name. This is known as the
+\emph{Non-Authoritative Checksum} (NAC) and is yielded from running the
+cryptographic hashing function over the contents of the resource file. The
+second digest uniquely fingerprints said resource based on its contents. This is
+known as the \emph{Resource Identifier} (RI) and is yielded from running the
+cryptographic hashing function over the resource's public path on the
+distribution system.
 
-Maybe a figure too as well?
+Next, \SYSTEM{} uses the RI to retrieve an \emph{Authoritative Checksum} (AC)
+from the backend. If successful, \SYSTEM{} will compare the NAC to the AC. Only
+in the case where they do not match will the user even realize \SYSTEM{} exists. Otherwise, \SYSTEM{} remains completely transparent the the end user, as demonstrated in our browser-based implementation.
 
-Reference the Chrome/FileZilla extensions as addressing user apathy but save the main conversation for later.
+\TODO{Maybe a figure too as well?}
 
 \PUNT{Backend:}
 \subsection{Defeating Co-Hosting, Sometimes for Free}
@@ -86,13 +97,13 @@ example, considering a web resource hosted at
 \textit{https://somesite.com/downloadme.txt}, a browser-based \SYSTEM{}
 implementation would hash \textit{/downloadme.txt} to get the RI.
 
-The Authoritative Hash (AH) is yielded from a record request to the backend.
+The Authoritative Checksum (AH) is yielded from a record request to the backend.
 
-The Non-Authoritative Hash (NAH) is calculated by hashing the contents of the
+The Non-Authoritative Checksum (NAC) is calculated by hashing the contents of the
 resource after it has been received in its entirety.
 
-Non-Authoritative Hash Validation (NAH Validation) is the final stage before
-\SYSTEM{} renders judgement on the downloaded resource's integrity. The NAH is
+Non-Authoritative Checksum Validation (NAC Validation) is the final stage before
+\SYSTEM{} renders judgement on the downloaded resource's integrity. The NAC is
 compared to the AH received from backend. If they do not match, the file is
 judged unsafe.
 
