@@ -124,19 +124,20 @@ considering a web resource hosted at
 \textit{/downloadme.txt} to yield an RI.
 
 Unlike the FileZilla patch, the Chrome implementation required a special
-\emph{Origin Domain (OD)} resolution step based on
-\texttt{DownloadItem::referrer}. The Origin Domain is the base domain used to
-query DNS, and must always be the Second-Level Domain (SLD) fragment of the
-current tab's URL. For example: \emph{somesite.com} would be the OD for the URL
-\emph{frag.something.somesite.com} and \emph{fakesite.io} would be the OD for
-the URL \emph{git.fakesite.io}.
+\emph{Origin Domain (OD)} resolution step based on the Chrome API's
+\texttt{DownloadItem::referrer} and the current Chrome tab's URL. The Origin
+Domain is the base domain used to query the backend---in this case DNS---and
+will always be the Second-Level Domain (SLD) fragment of the current tab's URL
+in our implementation. For example: \emph{somesite.com} would be the OD for the
+URL \emph{frag.something.somesite.com} and \emph{fakesite.io} would be the OD
+for the URL \emph{git.fakesite.io}.
 
-The OD is then appended to the Primary Label (PL), which is then appended to
-the RI Sub-Label (SL). The Primary Label (PL) is a standard string used to
-identify DNS records that belong to \SYSTEM{}; we used ``\_dnschk''. It will
-always appear as the third-level domain following the OD. The RI Sub-Label (SL)
-is a standard string used to identify DNS records that contain RIs; we used
-``\_ri'' in our implementation.
+The OD is then appended to the Primary Label (PL), which is then appended to the
+RI Sub-Label (SL). The Primary Label (PL) is a standard string used to identify
+DNS records that belong to \SYSTEM{}; we used ``\_dnschk''. It will always
+appear as the third-level domain following the OD. The RI Sub-Label (SL) is a
+standard string used to identify DNS records that contain RIs; we used ``\_ri''
+in our implementation. This string, consisting of \texttt{SL.PL.OD}, is 
 
 \PUNT{\begin{algorithm}[t]
     %\floatname{algorithm}{Algorithm}
