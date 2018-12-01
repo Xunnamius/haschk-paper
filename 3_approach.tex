@@ -143,6 +143,11 @@ forms the subject of the query to our DNS backend, whereafter the DNS network
 responds with a TXT record containing the AC or an indication that the RI does
 not exist in the zone.
 
+Note: to remain in compliance with DNS protocol label limits, we split the
+RI---a 64 character string---into two labels separated by a period. The final
+construction sent to DNS consists of \texttt{RI1.RI2.SL.PL.OD}. This may not be
+necessary given a different choice of backend.
+
 \PUNT{\begin{algorithm}[t]
     %\floatname{algorithm}{Algorithm}
     \caption{Handling an incoming download in Chrome} \label{algo:dnschk}
