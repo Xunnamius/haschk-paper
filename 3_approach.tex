@@ -108,43 +108,39 @@ includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
 
 \subsection{Proof-of-Concept Implementations}
 
-A Resource Identifier (RI) is the unique cryptographic digest yielded by hashing
-the full file path of the resource, including leading slash if applicable. For
-example, considering a web resource hosted at
-\textit{https://somesite.com/downloadme.txt}, a browser-based \SYSTEM{}
-implementation would hash \textit{/downloadme.txt} to get the RI.
-
-The Authoritative Checksum (AC) is yielded from a record request to the backend.
-
-The Non-Authoritative Checksum (NAC) is calculated by hashing the contents of the
-resource after it has been received in its entirety.
-
- (NAC Validation) is the final stage before
-\SYSTEM{} renders judgement on the downloaded resource's integrity. The NAC is
-compared to the AC received from backend. If they do not match, the file is
-judged unsafe.
-
-The Origin Domain (OD) is used to determine how \SYSTEM{} communicates with the
-backend. In a browser-based implementation, the OD is the Second-Level Domain
-(SLD) fragment of the current tab's URL. For example:
-\emph{google.com} would be the OD for the URL \emph{frag.something.google.com}
-and \emph{fakesite.io} would be the OD for the URL \emph{git.fakesite.io}.
-
 \subsubsection{\SYSTEM{} as a Google Chrome Extension}
 
-\TODO{(Google Chrome Extension: describe implementation details; works with DNS
-or DHT and is published to Chrome store; no interface changes!--i.e. downloads
-work exactly the same with or without the extension; users still have to
-confirm/deny suspicious judgements, but they are rare occurrences)}
+We implemented \SYSTEM{} as a proof-of-concept Google Chrome extension that can
+be configured to work with either global DNS or local DHT as its backend. Our
+Chrome extension does not make any modifications to the Chrome user interface or
+viewport (other than the extension icon itself). Further, downloads work exactly
+the same whether \SYSTEM{} is installed or not---the plugin is transparent to
+end users. If a failure is experienced during NAC Validation, however, \SYSTEM{}
+will alert the user to the dangerous download.
 
-The Primary Label (PL) is a standard string used to identify DNS records that
-belong to \SYSTEM{}. It will always appear as the third-level domain following the
-OD.
+\PUNT{In later version, talk about "timing attack"?}
 
-The RI Sub-Label (SL) is a standard string used to identify DNS records that
-contain RIs.
+The plugin computes RIs from the full URL path of a resource. For example,
+considering a web resource hosted at
+\textit{https://somesite.com/downloadme.txt}, our implementation would hash
+\textit{/downloadme.txt} to yield an RI.
 
-Chrome: the origin domain is determined via DownloadItem::referrer. This is to
+Unlike the FileZilla patch, the Chrome implementation required a special
+\emph{Origin Domain (OD)} resolution step based on
+\texttt{DownloadItem::referrer}. The Origin Domain is the base domain used to
+query DNS, and must always be the Second-Level Domain (SLD) fragment of the
+current tab's URL. For example: \emph{somesite.com} would be the OD for the URL
+\emph{frag.something.somesite.com} and \emph{fakesite.io} would be the OD for
+the URL \emph{git.fakesite.io}.
+
+The OD is then appended to the Primary Label (PL), which is then appended to
+the RI Sub-Label (SL). The Primary Label (PL) is a standard string used to
+identify DNS records that belong to \SYSTEM{}; we used ``\_dnschk''. It will
+always appear as the third-level domain following the OD. The RI Sub-Label (SL)
+is a standard string used to identify DNS records that contain RIs; we used
+``\_ri'' in our implementation.
+
+Chrome: the origin domain is determined via . This is to
 make it harder for an adversary to trick \SYSTEM{} into calculating an incorrect
 OD.
 
