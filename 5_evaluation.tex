@@ -113,17 +113,25 @@ Encrypt}~\cite{draft-ACME}.}
 
 To further evaluate the effectiveness of our mitigation, we tested our
 proof-of-concept \SYSTEM{} Chrome extension implementation against a series of
-common real-world resource integrity violations. The impetus behind such an any
-such resource integrity SCA is to have the resource pass through undetected with
-the hope that an unsuspecting user will interact with it.
+common real-world resource integrity violations. The impetus behind any such
+resource integrity supply chain attack is to have the resource pass through
+undetected with the hope that an unsuspecting user will interact with it.
 
-As a testbed, we launched a heavily modified version of the popular open source
-research submission and peer review software, \emph{HotCRP}. We uploaded a
-variety of different resources, including legimiate PDFs.
+As a test bed, we launched a heavily modified version of the popular open source
+research submission and peer review software, \emph{HotCRP}. Our modifications
+allowed us to interactively corrupt submissions and manipulate relevant DNS
+entries. We uploaded a variety of different resources, including legitimate
+PDFs, to HotCRP.
 
-We selectively corrupted half of these resources with random bit flips. Further,
-leveraging our administrator access to the instance, we uploaded files known to
-be malicious, replacing previously submitted PDFs in the HotCRP backend.
+We then selectively corrupted half of these resources with random bit flips.
+Interesting to note: the HotCRP instance did not update the checksums of the
+resources we corrupted. The only way to notice the attack would be to manually
+validate PDFs downloaded from HotCRP after the fact, something most users are
+not willing to do. Further, leveraging our administrator access to the instance,
+we uploaded files known to be malicious, replacing previously submitted PDFs in
+the HotCRP backend.
+
+We attempted to download these resources.
 
 Further, we implemented a ``redirection'' attack wherein a ``compromised'' PHP
 script added to the HotCRP instance redirected users several times before
