@@ -79,7 +79,7 @@ They can mutate the resource directly, which would be observable via \SYSTEM{}.
 They could also mutate the web/download page itself, replacing the anchor with a
 malicious one that points to a compromised resource on the adversary's remote
 system. \SYSTEM{} will still catch this due to the Chrome API's
-\texttt{DownloadItem::referrer} property (distinct from the concept of HTTP
+\texttt{DownloadItem::referrer} property (distinct from the concept of an HTTP
 referrer).
 
 However, a clever attacker might be able to trick the Chrome API into populating
@@ -99,15 +99,17 @@ If the tab is navigated and a download is started within a chosen time window,
 the user will be asked to verify that the OD is what they expect it to be
 (should be a familiar URL).
 
-We catch potential redirection attacks by assuming any page that begins a
-download in under three (3) seconds is suspicious and requires affirmation by
-the user. We expect this extreme edge case to occurrence very rarely, if at all.
+We catch potential redirection attacks by assuming any navigation that results
+in a direct download up to three (3) seconds after the page has loaded is
+suspicious and requires affirmation by the user. We expect this extreme
+Chrome-specific edge case to occurrence very rarely, if at all.
 
 \subsection{Real-World Resource Corruption Detection with Google Chrome and HotCRP}
 
-\TODO{It also seems from ACME that HTTP challenges are good enough of a proof to
-issue TLS certificates, so why not good enough for checksums? Threat model of
-ACME thoroughly goes through this~\cite{draft-ACME}.}
+As described in the IETF ACME draft specification, HTTP and DNS based
+authentication challenges are a good enough basis to issue TLS certificates for
+the popular free TLS certification issuing service \emph{Let's
+Encrypt}~\cite{draft-ACME}.
 
 \TODO{We carefully evaluate the security, performance,
 and practicality of \SYSTEM{} through implementing extensions in both a web
