@@ -28,12 +28,13 @@ possibilities: a) the new Resource Identifier \textit{does not} exist in the DNS
 zone, in which case \SYSTEM{} will fail to resolve the NAC, hence the NAC
 Validation step will fail silently; b) the new Resource Identifier \textit{does}
 exist in the DNS zone, therefore the ``new'' RI must be pointing to a different
-resource's checksum. Unless the adversary's goal is to swap one or more resources
-protected by \SYSTEM{} and a particular DNS zone with another resource also
-protected by \SYSTEM{} and in that same zone, the NAC Validation step will fail.
-For the aforementioned ``swap'' to work, the adversary would be required to both
-change the RI and also offer to the victim the \SYSTEM{} protected resource the
-``new'' RI corresponds to, which shrinks the attack surface significantly.
+resource's checksum. Unless the adversary's goal is to swap one or more
+resources protected by \SYSTEM{} and a particular DNS zone with another resource
+also protected by \SYSTEM{} and in that same zone, the NAC Validation step will
+fail. For the aforementioned ``swap'' to work, the adversary would be required
+to both change the RI and also offer to the victim the \SYSTEM{} protected
+resource the ``new'' RI corresponds to, which shrinks the attack surface
+significantly.
 
 We note that, in our proof-of-concept implementation, the ``silent failure''
 above allows \SYSTEM{} to be immediately deployed without risk of annoying the
@@ -81,7 +82,7 @@ system. \SYSTEM{} will still catch this due to the Chrome API's
 \texttt{DownloadItem::referrer} property (distinct from the concept of HTTP
 referrer).
 
-However, a clever attacker can trick the Chrome API into populating
+However, a clever attacker might be able to trick the Chrome API into populating
 \texttt{DownloadItem::referrer} by redirecting the user to a valid and innocuous
 page that very quickly redirects the user again to a compromised resource with
 the goal of tricking the Chrome API into supplying \SYSTEM{} with a chosen
