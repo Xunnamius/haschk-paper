@@ -121,17 +121,17 @@ interface.
 
 The extension computes RIs from the full URL path of a resource. For example,
 considering a web resource hosted at
-\textit{https://somesite.com/var/downloadme.txt}, our implementation would hash
-\textit{/var/downloadme.txt} to yield an RI.
+\texttt{https://somesite.com/var/downloadme.txt}, our implementation would hash
+\texttt{/var/downloadme.txt} to yield an RI.
 
 Unlike the FileZilla patch implementation, the Chrome extension implementation
 required a special \emph{Origin Domain (OD)} resolution step based on the Chrome
 API's \texttt{DownloadItem::referrer} and the current Chrome tab's URL. The
 Origin Domain is the base domain used to query the backend---in this case
 DNS---and will always be the Second-Level Domain (SLD) fragment of the current
-tab's URL in our implementation. For example: \emph{somesite.com} would be the
-OD for the URL \emph{frag.something.somesite.com} and \emph{fakesite.io} would
-be the OD for the URL \emph{git.fakesite.io}.
+tab's URL in our implementation. For example: \texttt{somesite.com} would be the
+OD for the URL \texttt{frag.something.somesite.com} and \texttt{fakesite.io}
+would be the OD for the URL \texttt{git.fakesite.io}.
 
 The OD is then appended to the Primary Label (PL), which is then appended to the
 RI Sub-Label (SL). The Primary Label (PL) is a standard string used to identify
@@ -197,8 +197,8 @@ transparent to end users. If a failure is experienced during NAC Validation,
 
 The extension computes RIs from the full URI path of a resource on the server
 (including root). For example, considering a resource hosted on an FTP server at
-\textit{/~user/var/downloadme.txt}, our implementation would hash
-\textit{/~user/var/downloadme.txt} to yield an RI.
+\texttt{/~user/var/downloadme.txt}, our implementation would hash
+\texttt{/~user/var/downloadme.txt} to yield an RI.
 
 Unlike the Chrome extension patch implementation, the FileZilla patch required
 no special \emph{Origin Domain (OD)} resolution step. The domain to be used for
