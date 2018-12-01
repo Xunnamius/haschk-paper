@@ -117,15 +117,17 @@ than existing solutions, detects a wide variety of real-world integrity errors
 across a diverse set of platforms, and is a scalable and immediately deployable
 solution.}
 
-\subsection{Deployment, Scalability, and Robustness}
+\subsection{Deployment and Scalability}
 
 With the HotCRP demo, the totality of our resource deployment scheme consisted
 of the addition of a new TXT entry to our DNS zone file---accomplished via API
-call---during HotCRP's paper submission process. We find a DNS record addition
-or update during the resource deployment process to be simple enough for service
-administrators to implement and presents no significant burden to adoption
-outside of DNS API integration into an organization's software development
-supply chain.
+call---during HotCRP's paper submission process. This new TXT entry consisted of
+a mapping between a RI and its corresponding AC.
+
+We find a DNS record addition or update during the resource deployment process
+to be simple enough for service administrators to implement and presents no
+significant burden to deployment outside of DNS API integration into an
+organization's software development supply chain.
 
 As \SYSTEM{} is predicated on a distributed authenticated highly-available
 backend, we conclude that the scalability of \SYSTEM{} can be reduced to the
@@ -133,10 +135,10 @@ scalability of its backend. We are aware of no other obstacles to scalability
 beyond those imposed by the underlying distributed system.
 
 In respect to DNS specifically, packet fragmentation can be a concern for high
-performance networks~\cite{EDNS}, but this is an artifact of DNSSEC rather than
-\SYSTEM{}~\cite{DNSSEC}. Further, there are no practical limits on the
-scalability of a DNS zone itself, by which we mean zone file size is
-unrestricted by the protocol. A service can host tens of thousands of resource
+performance networks~\cite{EDNS}, but this is an artifact of DNSSEC and related
+protocols rather than \SYSTEM{}~\cite{DNSSEC}. Further, we are aware of no
+practical limits or protocol-based restrictions on the scalability of a DNS zone
+file itself or its subzones. A service can host tens of thousands of resource
 records in their DNS zone file~\cite{DNS1, DNS2}.
 
 \subsection{Performance Overhead}
