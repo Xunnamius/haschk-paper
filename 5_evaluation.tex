@@ -28,12 +28,17 @@ possibilities: a) the new Resource Identifier \textit{does not} exist in the DNS
 zone, in which case \SYSTEM{} will fail to resolve the NAC, hence the NAC
 Validation step will fail silently; b) the new Resource Identifier \textit{does}
 exist in the DNS zone, therefore the ``new'' RI must be pointing to a different
-resource's checksum. Unless the adversary's goal is to swap one or more resources
-protected by \SYSTEM{} and a particular DNS zone with another resource also
-protected by \SYSTEM{} and in that same zone, the NAC Validation step will fail.
-For the aforementioned ``swap'' to work, the adversary would be required to both
-change the RI and also offer to the victim the \SYSTEM{} protected resource the
-``new'' RI corresponds to, which shrinks the attack surface significantly.
+resource's checksum. Unless the adversary's goal is to swap one or more
+resources protected by \SYSTEM{} and a particular DNS zone with another resource
+also protected by \SYSTEM{} and in that same zone, the NAC Validation step will
+fail. For the aforementioned ``swap'' to work, the adversary would be required
+to both change the RI and also offer to the victim the \SYSTEM{} protected
+resource the ``new'' RI corresponds to, which shrinks the attack surface
+significantly.
+
+We note that, in our proof-of-concept implementation, the ``silent failure''
+above allows \SYSTEM{} to be immediately deployed without risk of annoying the
+user with false negatives. See \secref{discussion} for further discussion.
 
 \subsubsection{Compromised Authoritative Checksum}
 
@@ -50,11 +55,13 @@ authoritative DNS server and/or the appropriate DNSSEC keys.
 
 Even if the adversary achieved this level of compromise, they do not have the
 ability to deliver a malicious payload in this case. However, the adversary
-could use control over the relevant DNS zones to cause denial-of-service attacks
-against those attempting to download the resource by causing all NAC Validation
-checks to fail. This is mitigated by \SYSTEM{} allowing the user to ``override''
-its error states, similarly to Google Chrome's invalid HTTPS certificate warning
-page allowing advanced users to pass through.
+could use control over the relevant DNS zones to cause denial-of-service style
+attacks against those attempting to download the resource by causing all NAC
+Validation checks to fail. This is mitigated by \SYSTEM{} allowing the user to
+``override'' its error states; \ie, \SYSTEM{} does not (and cannot, thanks to
+the Chrome/WebExtensions API) mutate a downloaded resource. See
+\secref{discussion} for further discussion on limitations due to the
+Chrome/WebExtensions API.
 
 \subsubsection{Compromised Resource and Authoritative Checksum}
 
@@ -71,26 +78,30 @@ If an adversary manages to compromise a web page/server, they have two options.
 They can mutate the resource directly, which would be observable via \SYSTEM{}.
 They could also mutate the web/download page itself, replacing the anchor with a
 malicious one that points to a compromised resource on the adversary's remote
-system. This system could be configured with valid \SYSTEM{} DNS TXT records,
-allowing the adversary to trick \SYSTEM{} into green lighting the resource
-without complaint. Similarly, an adversary could redirect the user to an valid
-and innocuous (but compromised) page that very quickly redirects the user again
-to the compromised resource with the goal of tricking \SYSTEM{}.
+system. \SYSTEM{} will still catch this due to the Chrome API's
+\texttt{DownloadItem::referrer} property (distinct from the concept of HTTP
+referrer).
 
-In order to prevent such implementation-level attacks, we make a distinction
+However, a clever attacker might be able to trick the Chrome API into populating
+\texttt{DownloadItem::referrer} by redirecting the user to a valid and innocuous
+page that very quickly redirects the user again to a compromised resource with
+the goal of tricking the Chrome API into supplying \SYSTEM{} with a chosen
+\texttt{DownloadItem::referrer}.
+
+In order to prevent such implementation-specific attacks, we make a distinction
 between the domain that the hyperlink containing the desired resource references
-and the OD---or the domain of the document within which said hyperlink exists.
-The extension must be implemented such that the OD is resolved as early as
-possible in the page loading process. The scope of the OD is at the tab level,
-meaning there is one OD determined for each open browser tab. Once determined
-for a tab, the OD should not be recalculated for some period of time. If the
-browser is navigated within this time period, the user will be asked to verify
-that the OD is what they expect it to be (should be a familiar URL).
+and the Origin Domain (OD)---or the domain of the document within which said
+hyperlink exists. The extension is implemented such that the OD is resolved as
+early as possible in the page loading process. The scope of the OD is at the tab
+level, meaning there is one OD determined for each open browser tab. Once
+determined for a tab, the OD should not be recalculated for some period of time.
+If the tab is navigated and a download is started within a chosen time window,
+the user will be asked to verify that the OD is what they expect it to be
+(should be a familiar URL).
 
-We implement this mitigation using chrome Download API's DownloadItem::referrer
-property as the OD. We catch redirection attacks by assuming any page that
-begins a download in under 3 seconds is suspicious and requires affirmation by
-the user.
+We catch potential redirection attacks by assuming any page that begins a
+download in under three (3) seconds is suspicious and requires affirmation by
+the user. We expect this extreme edge case to occurrence very rarely, if at all.
 
 \subsection{Real-World Resource Corruption Detection with Google Chrome and HotCRP}
 
@@ -120,6 +131,11 @@ solution anyway.}
 
 \TODO{Additional Download Latency, Additional Network Load, Runtime overhead,
 etc. All nixed.}
+
+While evaluating \SYSTEM{}, we observed no discernible additional network load
+or CPU usage with the extension loaded into Chrome. As \SYSTEM{} does not
+interrupt or manipulate resources as they are being downloaded, there is no
+additional download latency introduced by \SYSTEM{}. 
 
 Not computationally intensive. Requests are small, low network load. No
 discernible performance overhead.

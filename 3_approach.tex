@@ -38,7 +38,7 @@ threat of malware prevent them from receiving their desired content. Hence, we
 must assume: some non-trivial number of users, similarly \emph{determined} to
 transact resources over the internet, will not be burdened with the off-path
 minutiae of manually calculating a checksum (if they are even familiar with the
-jargon) and verifying the integrity of the resources they're downloading.
+jargon) and verifying the integrity of the resources they are downloading.
 
 With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
 the human factor altogether by providing a completely transparent and
@@ -188,12 +188,12 @@ necessary given a different choice of backend.
 
 \subsubsection{\SYSTEM{} as a FileZilla Source Patch}
 
-We implemented \SYSTEM{} as a proof-of-concept patch to the FileZilla source.
-Our implementation does not make any modifications to FileZilla's user interface. As with the
-Chrome extension, FTP downloads work exactly the same whether a user is using a
-patched or non-patched version of FileZilla. The extension is similarly
-transparent to end users. If a failure is experienced during NAC Validation,
-\SYSTEM{} will alert the user via a popup alert.
+We implement \SYSTEM{} as a proof-of-concept patch to the FileZilla source.
+Our implementation does not make any modifications to FileZilla's user
+interface. As with the Chrome extension, FTP downloads work exactly the same
+whether a user is using a patched or non-patched version of FileZilla. The
+extension is similarly transparent to end users. If a failure is experienced
+during NAC Validation, \SYSTEM{} will alert the user via a popup alert.
 
 The extension computes RIs from the full URI path of a resource on the server
 (including root). For example, considering a resource hosted on an FTP server at
