@@ -26,14 +26,14 @@ resource will fail integrity validation during the NAC Validation step.
 If the adversary does alter the Resource Identifier, there are two
 possibilities: a) the new Resource Identifier \textit{does not} exist in the DNS
 zone, in which case \SYSTEM{} will fail to resolve the NAC, hence the NAC
-Validation step will fail; b) the new Resource Identifier \textit{does} exist in
-the DNS zone, therefore the ``new'' RI must be pointing to a different file's
-checksum. Unless the adversary's goal is to swap one or more files protected by
-\SYSTEM{} and a particular DNS zone with another file also protected by
-\SYSTEM{} and in that same zone, the NAC Validation step will fail. For the
-aforementioned ``swap'' to work, the adversary would be required to both change
-the RI and also offer to the victim the \SYSTEM{} protected file the ``new'' RI
-corresponds to, which shrinks the attack surface significantly.
+Validation step will fail silently; b) the new Resource Identifier \textit{does}
+exist in the DNS zone, therefore the ``new'' RI must be pointing to a different
+resource's checksum. Unless the adversary's goal is to swap one or more resources
+protected by \SYSTEM{} and a particular DNS zone with another resource also
+protected by \SYSTEM{} and in that same zone, the NAC Validation step will fail.
+For the aforementioned ``swap'' to work, the adversary would be required to both
+change the RI and also offer to the victim the \SYSTEM{} protected resource the
+``new'' RI corresponds to, which shrinks the attack surface significantly.
 
 \subsubsection{Compromised Authoritative Checksum}
 
@@ -41,7 +41,7 @@ We consider the case where an adversary can completely control the victim DNS
 zone(s) that allow \SYSTEM{} to function. Therefore, the adversary can return an
 authoritative response of their choice to any DNS query.
 
-In this case, the adversary does not have control over the victim's file
+In this case, the adversary does not have control over the victim's resource
 distribution mechanism (web page, file server, CDN, etc).
 
 DNSSEC ensures the validity and authenticity of DNS responses. In order for the
@@ -113,7 +113,7 @@ solution.}
 \TODO{Can this be scaled? Yes it can. What are the practical limits? EDNS0 means
 it is not DNS size, though packet fragmentation is still a concern. How about
 max record length? Maximum number of records? A service could have thousands or
-millions of files it serves! Can DNS handle that? DHT failover is still a
+millions of resources it serves! Can DNS handle that? DHT failover is still a
 solution anyway.}
 
 \subsection{Performance Overhead}
