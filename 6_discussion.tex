@@ -62,23 +62,25 @@ modified by proxies and other intermediaries~\cite{MD5Header}.
 
 \subsubsection{DNSSEC Adoption is Slow}
 
-The DNSSEC adoption rate---which has increased dramatically since it was first
-proposed in 1997~\cite{Cloudflare, APNIC}---is decidedly variable and slow to
-rise. Only around 3\% of Fortune 1000 and 9\% of university domains have
-properly deployed DNSSEC~\cite{NIST-IPv6}, and the number of DNS resolvers
-validating DNSSEC replies currently sits at approximately 12-14\%~\cite{APNIC}.
+The DNSSEC adoption rate---which has increased dramatically since the first
+production root zone was signed in 2010~\cite{Cloudflare, APNIC}---is decidedly
+variable and slow to rise. Only around 3\% of Fortune 1000 and 9\% of university
+domains have properly deployed DNSSEC~\cite{NIST-IPv6}, and the number of DNS
+resolvers validating DNSSEC replies currently sits at approximately
+12-14\%~\cite{APNIC}.
 
 While this could be happening for a variety of reasons~\cite{DNSSEC-is-hard-1,
 DNSSEC-is-hard-2, DNSSEC-is-hard-3, DNSSEC-is-hard-4, DNSSEC-is-hard-5}, slow
 growth is certainly not outside of the norm for global protocol deployments that
 are perceived as ``nice to have'' rather than ``business critical''. For
 instance: the adoption rate of IPv6, proposed nearly 25 years ago, is similarly
-slow to rise. Globally, the IPv6 adoption rate rests at approximately
+slow to rise. Globally, when measured as the availability of IPv6 connectivity
+among users accessing any Google service, it rests at approximately
 21\%~\cite{Google-IPv6}, with only 2\% of Fortune 1000 and 3\% of university
-domains being IPv6-enabled~\cite{NIST-IPv6}; we note this is the case
-\emph{despite IANA and all RIRs having entered the final stage of IPv4
-exhaustion as of 2018}~\cite{APNIC-exhaustion} while the number of
-internet-connected devices \emph{continues to rise}~\cite{Cisco}.
+domains being IPv6-enabled~\cite{NIST-IPv6}; we note that this is the case
+\emph{despite IANA and all RIRs having entered the final stage of virtual IPv4
+address space exhaustion as of 2018}~\cite{APNIC-exhaustion} while the number of
+internet-connected devices \emph{continues its upward climb}~\cite{Cisco}.
 
 Lamentably, as with IPv6, DNSSEC adoption will continue to grow slowly until
 securing our global DNS infrastructure is more widely considered ``business
@@ -88,15 +90,15 @@ critical''.
     \centering
     \includegraphics[width=0.95\linewidth]{apnic.png}
     \caption{APNIC estimate of the percentage of global DNS resolvers (Google
-    PDNS as well as local resolvers) performing DNSSEC validation from January
-    2016 to December 2018.}\label{fig:apnic}
+    PDNS as well as local resolvers) performing DNSSEC validation from October
+    2013 to December 2018. The five year trend is positive.}\label{fig:apnic}
 \end{figure*}
 
 We also note that, while the highly-available DNS network is used to host the
 mappings between Resource Identifers and Authoritative Hashes in the \SYSTEM{}
 implementation, the \SYSTEM{} \emph{approach} is still valid no matter the
-choice of (eventually consistent) highly-available distributed system, such as a
-Distributed Hash Table (DHT).
+choice of highly-available distributed system, such as a Distributed Hash Table
+(DHT).
 
 \subsubsection{DNS-Specific Protocol Limitations}
 
@@ -155,12 +157,13 @@ to save the user a significant amount of time, though using Merkle trees for
 resource integrity validation over the internet is decidedly
 not-trivial~\cite{Merkle-HTTP}.
 
-For a production example of Merkle tree based resource validation, we can look
-to the so-called \emph{Tiger tree hash}~\cite{TTH, Merkle} (TTH) construction.
-TTHs are Merkle trees built on the Tiger cryptographic hashing function. The TTH
-is a well-studied and widely deployed construction capable of supporting
-``partial verification'' of resources as they're downloaded. Tiger tree hashes
-are popular among several large P2P file sharing applications such as WireShare
+For a production example of Merkle tree based resource integrity validation, we
+can look to the so-called \emph{Tiger tree hash}~\cite{TTH, Merkle} (TTH)
+construction. The TTH, a Merkle tree implementation, is built on the Tiger
+cryptographic hashing function. Merkle trees and TTHs are well-studied and
+widely deployed constructions capable of supporting ``partial verification'' of
+resources as they're downloaded. Tiger tree hashes in particular are popular
+among several large P2P file sharing applications such as WireShare
 (LimeWire)~\cite{LimeWire}. Of course, a solution need not be tightly coupled to
 the Tiger cryptographic hashing function. The high-speed BLAKE2, SHA2, or SHA3
 cryptographic hashing functions would perform just as well, if not better.
@@ -183,4 +186,5 @@ Assigned Numbers Authority. Going forward, we can potentially adopt a URN scheme
 that already exists, such as Magnet links~\cite{MagnetLinks} or the informal
 IETF draft for hash-based URN namespaces~\cite{draft-URN}. With URNs, we can
 ensure our naming scheme is based solely on a resource's contents rather than
-both its contents and its location on a web server.
+both its contents \emph{and} its arbitrary location on a web server, making
+\SYSTEM{} more resilient.
