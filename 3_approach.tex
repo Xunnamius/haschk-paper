@@ -22,10 +22,10 @@ illustrates the \SYSTEM{} approach.
 
 Human factors such as user apathy have stymied cryptographers for decades.
 Schemes that are otherwise reasonably cryptographically solid can fail
-catastrophically due to human error, confusion, or simple apathy. Users are just
-as likely to avoid using a security measure altogether if it presents an even
-minor obstacle to immediate gratification~\cite{Clickthrough, PGPBad}. In the
-browser, for example, can observe this empirically.
+catastrophically due to human error, confusion, or simple lack of interest. Some
+users are just as likely to avoid using a security measure altogether if it
+presents even a minor obstacle to immediate gratification~\cite{Clickthrough,
+PGPBad}. In the browser, for example, can observe this empirically.
 
 Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
 passively observe over 25 million warning impressions in 2013, Akhawe et al.
@@ -34,21 +34,18 @@ phishing warnings} and \emph{70\% of TLS warnings}~\cite{Clickthrough}. Users
 also clicked through a third of Mozilla Firefox's TLS warnings and a tenth of
 their malware and phishing warnings. That is to say: a significant percentage of
 browser users are \emph{determined} not to be let TLS trust issues and/or the
-threat of malware prevent them from receiving their desired content. We can
-safely conclude: users, similarly \emph{determined} to transact resources over
-the internet, will not be burdened with manually calculating checksums and
-verifying the integrity of those resources.
+threat of malware prevent them from receiving their desired content. Hence, we
+must assume: some non-trivial number of users, similarly \emph{determined} to
+transact resources over the internet, will not be burdened with the off-path
+minutiae of manually calculating a checksum (if they are even familiar with the
+jargon) and verifying the integrity of the resources they're downloading.
 
-for most users, hand-calculating the checksum and comparing to the published
-version is too off-path and tedious.
-
-PGP apathy example PGP apathy applies here It is a mistake to pit security
-concerns against human factors like this.
-
-The primary goal of \SYSTEM{} is to side-step the problem altogether. Full
-automation and transparency for the end user.
-
-We achieve this by
+With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
+the human factor altogether by providing a completely transparent and
+unobtrusive fully automated method of checksum calculation and verification. We
+achieve this through 1) the unique identification of individual hosted resources
+and 2) the globally available mapping of unique resource identifiers to
+checksums.
 
 A typical flow can be summarized as (now we introduce some jargon)
 
