@@ -71,34 +71,37 @@ demonstrated in our browser-based implementation.
 \subsection{Defeating Co-Hosting, Sometimes for Free}
 
 Funding and maintaining a single server/system to host all of your assets can be
-highly cost effective in the short term compared to hosting two or more discrete
-systems---one hosting the resource and one hosting the resource's checksum.
-Unfortunately, an adversary that compromises such a system can both mutate the
-resource and update the checksum to match the mutation. Hence, \emph{co-hosting}
-a resource and its corresponding checksum on the same distribution system
-virtually negates the effectiveness of having a checksum at all, making it
-irrelevant. This is widely understood in the security
-community~\cite{SCA-MINT2}.
+extremely cost-effective in the short term compared to hosting two or more
+discrete systems---one hosting the resource and one hosting the resource's
+checksum. Unfortunately, this establishes a single point of failure: an
+adversary that compromises such a system can both mutate the resource and update
+the checksum to match the mutation. Hence, \emph{co-hosting} a resource and its
+corresponding checksum on the same distribution system virtually negates the
+effectiveness of having a checksum at all. This is widely understood in the
+security community~\cite{SCA-MINT2}.
 
 Hence, deployment of \SYSTEM{} necessitates the existence of a separate
-distribution mechanisms for RIs and their AHs. Though the concept of using some
+distribution mechanism for resources and ACs. Though the concept of using some
 distributed authenticated storage service to query a global mapping between RIs
-and AHs sounds intuitive and straightforward, two natural concerns arise. The
-first: modern durable authentication schemes are based on PKI; who is managing
-the keypairs? The second: who is paying to maintain this secondary system? Who
-is bearing the burden of its maintenance?
+and ACs sounds intuitive and straightforward, two natural concerns arise. The
+first: modern fully authenticated schemes are based on PKI; who is managing
+this infrastructure and can they be trusted? The second: who is funding the
+establishment and maintenance of this potentially complex secondary system?
 
-Fortunately, there exists a highly-available authenticated globally distributed
-mapping service that web-facing organizations are already quite familiar with:
-the Domain Name System (DNS). In our implementations, we prefered DNS to other candidate highly-available authenticated systems for these reasons.
+Fortunately, there exists a relatively free (extra TXT resource records are
+cheap and essentially limitless) highly-available fully authenticated globally
+distributed high performance low latency mapping service that web-facing
+organizations and IT teams are already quite familiar with: the Domain Name
+System (DNS). To avoid co-location in our implementations, we preferred DNS to
+other candidate highly-available authenticated systems for these reasons.
 
 \subsection{Platform Diversity}
 
-Not computationally intensive. Requests are small, low network load. See eval.
-
-Hence, the approach can be incorporated into software on any device capable of
-communicating with a distributed authenticated backend. This includes desktops,
-laptops, tablets, mobile devices, embedded systems.
+From our evaluation, the computational overhead of running \SYSTEM{} is minimal
+for most resources. Further, additional network load is negligible (cf.
+\secref{evaluation}). Hence, the \SYSTEM{} approach can be incorporated into
+software on most any device capable of communicating with the backend. This
+includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
 
 \subsection{Proof-of-Concept Implementations}
 
@@ -110,14 +113,14 @@ example, considering a web resource hosted at
 \textit{https://somesite.com/downloadme.txt}, a browser-based \SYSTEM{}
 implementation would hash \textit{/downloadme.txt} to get the RI.
 
-The Authoritative Checksum (AH) is yielded from a record request to the backend.
+The Authoritative Checksum (AC) is yielded from a record request to the backend.
 
 The Non-Authoritative Checksum (NAC) is calculated by hashing the contents of the
 resource after it has been received in its entirety.
 
  (NAC Validation) is the final stage before
 \SYSTEM{} renders judgement on the downloaded resource's integrity. The NAC is
-compared to the AH received from backend. If they do not match, the file is
+compared to the AC received from backend. If they do not match, the file is
 judged unsafe.
 
 The Origin Domain (OD) is used to determine how \SYSTEM{} communicates with the
