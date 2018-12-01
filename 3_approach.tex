@@ -6,29 +6,48 @@ present the challenges and their solutions in designing \SYSTEM{} that
 transparently mitigates resource integrity Supply Chain Attacks (SCA) without
 degrading the experience of users that do not implement the \SYSTEM{} approach.
 
-Further, though our concrete implementation relies on DNS and DNS Security
+Further, though our concrete implementations relies on DNS and DNS Security
 (DNSSEC), the approach itself is flexible and completely agnostic of any single
-component. The implementation choice of highly-available distributed backend is
-not restricted to the DNS network. The approach works just as well with, for
-instance, an authenticated Distributed Hash Tables (DHT) or some distributed
-authenticated key-value store (\eg Redis).
+component. The implementation choice of highly-available distributed
+\emph{backend} is not restricted to the DNS network. The approach works just as
+well with, for instance, an authenticated Distributed Hash Tables (DHT) or some
+distributed authenticated key-value store (\eg Redis) as the backend.
+
+
+
+A Resource Identifier (RI) is the unique cryptographic digest yielded by hashing
+the full file path of the resource, including leading slash. For example, for a
+web resource hosted at \textit{https://somesite.com/downloadme.txt}, a
+browser-based \SYSTEM{} implementation would hash \textit{/downloadme.txt} to
+get the RI.
+
+The Authoritative Hash (AH) is yielded from a record request to the backend.
+
+The Non-Authoritative Hash (NAH) is calculated by hashing the contents of the resource after it has been received in its entirety.
+
+Non-Authoritative Hash Validation (NAH Validation) is the final stage before
+\SYSTEM{} renders judgement on the downloaded resource's integrity. The NAH is
+compared to the AH received from backend. If they do not match, the file is
+judged unsafe.
+
+The Origin Domain (OD) is used to determine how \SYSTEM{} communicates with the
+distributed backend. In a browser-based implementation, the OD is the
+Second-Level Domain (SLD) fragment of the current tab's URL. For example:
+\emph{google.com} would be the OD for the URL \emph{frag.something.google.com}
+and \emph{fakesite.io} would be the OD for the URL \emph{git.fakesite.io}.
+
+
 
 \TODO{talk about the Chrome/FileZilla extensions as addressing user apathy with
 the DNSSEC/DHT implementations addressing co-hosting.}
 
-\TODO{Resource Identifier (RI)}  
-\TODO{Authoritative Hash (AH)}  
-\TODO{Non-Authoritative Hash (NAH)}  
-\TODO{Non-Authoritative Hash Validation (NAH Validation)}  
-\TODO{Origin Domain (OD)}  
-\TODO{Primary Label}  
-\TODO{RI Sub-Label}
-
+\PUNT{Frontend:}
 \subsection{Transparency and User Apathy}
 
 
 
-\subsection{Defeating Co-Hosting for Free?}
+\PUNT{Backend:}
+\subsection{Defeating Co-Hosting for Free}
 
 
 
@@ -44,6 +63,17 @@ the DNSSEC/DHT implementations addressing co-hosting.}
 or DHT and is published to Chrome store; no interface changes!--i.e. downloads
 work exactly the same with or without the extension; users still have to
 confirm/deny suspicious judgements, but they are rare occurrences)}
+
+The Primary Label (PL) is a standard string used to identify DNS records that
+belong to DNSCHK. It will always appear as the third-level domain following the
+OD.
+
+The RI Sub-Label (SL) is a standard string used to identify DNS records that
+contain RIs.
+
+Chrome: the origin domain is determined via DownloadItem::referrer.
+This is to make it harder for an adversary to trick DNSCHK into calculating an
+incorrect OD.
 
 \TODO{Reference hotcrp demo but leave the description for the evaluation.}
 
