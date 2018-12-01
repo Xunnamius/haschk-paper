@@ -9,7 +9,7 @@ DNS itself.
 
 \subsection{Additional Related Work}
 
-\noindent\textbf{Cryptographic Data in DNS Resource Records.} 
+\noindent\textbf{Cryptographic Data in DNS Resource Records.}
 \TODO{Suggestion here: eliminate the first sentence---it just sounds negative.  Starting with the second sentence is just listing the facts.  BUT: add a last sentence that clearly states what IS new, which I believe is using DNSSEC to store a cryptographic record (authoritative hash) that is associated with some other resource.  You can probably state that better yourself. }
 Storing
 cryptographic data in the DNS network is not a new idea. The DNS-Based
@@ -44,7 +44,7 @@ integrity verification scheme~\cite{LF}. Subresource Integrity (SRI) describes a
 similar production-ready HTML-based scheme designed with CDNs and web assets
 (rather than generic resources) in mind. Like \SYSTEM{}, both LF and SRI employ
 cryptographic digests to ensure no changes of any kind have been made to a
-resource file~\cite{SRI}. Unlike \SYSTEM{}, LF and SRI rely on the server that
+resource~\cite{SRI}. Unlike \SYSTEM{}, LF and SRI rely on the server that
 hosts the HTML source to be secure; specifically, the checksums contained in the
 HTML source must be accurate for these schemes to work. An attacker that has
 control of the web server can alter the HTML and inject a malicious checksum.
@@ -119,10 +119,6 @@ Additionally, \SYSTEM{} does not add to the danger of amplification and other
 reflection attacks on DNS; these are generic DNS issues addressable at other
 layers of the protocol.
 
-\TODO{In contrast to the previous section, this one doesn't seem like
-  limitations at all.  Not sure anything needs to change here, but it
-  is a striking contrast.}
-
 \subsubsection{Chrome Implementation}
 
 Our current JavaScript proof-of-concept implementation, as a Chrome extension,
@@ -154,12 +150,24 @@ use with \SYSTEM{} as a background page based extension.
 
 \subsubsection{Merkle Trees and Early Resource Validation}
 
-Using Merkle Trees instead of pure hashing functions would enable partial
-verification of large files; \ie{} if the file we are downloading is 10TiB, we
-do not have to wait for it to finish downloading before we render a failing
-judgement. This saves the user time. Perhaps using the Tiger hash, since Tiger
-Merkle Trees seem to be popular among large P2P and file sharing applications.
-\TODO{LAst sentence is incomplete}.
+Using Merkle trees~\cite{Merkle} instead of pure cryptographic hashing functions
+for resource validation would enable partial verification of large files. For
+example, suppose we are downloading a 10TiB resource and it is compromised. By
+calculating a Merkle tree beforehand, we do not have to wait for the resource to
+finish downloading before we render a failing judgement. This has the potential
+to save the user a significant amount of time, though using Merkle trees for
+resource integrity validation over the internet is decidedly
+not-trivial~\cite{Merkle-HTTP}.
+
+For a production example of Merkle tree based resource validation, we can look
+to the so-called \emph{Tiger tree hash}~\cite{TTH, Merkle} (TTH) construction.
+TTHs are Merkle trees built on the Tiger cryptographic hashing function. The TTH
+is a well-studied and widely deployed construction capable of supporting
+``partial verification'' of resources as they're downloaded. Tiger tree hashes
+are popular among several large P2P file sharing applications such as WireShare
+(LimeWire)~\cite{LimeWire}. Of course, a solution need not be tightly coupled to
+the Tiger cryptographic hashing function. The high-speed BLAKE2, SHA2, or SHA3
+cryptographic hashing functions would perform just as well, if not better.
 
 \subsubsection{Replacing RIs with URNs}
 

@@ -114,8 +114,8 @@ In this paper, we propose \SYSTEM{}, a novel method of verifying the integrity
 of resources downloaded over the internet that is a complete replacement for
 traditional checksums. We approach the problem with four key concerns in mind:
 a) implementations provide security guarantees transparently without adding any
-extra burden on the end user, \ie neither grappling with a new UI nor any
-additional labor is required during standard usage; b) configuring the
+extra burden on the end user---here, an optimal solution avoids relying on the
+user to overcome apathy in the interest of security; b) configuring the
 validation method is simple for service administrators and system operators to
 integrate and deploy while ensuring configuration of a potentially-expensive
 discrete secondary system to host checksums is unnecessary; c) the validation
@@ -140,12 +140,13 @@ In summary, our primary contributions are:
 
   \item We propose a novel practical defense against receiving corrupted or
   compromised resources over the internet. Contrasted with current solutions,
-  our defense requires no source code or infrastructure changes at any level
-  (other than DNS), does not employ unreliable heuristics, does not interfere
-  with other software or extensions that also handle download security, and can
-  be transparently deployed without adding to the \textit{fragility} of
-  DNSSEC-enabled systems; \ie, it protects users whose software implements
-  \SYSTEM{} while remaining unnoticeable to users whose software does not.
+  our defense requires no source code or user-facing web server/infrastructure
+  changes at any level, does not employ unreliable heuristics, does not
+  interfere with other software or extensions that also handle download
+  security, and can be transparently deployed without adding to the
+  \textit{fragility} of DNSSEC-enabled systems; \ie, it protects users whose
+  software implements \SYSTEM{} while remaining unnoticeable to users whose
+  software does not.
 
   \item We present our prototype \SYSTEM{} implementations for Google Chrome and
   FileZilla and demonstrate their effectiveness in automatically and
