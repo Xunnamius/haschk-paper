@@ -21,11 +21,11 @@ As every internet user is certainly aware, downloading resources over the
 internet comes with considerable risk. This risk can be divided into three
 categories: response authentication, communication confidentiality, and resource
 integrity. Response authentication allows us to determine if a response received
-indeed originates from its purported source. This can be accomplished through,
+indeed originates from its purported source through,
 for instance, the adoption of a Public Key Infrastructure (PKI)
 scheme~\cite{PKI}. Communication confidentiality, on the other hand, allows us
 to keep the data transacted between two or more parties private except to said
-parties. This is can be accomplished through some form of encryption, such as
+parties through some form of encryption, such as
 AES~\cite{AES}. Finally, resource integrity allows us to verify that the data we
 are receiving is the data we are expecting to receive.
 
@@ -64,8 +64,8 @@ file from some source, they are expected to run the same cryptographic hashing
 function over their version of the resource, yield a local checksum, and match
 it with the authoritative checksum given to them from said source.
 
-However, checksums have come up short as a viable solution to the resource
-integrity problem. Foremost is a well-understood but harsh reality: a
+However, checksums come up short as a solution to the resource
+integrity problem. Foremost is a well-understood but harsh reality: \emph{user-apathy}---a
 non-trivial number of users will not be burdened with manually calculating
 checksums for the resources they download. While detailing how they gained
 unauthorized access to the servers, one of the hackers behind the 2016 breach of
@@ -84,12 +84,12 @@ they are published online somewhere. If they do manage to find the authoritative
 checksum and also recognize the checksums are different, the user is then
 expected to ``do the right thing,'' whatever that happens to be in context.
 
-Then there is the futility of co-hosting a resource and its checksum on the same
-distribution system. While cost effective compared to hosting two or more
-discrete systems---one hosting the resource and one hosting the resource's
+Then there is the futility of \emph{co-hosting} a resource and its checksum on the same
+distribution system. While cost-effective compared to hosting two or more
+discrete systems---one for the resource and one for the resource's
 checksum---an adversary that compromises a single distribution system hosting
-both a resource and its checksum can mutate both, rendering the checksum
-irrelevant; this was the case with the 2016 hack of Linux Mint's distribution
+a resource and its checksum can mutate both, rendering the checksum
+irrelevant. The co-hosting problem was demonstrated by the 2016 hack of Linux Mint's distribution
 server~\cite{SCA-MINT1, SCA-MINT2}.
 
 Checksums as they are employed currently are not effective at guaranteeing
@@ -103,7 +103,7 @@ Play, Apple App Store, and the Microsoft Store.
 \PUNT{Unfortunately, ... --> (solution proposal)}
 
 Unfortunately, not all resources available on the internet are acquired through
-software package ecosystems with builtin PKI support, nor are all resources
+software package ecosystems with built-in PKI support, nor are all resources
 software binaries; moreover, these PKI schemes are not compatible with one
 another and cannot scale to secure arbitrary resources on the internet without
 significant cost and effort. Worse, roll-your-own PKI is \emph{hard to get
@@ -127,7 +127,7 @@ user-facing web server/infrastructure alterations are necessary. We implement
 the FileZilla FTP client.
 
 We evaluate the security, scalability, and performance of our automated defense
-against resource corruption to demonstrate the effectiveness and high
+against resource corruption to demonstrate the effectiveness and
 practicality of the \SYSTEM{} approach. Specifically, we find no obstacles to
 efficient scalability given choice of authenticated distributed system and no
 performance overhead compared to downloads without \SYSTEM{}. We further provide
@@ -164,5 +164,5 @@ In summary, our primary contributions are:
 \end{itemize}
 
 We release the \SYSTEM{} solution to the community as open source software to
-prompt exploration of the \SYSTEM{} approach\footnote{The \SYSTEM{} Chrome
-extension is available at https://tinyurl.com/dnschk-actual}.
+prompt exploration of the \SYSTEM{} approach.\footnote{The \SYSTEM{} Chrome
+extension is available at https://tinyurl.com/dnschk-actual}
