@@ -18,7 +18,7 @@ store cryptographic data. These resource record types, along with
 Security Extensions (DNSSEC)~\cite{DNSSEC}, and others demonstrate that storing
 useful cryptographic data retrievable through the DNS network is feasible at
 scale. Due the unique requirements of \SYSTEM{}, however, we use ``TXT'' records
-to map Resource Identifiers to Authoritative Checksumes. In accordance with RFC
+to map Resource Identifiers to Authoritative Checksums. In accordance with RFC
 5507~\cite{RFC5507}, an actual \SYSTEM{} implementation would necessitate the
 creation of a new DNS resource record type as no current resource record type
 meets the requirements of \SYSTEM{}. \\
@@ -49,7 +49,7 @@ source must be accurate for these schemes to work. An attacker that has control
 of the web server can alter the HTML and inject a malicious checksum. With
 \SYSTEM{}, however, an attacker would also have to compromise the DNS zone or
 whichever authenticated distributed system hosted the mappings between Resource
-Identifers and Authoritative Checksumes. \\
+Identifiers and Authoritative Checksums. \\
 
 \noindent\textbf{Content-MD5 Header.} The Content-MD5 header field is a
 deprecated email and HTTP header that delivers a checksum similar to those used
@@ -84,7 +84,7 @@ internet-connected devices \emph{continues its upward climb}~\cite{Cisco}.
 
 Lamentably, as with IPv6, DNSSEC adoption will continue to grow slowly until
 securing our global DNS infrastructure is more widely considered ``business
-critical''.
+critical.''
 
 \begin{figure*}[t]
     \centering
@@ -95,7 +95,7 @@ critical''.
 \end{figure*}
 
 We also note that, while the highly-available DNS network is used to host the
-mappings between Resource Identifers and Authoritative Checksumes in the \SYSTEM{}
+mappings between Resource Identifers and Authoritative Checksums in the \SYSTEM{}
 implementation, the \SYSTEM{} \emph{approach} is still valid no matter the
 choice of highly-available distributed system as long as there is an
 authentication component; \eg Distributed Hash Table (DHT), distributed
@@ -135,10 +135,10 @@ in the downloads API. This hook would fire immediately before a file download
 completed and the file became executable, \ie had its \texttt{.crdownload} or
 \texttt{.download} extension removed. The hook would consume a
 \texttt{Promise}/\texttt{AsyncFunction} that kept the download in its
-non-complete state until said \texttt{Promise} completed. This would allow
+non-complete state until said \texttt{Promise} completed. This protocol would allow
 \SYSTEM{}'s background page to do something like alter the download's
 \texttt{DangerType} property and alert the end user to the dangerous download
-naturally. This would have the advantage of communicating intent through the
+naturally. These modifications would have the advantage of communicating intent through the
 browser's familiar UI and preventing the potentially-malicious download from
 becoming immediately executable. Unfortunately, the closest the
 Chrome/WebExtensions API comes to allowing \texttt{DangerType} mutations is the
@@ -153,7 +153,7 @@ Using Merkle trees~\cite{Merkle} instead of pure cryptographic hashing functions
 for resource validation would enable partial verification of large files. For
 example, suppose we are downloading a 10TiB resource and it is compromised. By
 calculating a Merkle tree beforehand, we do not have to wait for the resource to
-finish downloading before we render a failing judgement. This has the potential
+finish downloading before we render a failing judgment. This partial verification has the potential
 to save the user a significant amount of time, though using Merkle trees for
 resource integrity validation over the internet is decidedly
 not-trivial~\cite{Merkle-HTTP}.
@@ -173,7 +173,7 @@ cryptographic hashing functions would perform just as well, if not better.
 
 The goal of the Resource Identifiers (RI) is very similar to that of Uniform
 Resource Names (URN). It may make sense to replace the mapping between RIs and
-Authoritative Checksumes with purely URN-based DNS lookups that return specially
+Authoritative Checksums with purely URN-based DNS lookups that return specially
 formatted TXT records upon success. This would further simplify the deployment
 process for service administrators since DNS updates would be based upon the
 resource's contents instead of both its contents \textit{and where it is located
