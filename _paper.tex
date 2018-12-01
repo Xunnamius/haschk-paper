@@ -5,10 +5,10 @@
 %\usepackage{usenix}
 %\documentclass[pageno]{jpaper}
 %\documentclass[10pt,preprint]{sigplanconf}
-\documentclass[sigplan,10pt,anonymous]{acmart}\settopmatter{printfolios=true}
+%\documentclass[sigplan,10pt,anonymous]{acmart}\settopmatter{printfolios=true}
+\documentclass[10pt,conference]{IEEEtran}
 \usepackage{mathptmx} % This is Times font
 
-\setcopyright{none}             %% For review submission
 %\conferenceinfo{SOSP'15}{October 4--7, 2015, Monterey, CA}
 %\copyrightyear{2015}
 % The following \documentclass options may be useful:
@@ -106,11 +106,6 @@ tick label style={font=\small},
 \pdfpagewidth=8.5in
 \pdfpageheight=11in
 
-%%%%%%%%%%%---SETME-----%%%%%%%%%%%%%
-\newcommand{\microsubmissionnumber}{440}
-\newcommand{\asplossubmissionnumber}{440}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \fancypagestyle{firstpage}{
 %   \fancyhf{}
 % \setlength{\headheight}{50pt}
@@ -204,27 +199,31 @@ tick label style={font=\small},
 \newcommand{\SYSTEM}{DNSCHK}
 \newcommand{\CONFERENCE}{IEEE S\&P}
 
-\pdfstringdefDisableCommands{
-    \def\\{}
-    \def\unskip{}
-    \def\texttt#1{<#1>}
-}
+% \pdfstringdefDisableCommands{
+%     \def\\{}
+%     \def\unskip{}
+%     \def\texttt#1{<#1>}
+% }
 
 %-------------------------------------------------------------------------
 \begin{document}
 
-\date{}
-\title[\SYSTEM{}]{\SYSTEM{}: Malicious Download Detection with Highly-Available Distributed Systems}
+%\date{}
+\title{\SYSTEM{}: Malicious Download Detection with Highly-Available Distributed Systems}
 
 \author{
-% Not used?
+  Anonymous Author(s)
+%   \texttt{first1.last1@xxxxx.com}
+%   \and
+%   LastName2, FirstName2\\
+%   \texttt{first2.last2@xxxxx.com}
 }
 
 \input{0_abstract}
 
 \maketitle
-\thispagestyle{firstpage}
-\pagestyle{plain}
+%\thispagestyle{firstpage}
+%\pagestyle{plain}
 
 %\vskip -100pt
 
