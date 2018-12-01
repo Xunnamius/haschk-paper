@@ -2,14 +2,18 @@
 
 In this section we detail the \SYSTEM{} approach: a novel defense against
 receiving corrupted or compromised resources over the internet. The approach
-requires no source code or user-facing web server/infrastructure changes, does
-not employ unreliable heuristics, does not interfere with other software that
-also handles download security, and can be immediately and transparently
-deployed without breaking clients that do not implement the \SYSTEM{} approach.
+requires no source code or user-facing web server/infrastructure changes in a
+browser-based or similar environment, does not employ unreliable heuristics,
+does not interfere with other software that also handles download security, and
+can be immediately and transparently deployed without breaking clients that do
+not implement the \SYSTEM{} approach.
+
 Further, though our concrete implementation relies on DNS and DNS Security
-(DNSSEC), the approach itself is agnostic of its ``backend,'' be it DNS,
-Distributed Hash Tables (DHT), distributed key-value stores such as Redis, et
-cetera.
+(DNSSEC), the approach itself is flexible and completely agnostic of any single
+component. The implementation choice of highly-available distributed backend is
+not restricted to the DNS network. The approach works just as well with, for
+instance, an authenticated Distributed Hash Tables (DHT) or some distributed
+authenticated key-value store (\eg Redis).
 
 \TODO{Resource Identifier (RI)}
 \TODO{Authoritative Hash (AH)}
