@@ -119,13 +119,25 @@ solution.}
 
 \subsection{Deployment, Scalability, and Robustness}
 
-\TODO{Discuss envisioned deployment strategies for resource providers.}
+With the HotCRP demo, the totality of our resource deployment scheme consisted
+of the addition of a new TXT entry to our DNS zone file---accomplished via API
+call---during HotCRP's paper submission process. We find a DNS record addition
+or update during the resource deployment process to be simple enough for service
+administrators to implement and presents no significant burden to adoption
+outside of DNS API integration into an organization's software development
+supply chain.
 
-\TODO{Can this be scaled? Yes it can. What are the practical limits? EDNS0 means
-it is not DNS size, though packet fragmentation is still a concern. How about
-max record length? Maximum number of records? A service could have thousands or
-millions of resources it serves! Can DNS handle that? DHT failover is still a
-solution anyway.}
+As \SYSTEM{} is predicated on a distributed authenticated highly-available
+backend, we conclude that the scalability of \SYSTEM{} can be reduced to the
+scalability of its backend. We are aware of no other obstacles to scalability
+beyond those imposed by the underlying distributed system.
+
+In respect to DNS specifically, packet fragmentation can be a concern for high
+performance networks~\cite{EDNS}, but this is an artifact of DNSSEC rather than
+\SYSTEM{}~\cite{DNSSEC}. Further, there are no practical limits on the
+scalability of a DNS zone itself, by which we mean zone file size is
+unrestricted by the protocol. A service can host tens of thousands of resource
+records in their DNS zone file~\cite{DNS1, DNS2}.
 
 \subsection{Performance Overhead}
 
