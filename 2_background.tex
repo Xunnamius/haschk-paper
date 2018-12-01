@@ -7,8 +7,43 @@ checksums, HTTPS, anti-malware, PKI, and others.
 
 \subsection{Supply Chain Attacks on Resource Integrity}
 
-Every year, supply chain attacks and their impacts are being felt more and more
-widely. \TODO{(more; use NIST citations)}
+Modern software development requires a complex globally distributed supply chain
+and development ecosystem for organizations to design, develop, and deploy, and
+maintain products efficiently~\cite{SCA}. Such a globally distributed ecosystem
+necessitates integration with potentially many third party entities be they
+specialty driver manufacturers, external content distribution network (CDN)
+providers, third party database management software, etc.
+
+Critically, reliance on third parties, while often cost-effective and
+feature-rich, also increases the risk of a security compromise at some point in
+the supply chain~\cite{SCA}. These types of compromises are known as Supply
+Chain Attacks (SCA). In the context of software development, SCAs are the
+compromise of an organization's software source code via cyber attack, insider
+threat, upstream asset compromise, trusted hardware/vendor compromise, or some
+other attack on one or more phases of the software development life cycle or
+``supply chain'' to infect an unsuspecting end user~\cite{NIST-SCA}.
+
+Every year, major supply chain attacks become more frequent and their fallout
+more widely felt~\cite{SCA, NIST-SCA}. Whether major or minor, SCAs are hard to
+detect, even harder to prevent, and have the goal of infecting and exploiting
+victims by violating the trust between consumer and reputable software vendor.
+
+\begin{table*}[th]
+    \centering
+    \begin{tabular}{|*{10}{c|}}
+      \hline\textbf{Concept}
+          & \textbf{Design} & \textbf{Development} & \textbf{Integration} &
+          \textbf{Deployment} & \textbf{Maintenance} & \textbf{Retirement}\\\hline
+      X&X&X&X&\ding{51}&\ding{51}&\ding{51}\\\hline
+    \end{tabular}
+    \caption{The software development supply chain. Attacks on
+     the deployment, maintenance, and retirement
+    phases are in scope.} \label{tbl:attacks}
+\end{table*}
+
+\figref{attacks} details the phases of a generic software development supply
+chain. For the purposes of this research, we focus exclusively on SCAs targeting
+the deployment, maintenance, and retirement phases.
 
 \subsection{Motivation: Cases}
 \TODO{I liked this section especially.  If you have time, I think you
