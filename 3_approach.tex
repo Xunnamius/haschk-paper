@@ -17,11 +17,27 @@ backend.
 \TODO{Create the overview image or remove this sentence} \figref{overview}
 illustrates the \SYSTEM{} approach.
 
-\TODO{talk about the Chrome/FileZilla extensions as addressing user apathy with
-the DNSSEC/DHT implementations addressing co-hosting.}
-
 \PUNT{Frontend:}
 \subsection{Transparency and User Apathy}
+
+Human factors such as user apathy have stymied cryptographers for decades.
+Schemes that are otherwise reasonably cryptographically solid can fail
+catastrophically due to human error, confusion, or simple apathy. Users are just
+as likely to avoid using a security measure altogether if it presents an even
+minor obstacle to immediate gratification~\cite{Clickthrough, PGPBad}. In the
+browser, for example, can observe this empirically.
+
+Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
+passively observe over 25 million warning impressions in 2013, Akhawe et al.
+found that users of Google Chrome clicked through a quarter of \emph{malware and
+phishing warnings} and \emph{70\% of TLS warnings}~\cite{Clickthrough}. Users
+also clicked through a third of Mozilla Firefox's TLS warnings and a tenth of
+their malware and phishing warnings. That is to say: a significant percentage of
+browser users are \emph{determined} not to be let TLS trust issues and/or the
+threat of malware prevent them from receiving their desired content. We can
+safely conclude: users, similarly \emph{determined} to transact resources over
+the internet, will not be burdened with manually calculating checksums and
+verifying the integrity of those resources.
 
 for most users, hand-calculating the checksum and comparing to the published
 version is too off-path and tedious.
@@ -37,6 +53,8 @@ We achieve this by
 A typical flow can be summarized as (now we introduce some jargon)
 
 Maybe a figure too as well?
+
+Reference the Chrome/FileZilla extensions as addressing user apathy but save the main conversation for later.
 
 \PUNT{Backend:}
 \subsection{Defeating Co-Hosting, Sometimes for Free}
@@ -62,6 +80,8 @@ communicating with a distributed authenticated backend. This includes desktops,
 laptops, tablets, mobile devices, embedded systems.
 
 \subsection{Proof-of-Concept Implementations}
+
+\TODO{Talk about the Chrome/FileZilla extensions as addressing user apathy}
 
 A Resource Identifier (RI) is the unique cryptographic digest yielded by hashing
 the full file path of the resource, including leading slash if applicable. For
@@ -93,14 +113,14 @@ work exactly the same with or without the extension; users still have to
 confirm/deny suspicious judgements, but they are rare occurrences)}
 
 The Primary Label (PL) is a standard string used to identify DNS records that
-belong to DNSCHK. It will always appear as the third-level domain following the
+belong to \SYSTEM{}. It will always appear as the third-level domain following the
 OD.
 
 The RI Sub-Label (SL) is a standard string used to identify DNS records that
 contain RIs.
 
 Chrome: the origin domain is determined via DownloadItem::referrer. This is to
-make it harder for an adversary to trick DNSCHK into calculating an incorrect
+make it harder for an adversary to trick \SYSTEM{} into calculating an incorrect
 OD.
 
 \TODO{Reference hotcrp demo but leave the description for the evaluation.}
