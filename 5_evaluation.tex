@@ -121,18 +121,21 @@ As a test bed, we launched a heavily modified version of the popular open source
 research submission and peer review software, \emph{HotCRP}. Our modifications
 allowed us to interactively corrupt submissions and manipulate relevant DNS
 entries. We uploaded a variety of different resources, including legitimate
-PDFs, to HotCRP.
+PDFs, to our HotCRP instance.
 
 We then selectively corrupted half of these resources with random bit flips.
 Interesting to note: the HotCRP instance did not update the checksums of the
 resources we corrupted. The only way to notice the attack would be to manually
 validate PDFs downloaded from HotCRP after the fact, something most users are
 not willing to do. Further, leveraging our administrator access to the instance,
-we uploaded files known to be malicious, replacing previously submitted PDFs in
-the HotCRP backend.
+we manually uploaded files known to be malicious, replacing previously submitted
+innocuous PDFs in the HotCRP backend. We also uploaded resources without
+including them in our DNS zone file.
 
-When we attempted to download these resources, \SYSTEM{} flagged each corrupted
-resource. Unmodified resources were not affected.
+When we attempted to download the corrupted resources, including those uploaded
+manually via side channel, \SYSTEM{} correctly flagged each corrupted resource.
+Unmodified resources were not flagged and so were not affected; this includes
+the resources whose ACs we purposely excluded from our DNS zone file.
 
 Further, we implemented a ``redirection'' attack wherein a ``compromised'' PHP
 script added to the HotCRP instance redirected users several times before
