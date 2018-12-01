@@ -2,7 +2,7 @@
 
 In 2010, through compromising legitimate applications available on trusted
 vendor websites, nation-state actors launched the Havex malware, targeting
-aviation, defense, pharmaceutical, and petrochemical companies in Europe and the
+aviation, defense, pharmaceutical, and other companies in Europe and the
 United States~\cite{SCA-HAVEX1, SCA-HAVEX2}. In 2012, attackers compromised an
 official phpMyAdmin download mirror hosted by reputable software provider
 SourceForge. The backdoored version of the popular database frontend was
@@ -49,9 +49,9 @@ Attacks} (SCA). Rather than attack an organization directly, SCAs are the
 compromise of an organization's software source code (or any product) via cyber
 attack, insider threat, upstream asset compromise, trusted hardware/vendor
 compromise, or other attack on one or more phases of the software development
-life cycle. These attacks are hard to detect, even harder to prevent, and have
-the goal of infecting and exploiting victims by abusing the trust between
-consumer and reputable software vendor~\cite{SCA}.
+life cycle~\cite{NIST-SCA}. These attacks are hard to detect, even harder to
+prevent, and have the goal of infecting and exploiting victims by abusing the
+trust between consumer and reputable software vendor~\cite{SCA}.
 
 Ensuring the integrity of resources exchanged over the internet despite SCAs and
 other active attacks is a hard and well studied problem~\cite{MD5Header,
@@ -70,7 +70,9 @@ majority of users will not be burdened with manually calculating checksums for
 the resources they download. While detailing how they gained unauthorized access
 to the servers, one of the hackers behind the 2016 breach of Linux Mint's
 distribution system went so far as to comment (in respect to checksums): ``Who
-the [expletive] checks those anyway?''~\cite{SCA-MINT3}.
+the [expletive] checks those anyway?''~\cite{SCA-MINT3}. Hardly unique to
+checksum calculation, cryptographic schemes from HTTPS to PGP have found user
+apathy a difficult problem space to navigate~\cite{PGPBad, Clickthrough}.
 
 Even if a user felt the urge to manually calculate a checksum, they must search
 for the corresponding authoritative checksum to verify that calculation. As
@@ -81,7 +83,7 @@ they are published online somewhere. If they do manage to find the authoritative
 checksum and also recognize the checksums are different, the user is then
 expected to ``do the right thing,'' whatever that happens to be in context.
 
-Then there is the futility of co-locating a resource and its checksum on the same
+Then there is the futility of co-hosting a resource and its checksum on the same
 distribution system. While cost effective compared to hosting two or more
 discrete systems---one hosting the resource and one hosting the resource's
 checksum---an adversary that compromises a single distribution system hosting
