@@ -23,9 +23,9 @@ illustrates the \SYSTEM{} approach.}
 Human factors such as user apathy have stymied cryptographers for decades.
 Schemes that are otherwise reasonably cryptographically solid can fail
 catastrophically due to human error, confusion, or simple lack of interest. Some
-users are just as likely to avoid using a security measure altogether if it
-presents even a minor obstacle to immediate gratification~\cite{Clickthrough,
-PGPBad}. In the browser, for example, can observe this empirically.
+users are likely to avoid using a security measure altogether if it presents
+even a minor obstacle to immediate gratification~\cite{Clickthrough, PGPBad}. In
+the browser, for example, can observe this empirically.
 
 Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
 passively observe over 25 million warning impressions in 2013, Akhawe et al.
@@ -59,25 +59,38 @@ cryptographic hashing function over the resource's public path on the
 distribution system.
 
 Next, \SYSTEM{} uses the RI to retrieve an \emph{Authoritative Checksum} (AC)
-from the backend. If successful, \SYSTEM{} will compare the NAC to the AC. Only
-in the case where they do not match will the user even realize \SYSTEM{} exists. Otherwise, \SYSTEM{} remains completely transparent the the end user, as demonstrated in our browser-based implementation.
+from the backend. If successful, \SYSTEM{} will compare the NAC to the AC---we
+refer to this as \emph{Non-Authoritative Checksum Validation} (NAC Validation).
+Only in the case where they do not match will the user even realize \SYSTEM{}
+exists. Otherwise, \SYSTEM{} remains completely transparent the the end user, as
+demonstrated in our browser-based implementation.
 
 \PUNT{\TODO{I want a figure here too as well!}}
 
 \PUNT{Backend:}
 \subsection{Defeating Co-Hosting, Sometimes for Free}
 
-Cohosting is bad. Reiterate why (from intro).
+Funding and maintaining a single server/system to host all of your assets can be
+highly cost effective in the short term compared to hosting two or more discrete
+systems---one hosting the resource and one hosting the resource's checksum.
+Unfortunately, an adversary that compromises such a system can both mutate the
+resource and update the checksum to match the mutation. Hence, \emph{co-hosting}
+a resource and its corresponding checksum on the same distribution system
+virtually negates the effectiveness of having a checksum at all, making it
+irrelevant. This is widely understood in the security
+community~\cite{SCA-MINT2}.
 
-Though the concept of using some distributed authenticated storage mechanism to
-query a global mapping between RIs and AHs sounds intuitive and straightforward,
-two natural concerns arise.
+Hence, deployment of \SYSTEM{} necessitates the existence of a separate
+distribution mechanisms for RIs and their AHs. Though the concept of using some
+distributed authenticated storage service to query a global mapping between RIs
+and AHs sounds intuitive and straightforward, two natural concerns arise. The
+first: modern durable authentication schemes are based on PKI; who is managing
+the keypairs? The second: who is paying to maintain this secondary system? Who
+is bearing the burden of its maintenance?
 
-The first: modern durable authentication schemes are based on PKI; who is
-managing the keypairs?
-
-The second: who is paying to maintain this secondary system? Who is bearing the
-burden of its maintenance?
+Fortunately, there exists a highly-available authenticated globally distributed
+mapping service that web-facing organizations are already quite familiar with:
+the Domain Name System (DNS). In our implementations, we prefered DNS to other candidate highly-available authenticated systems for these reasons.
 
 \subsection{Platform Diversity}
 
@@ -102,7 +115,7 @@ The Authoritative Checksum (AH) is yielded from a record request to the backend.
 The Non-Authoritative Checksum (NAC) is calculated by hashing the contents of the
 resource after it has been received in its entirety.
 
-Non-Authoritative Checksum Validation (NAC Validation) is the final stage before
+ (NAC Validation) is the final stage before
 \SYSTEM{} renders judgement on the downloaded resource's integrity. The NAC is
 compared to the AH received from backend. If they do not match, the file is
 judged unsafe.
