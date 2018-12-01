@@ -111,15 +111,30 @@ authentication challenges are a good enough basis to issue TLS certificates for
 services such as the popular TLS Certificate Authority \emph{Let's
 Encrypt}~\cite{draft-ACME}.}
 
-\TODO{We carefully evaluate the security, performance,
-and practicality of \SYSTEM{} through implementing extensions in both a web
-browser (Chrome) and FTP client (FileZilla); implementations are tested versus
-common resource integrity violations. We find that \SYSTEM{} is more effective
-than existing solutions, detects a wide variety of real-world integrity errors
-across a diverse set of platforms, and is a scalable and immediately deployable
-solution.}
+To further evaluate the effectiveness of our mitigation, we tested our
+proof-of-concept \SYSTEM{} Chrome extension implementation against a series of
+common real-world resource integrity violations. The impetus behind such an any
+such resource integrity SCA is to have the resource pass through undetected with
+the hope that an unsuspecting user will interact with it.
 
+As a testbed, we launched a heavily modified version of the popular open source
+research submission and peer review software, \emph{HotCRP}. We uploaded a
+variety of different resources, including legimiate PDFs.
 
+We selectively corrupted half of these resources with random bit flips. Further,
+leveraging our administrator access to the instance, we uploaded files known to
+be malicious, replacing previously submitted PDFs in the HotCRP backend.
+
+Further, we implemented a ``redirection'' attack wherein a ``compromised'' PHP
+script added to the HotCRP instance redirected users several times before
+quickly triggering the download of a corrupted resource from a disparate domain.
+\SYSTEM{} correctly flagged this download as suspicious once the download began,
+successfully warning the user.
+
+We conclude that our proof-of-concept \SYSTEM{} implementation and approach are
+more effective than existing solutions at detecting integrity violations in
+arbitrary resources on the internet; this is especially true when \SYSTEM{} is
+compared to the de facto standard, bare checksums.
 
 \subsection{Deployment and Scalability}
 
