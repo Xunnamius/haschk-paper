@@ -118,8 +118,6 @@ the same whether \SYSTEM{} is installed or not---the plugin is transparent to
 end users. If a failure is experienced during NAC Validation, however, \SYSTEM{}
 will alert the user to the dangerous download.
 
-\PUNT{In later version, talk about "timing attack"?}
-
 The plugin computes RIs from the full URL path of a resource. For example,
 considering a web resource hosted at
 \textit{https://somesite.com/downloadme.txt}, our implementation would hash
@@ -140,13 +138,7 @@ always appear as the third-level domain following the OD. The RI Sub-Label (SL)
 is a standard string used to identify DNS records that contain RIs; we used
 ``\_ri'' in our implementation.
 
-Chrome: the origin domain is determined via . This is to
-make it harder for an adversary to trick \SYSTEM{} into calculating an incorrect
-OD.
-
-\TODO{Reference hotcrp demo but leave the description for the evaluation.}
-
-\begin{algorithm}[t]
+\PUNT{\begin{algorithm}[t]
     %\floatname{algorithm}{Algorithm}
     \caption{Handling an incoming download in Chrome} \label{algo:dnschk}
     {\footnotesize
@@ -181,7 +173,7 @@ OD.
     \vskip -1.5em
     \end{algorithmic}
     }
-\end{algorithm}
+\end{algorithm}}
 
 \subsubsection{\SYSTEM{} as a Filezilla Patch}
 
