@@ -28,7 +28,7 @@ the DNSSEC/DHT implementations addressing co-hosting.}
 
 
 
-\subsection{Defeating Co-Hosting for ``Free''}
+\subsection{Defeating Co-Hosting for Free?}
 
 
 
@@ -38,12 +38,53 @@ the DNSSEC/DHT implementations addressing co-hosting.}
 
 \subsection{Proof-of-Concept Implementations}
 
+\subsubsection{Google Chrome}
+
 \TODO{(Google Chrome Extension: describe implementation details; works with DNS
 or DHT and is published to Chrome store; no interface changes!--i.e. downloads
 work exactly the same with or without the extension; users still have to
 confirm/deny suspicious judgements, but they are rare occurrences)}
 
 \TODO{Reference hotcrp demo but leave the description for the evaluation.}
+
+\begin{algorithm}[t]
+    %\floatname{algorithm}{Algorithm}
+    \caption{\SYSTEM{} handling an incoming resource event.} \label{algo:dnschk}
+    {\footnotesize
+    \begin{algorithmic}[1]
+    \Require The read request is over a contiguous segment of the backing
+    store
+    \Require $\ell, \ell' \leftarrow$ read requested length
+    \Require $\aleph \leftarrow$ master secret
+    \Require $n_{index} \leftarrow$ first nugget index to be read
+    \State $data \leftarrow$ \emph{empty}
+    \While{$\ell \neq 0$}
+        \State $k_{n_{index}} \leftarrow GenKey_{nugget}(n_{index}, \aleph)$
+        \State Fetch nugget keycount $n_{kc}$ from Keycount Store.
+        \State Calculate indices touched by request: $f_{first}$, $f_{last}$
+        \State $n_{flakedat} \leftarrow ReadFlakes(f_{first},\dots,f_{last})$
+        \For{$f_{current} = f_{first}$ \textbf{to} $f_{last}$}
+            \State $k_{f_{current}} \leftarrow GenKey_{flake}(k_{n_{index}},
+            f_{current}, n_{kc})$
+            \State $tag_{f_{current}} \leftarrow GenMac(k_{f_{current}},
+            n_{flakedat}[f_{current}])$
+            \State Verify $tag_{f_{current}}$ in Merkle Tree.
+        \EndFor
+        \LineComment{(\textbf{*}) denotes requested subset of nugget data}
+        \State $data \leftarrow data + Decrypt(*n_{flakedat}, k_{n_{index}},
+        n_{kc})$
+        \State $\ell \leftarrow \ell - \|*n_{flakedat}\|$
+        \State $n_{index} \leftarrow n_{index} + 1$
+    \EndWhile
+    \\\Return $data$ \Comment{Fulfill the read request}
+    \Ensure $\|data\| <= \ell'$
+    \Ensure $\ell = 0$
+    \vskip -1.5em
+    \end{algorithmic}
+    }
+\end{algorithm}
+
+\subsubsection{Filezilla}
 
 \TODO{(FileZilla (FTP) Patch (only talked about here) describe implementation
 details; minor interface change if the download is judged unsafe or suspicious,
