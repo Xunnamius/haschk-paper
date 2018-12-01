@@ -103,8 +103,8 @@ highly-available authenticated systems for just these reasons.
 From our evaluation, the computational overhead of running \SYSTEM{} is minimal
 for most resources. Further, additional network load is negligible (cf.
 \secref{evaluation}). Hence, the \SYSTEM{} approach can be incorporated into
-software on most any device capable of communicating with the backend. This
-includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
+software on most any device capable of communicating with the chosen backend.
+This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
 
 \subsection{Proof-of-Concept Implementations}
 
@@ -114,14 +114,15 @@ We implemented \SYSTEM{} as a proof-of-concept Google Chrome extension that can
 be configured to work with either global DNS or local DHT as its backend. Our
 Chrome extension does not make any modifications to the Chrome user interface or
 viewport (other than the extension icon itself). Further, downloads work exactly
-the same whether \SYSTEM{} is installed or not---the plugin is transparent to
+the same whether \SYSTEM{} is installed or not---the extension is transparent to
 end users. If a failure is experienced during NAC Validation, however, \SYSTEM{}
-will alert the user to the dangerous download.
+will alert the user to the dangerous download via the extension's icon and popup
+interface.
 
-The plugin computes RIs from the full URL path of a resource. For example,
+The extension computes RIs from the full URL path of a resource. For example,
 considering a web resource hosted at
-\textit{https://somesite.com/downloadme.txt}, our implementation would hash
-\textit{/downloadme.txt} to yield an RI.
+\textit{https://somesite.com/var/downloadme.txt}, our implementation would hash
+\textit{/var/downloadme.txt} to yield an RI.
 
 Unlike the FileZilla patch implementation, the Chrome extension implementation
 required a special \emph{Origin Domain (OD)} resolution step based on the Chrome
@@ -141,7 +142,7 @@ RIs; we used ``\_ri'' in our implementation. The resulting construction,
 consisting of \texttt{SL.PL.OD}, is appended to the RI calculated earlier. This
 forms the subject of the query to our DNS backend, whereafter the DNS network
 responds with a TXT record containing the AC or an indication that the RI does
-not exist in the zone.
+not exist in the zone; the latter case is silently ignored.
 
 Note: to remain in compliance with DNS protocol label limits, we split the
 RI---a 64 character string---into two labels separated by a period. The final
@@ -185,8 +186,21 @@ necessary given a different choice of backend.
     }
 \end{algorithm}}
 
-\subsubsection{\SYSTEM{} as a Filezilla Patch}
+\subsubsection{\SYSTEM{} as a FileZilla Source Patch}
 
-\TODO{(FileZilla (FTP) Patch (only talked about here) describe implementation
-details; minor interface change if the download is judged unsafe or suspicious,
-requires user to confirm/deny download)}
+We implemented \SYSTEM{} as a proof-of-concept patch to the FileZilla source.
+Our does not make any modifications to FileZilla's user interface. As with the
+Chrome extension, FTP downloads work exactly the same whether a user is using a
+patched or non-patched version of FileZilla. The extension is similarly
+transparent to end users. If a failure is experienced during NAC Validation,
+\SYSTEM{} will alert the user via a popup alert.
+
+The extension computes RIs from the full URI path of a resource on the server
+(including root). For example, considering a resource hosted on an FTP server at
+\textit{/~user/var/downloadme.txt}, our implementation would hash
+\textit{/~user/var/downloadme.txt} to yield an RI.
+
+Unlike the Chrome extension patch implementation, the FileZilla patch required
+no special \emph{Origin Domain (OD)} resolution step. The domain to be used for
+backend queries is the domain of the FTP server itself. The remainder of the
+implementation comports with the Chrome extension implementation of \SYSTEM{}.
