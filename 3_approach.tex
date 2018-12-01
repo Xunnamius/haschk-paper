@@ -1,6 +1,15 @@
 \section{The \SYSTEM{} Approach} \label{sec:approach}
 
-In this section we detail the approach, defining terminology and describing a general approach to more secure 
+In this section we detail the \SYSTEM{} approach: a novel defense against
+receiving corrupted or compromised resources over the internet. The approach
+requires no source code or user-facing web server/infrastructure changes, does
+not employ unreliable heuristics, does not interfere with other software that
+also handles download security, and can be immediately and transparently
+deployed without breaking clients that do not implement the \SYSTEM{} approach.
+Further, though our concrete implementation relies on DNS and DNS Security
+(DNSSEC), the approach itself is agnostic of its ``backend,'' be it DNS,
+Distributed Hash Tables (DHT), distributed key-value stores such as Redis, et
+cetera.
 
 \TODO{Resource Identifier (RI)}
 \TODO{Authoritative Hash (AH)}
