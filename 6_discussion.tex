@@ -10,19 +10,18 @@ DNS itself.
 \subsection{Additional Related Work}
 
 \noindent\textbf{Cryptographic Data in DNS Resource Records.}
-\TODO{Suggestion here: eliminate the first sentence---it just sounds negative.  Starting with the second sentence is just listing the facts.  BUT: add a last sentence that clearly states what IS new, which I believe is using DNSSEC to store a cryptographic record (authoritative hash) that is associated with some other resource.  You can probably state that better yourself. }
-Storing
-cryptographic data in the DNS network is not a new idea. The DNS-Based
-Authentication of Named Entities (DANE) specification~\cite{DANE1, DANE2, DANE3}
-defines the ``TLSA'' and ``OPENPGPKEY'' DNS resource records to store
-cryptographic data. These resource record types, along with
+
+The DNS-Based Authentication of Named Entities (DANE) specification~\cite{DANE1,
+DANE2, DANE3} defines the ``TLSA'' and ``OPENPGPKEY'' DNS resource records to
+store cryptographic data. These resource record types, along with
 ``CERT''~\cite{CERT}, ``IPSECKEY''~\cite{IPSECKEY}, those defined by DNS
 Security Extensions (DNSSEC)~\cite{DNSSEC}, and others demonstrate that storing
 useful cryptographic data retrievable through the DNS network is feasible at
-scale. With \SYSTEM{}, however, we use ``TXT'' records to map Resource
-Identifiers to Authoritative Hashes. In accordance with RFC 5507~\cite{RFC5507},
-an actual \SYSTEM{} implementation would necessitate the creation of a new DNS
-resource record type. \\
+scale. Due the unique requirements of \SYSTEM{}, however, we use ``TXT'' records
+to map Resource Identifiers to Authoritative hashes. In accordance with RFC
+5507~\cite{RFC5507}, an actual \SYSTEM{} implementation would necessitate the
+creation of a new DNS resource record type as no current resource record type
+meets the requirements of \SYSTEM{}. \\
 
 \noindent\textbf{PGP/OpenPGP.} Though PGP addresses a fundamentally different
 authentication-focused threat model compared with \SYSTEM{}, it is useful to
@@ -44,13 +43,13 @@ integrity verification scheme~\cite{LF}. Subresource Integrity (SRI) describes a
 similar production-ready HTML-based scheme designed with CDNs and web assets
 (rather than generic resources) in mind. Like \SYSTEM{}, both LF and SRI employ
 cryptographic digests to ensure no changes of any kind have been made to a
-resource~\cite{SRI}. Unlike \SYSTEM{}, LF and SRI rely on the server that
-hosts the HTML source to be secure; specifically, the checksums contained in the
-HTML source must be accurate for these schemes to work. An attacker that has
-control of the web server can alter the HTML and inject a malicious checksum.
-With \SYSTEM{}, however, an attacker would also have to compromise the DNS zone
-or whichever distributed system hosted the mappings between Resource Identifers
-and Authoritative Hashes. \\
+resource~\cite{SRI}. Unlike \SYSTEM{}, LF and SRI rely on the server that hosts
+the HTML source to be secure; specifically, the checksums contained in the HTML
+source must be accurate for these schemes to work. An attacker that has control
+of the web server can alter the HTML and inject a malicious checksum. With
+\SYSTEM{}, however, an attacker would also have to compromise the DNS zone or
+whichever distributed system hosted the mappings between Resource Identifers and
+Authoritative Hashes. \\
 
 \noindent\textbf{Content-MD5 Header.} The Content-MD5 header field is a
 deprecated email and HTTP header that delivers a checksum similar to those used
@@ -63,44 +62,41 @@ modified by proxies and other intermediaries~\cite{MD5Header}.
 
 \subsubsection{DNSSEC Adoption is Slow}
 
-DNSSEC is hard to configure correctly~\cite{DNSSEC-is-hard-1, DNSSEC-is-hard-2,
-DNSSEC-is-hard-3, DNSSEC-is-hard-4}, which make services that attempt to deploy
-it significantly more \textit{fragile}. For instance, services deploying DNSSEC
-become vulnerable to small DNSSEC resource record misconfigurations that can
-take entire services offline with varying levels of conspicuousness. Further,
-any DNS-related issue becomes harder to diagnose with DNSSEC enabled. Some
-registrars and DNS operators do not offer DNSSEC capability at all, restrict
-access behind a paywall, or lack an interface for proper key
-management~\cite{Cloudflare}. Despite ongoing efforts to simply DNSSEC
-deployment, adoption remains low for these reasons. Only around 3\% of Fortune
-1000 and 9\% of university domains, a number that is very slowly on the
-rise~\cite{NIST}.
+The DNSSEC adoption rate---which has picked up recently~\cite{Cloudflare,
+APNIC}---is decidedly variable and slow to rise. Only around 3\% of Fortune 1000
+and 9\% of university domains have properly deployed DNSSEC~\cite{NIST-IPv6},
+and the number of DNS resolvers validating DNSSEC replies currently sits at
+approximately 12-14\%~\cite{APNIC}.
 
-On the client side, adoption of DNSSEC validation by DNS resolvers is low and
-growth is slow. \figref{apnic} shows that, worldwide, some 14\% of DNS requests
-have DNSSEC extensions validated by the resolver towards the end of
-2018~\cite{APNIC}. The overall trend is positive thanks to large public
-resolvers like Google (8.8.8.8 and 8.8.4.4) and Cloudflare/APNIC (1.1.1.1), as
-well as the increasing number of compliant local/ISP resolvers.
+While this could be happening for a variety of reasons~\cite{DNSSEC-is-hard-1,
+DNSSEC-is-hard-2, DNSSEC-is-hard-3, DNSSEC-is-hard-4, DNSSEC-is-hard-5}, slow
+growth is certainly not outside of the norm for global protocol deployments that
+are perceived as ``nice to have'' rather than ``business critical''. For
+instance: the adoption rate of IPv6, proposed nearly 25 years ago, is similarly
+slow to rise. Globally, the IPv6 adoption rate rests at approximately
+21\%~\cite{Google-IPv6}, with only 2\% of Fortune 1000 and 3\% of university
+domains being IPv6-enabled~\cite{NIST-IPv6}; we note this is the case
+\emph{despite IANA and all RIRs having entered the final stage of IPv4
+exhaustion as of 2018}~\cite{APNIC-exhaustion} while the number of
+internet-connected devices \emph{continues to rise}~\cite{Cisco}.
 
-\begin{figure}[t]
+Lamentably, as with IPv6, DNSSEC adoption will continue to grow slowly until
+securing our global DNS infrastructure is more widely considered ``business
+critical''.
+
+\begin{figure*}[t]
     \centering
     \includegraphics[width=0.95\linewidth]{apnic.png}
     \caption{APNIC estimate of global DNS resolvers (Google PDNS as well as
     local resolvers) performing DNSSEC validation from January 2016 to December
     2018.}\label{fig:apnic}
-\end{figure}
+\end{figure*}
 
-It should be noted that DNSSEC does not necessarily make the DNS network---\ie{}
-properly configured DNS servers---more vulnerable to amplification or other types
-of reflection attacks~\cite{Ariya} than it already is as a UDP-based content
-delivery service~\cite{USCERT, Vixie}.
-
-\TODO{This section sounds super negative.  Maybe end by noting that
-  DNSSEC is just one way to support the backend of this idea and that
-  even if DNSSEC isn't adopted, then the key idea is still valid and
-  can be implemented by storing the authoritative hash in a DHT (or
-  maybe something else as well)?}
+We also note that, while the highly-available DNS network is used to host the
+mappings between Resource Identifers and Authoritative Hashes in the \SYSTEM{}
+implementation, the \SYSTEM{} \emph{approach} is still valid no matter the
+choice of (eventually consistent) highly-available distributed system, such as a
+Distributed Hash Table (DHT).
 
 \subsubsection{DNS-Specific Protocol Limitations}
 

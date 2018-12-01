@@ -28,17 +28,17 @@ more widely felt~\cite{SCA, NIST-SCA}. Whether major or minor, SCAs are hard to
 detect, even harder to prevent, and have the goal of infecting and exploiting
 victims by violating the trust between consumer and reputable software vendor.
 
-\begin{table*}[th]
+\begin{table*}[t]
     \centering
     \begin{tabular}{|*{10}{c|}}
       \hline\textbf{Concept}
           & \textbf{Design} & \textbf{Development} & \textbf{Integration} &
-          \textbf{Deployment} & \textbf{Maintenance} & \textbf{Retirement}\\\hline
+          \textbf{Deployment} & \textbf{Maintenance} &
+          \textbf{Retirement}\\\hline
       X&X&X&X&\ding{51}&\ding{51}&\ding{51}\\\hline
     \end{tabular}
-    \caption{The software development supply chain. Attacks on
-     the deployment, maintenance, and retirement
-    phases are in scope.} \label{tbl:attacks}
+    \caption{The software development supply chain. Attacks on the deployment,
+     maintenance, and retirement phases are in scope.} \label{tbl:attacks}
 \end{table*}
 
 \figref{attacks} details the phases of a generic software development supply
@@ -46,16 +46,6 @@ chain. For the purposes of this research, we focus exclusively on SCAs targeting
 the deployment, maintenance, and retirement phases.
 
 \subsection{Motivation: Cases}
-\TODO{I liked this section especially.  If you have time, I think you
-  could strengthen this section (and the whole paper) by propagating
-  the notion of (a) user apathy and (b) co-hosting throughout
-  (assuming you are comfortable with that framing).  That will help
-  make the paper's message consistent from the abstract through the
-  conclusion.  You say these are the two problems, you talk about
-  cases studies that exhibited one or both of the problems (listed
-  explicitly as ``user apathy'' or ``co-hosting'') and then you talk
-  about the Chrome/FileZilla extensions as addressing user apathy with
-  the DNSSEC/DHT implementations addressing co-hosting.}
 
 Here we select four historic attacks we believe most effectively articulate the
 threat posed by resource integrity SCAs and how \SYSTEM{} might have been used
@@ -81,9 +71,9 @@ official phpMyAdmin website was entirely unaffected; the authoritative checksums
 listed on the site's download page were similarly unaffected~\cite{SCA-PMA2}.
 Hence, a user who was sufficiently motivated, had sufficient technical knowledge
 of checksums and how to calculate them, and was also privy to the location of
-the correct checksum for the official phpMyAdmin image \emph{might} have
-noticed the discrepancy between the two digests. Clearly, a majority of users do
-not meet these criteria. \\
+the correct checksum for the official phpMyAdmin image \emph{might} have noticed
+the discrepancy between the two digests. Clearly, a majority of users do not
+meet these criteria. \\
 
 \noindent\textbf{Case 2: Linux Mint.} In 2016, the Linux Mint team discovered an
 intrusion into their official HTTPS-protected distribution
@@ -116,7 +106,7 @@ bundled into opaque software dependencies, \ie a hardware driver or internal
 communication application.
 
 It is estimated that Havex successfully impacted hundreds or even thousands of
-corporations and organizations---mostly in United States and 
+corporations and organizations---mostly in United States and
 Europe~\cite{SCA-HAVEX2}. The motivation behind the Havex malware was
 intelligence exfiltration and espionage~\cite{SCA-HAVEX1}. How many of these
 vendors employed checksums and other mitigations as part of their software
@@ -170,11 +160,11 @@ Anti-malware software are heuristic-based programs designed for the specific
 purpose of detecting and removing various kinds of malware. However, updates to
 anti-malware definitions often lag behind or occur in response to the release of
 crippling malware. For example, during the 2017 compromise of the HandBrake
-distribution mirror, users who first ran the compromised HandBrake image
-through \textit{VirusTotal}---a web service that will run a resource through
-several dozen popular anti-malware products---received a report claiming no
-infections were detected, despite the empirically verifiable presence of the
-Proton Malware.
+distribution mirror, users who first ran the compromised HandBrake image through
+\textit{VirusTotal}---a web service that will run a resource through several
+dozen popular anti-malware products---received a report claiming no infections
+were detected, despite the empirically verifiable presence of the Proton
+Malware.
 
 Worse, not all resource compromises end up looking like malware. In the 2012
 compromise of SourceForge's CDN, where a malicious version of phpMyAdmin was
@@ -232,20 +222,3 @@ Similar to anti-malware software, browser-based heuristics and blacklists are a
 reactive rather than proactive solution; hence, they are ineffective at
 shielding users from attacks on the integrity of the resources downloaded over
 the internet.
-
-\PUNT{\subsubsection{Checksums}
-
-I think we explain this sufficiently in the intro.
-
-\TODO{(what it is, why it fails; perhaps move part of abstract definition
-here?)}}
-
-\PUNT{\subsubsection{Public Key Infrastructure and Code Signing}
-
-I think we explain this sufficiently in the intro.
-
-\TODO{(what it is, why it fails)}~\cite{DANE1, DANE2, DANE3, OpenPGP1}
-
-\TODO{(specific case rather than the generic one; I think we should address the
-differences explicitly: we're simpler; we do not make the system more fragile;
-no central authority; applicable to more than just software binaries)}}
