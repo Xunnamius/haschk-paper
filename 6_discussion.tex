@@ -48,8 +48,8 @@ the HTML source to be secure; specifically, the checksums contained in the HTML
 source must be accurate for these schemes to work. An attacker that has control
 of the web server can alter the HTML and inject a malicious checksum. With
 \SYSTEM{}, however, an attacker would also have to compromise the DNS zone or
-whichever distributed system hosted the mappings between Resource Identifers and
-Authoritative Hashes. \\
+whichever authenticated distributed system hosted the mappings between Resource
+Identifers and Authoritative Hashes. \\
 
 \noindent\textbf{Content-MD5 Header.} The Content-MD5 header field is a
 deprecated email and HTTP header that delivers a checksum similar to those used
@@ -97,8 +97,9 @@ critical''.
 We also note that, while the highly-available DNS network is used to host the
 mappings between Resource Identifers and Authoritative Hashes in the \SYSTEM{}
 implementation, the \SYSTEM{} \emph{approach} is still valid no matter the
-choice of highly-available distributed system; \eg Distributed Hash Table
-(DHT), distributed KV store (\eg Redis), et cetera.
+choice of highly-available distributed system as long as there is an
+authentication component; \eg Distributed Hash Table (DHT), distributed
+authenticated KV store (\eg Redis), et cetera.
 
 \subsubsection{DNS-Specific Protocol Limitations}
 

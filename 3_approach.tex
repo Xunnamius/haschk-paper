@@ -16,10 +16,10 @@ distributed authenticated key-value store (\eg Redis) as the backend.
 
 
 A Resource Identifier (RI) is the unique cryptographic digest yielded by hashing
-the full file path of the resource, including leading slash. For example, for a
-web resource hosted at \textit{https://somesite.com/downloadme.txt}, a
-browser-based \SYSTEM{} implementation would hash \textit{/downloadme.txt} to
-get the RI.
+the full file path of the resource, including leading slash if applicable. For
+example, considering a web resource hosted at
+\textit{https://somesite.com/downloadme.txt}, a browser-based \SYSTEM{}
+implementation would hash \textit{/downloadme.txt} to get the RI.
 
 The Authoritative Hash (AH) is yielded from a record request to the backend.
 
@@ -30,8 +30,7 @@ Non-Authoritative Hash Validation (NAH Validation) is the final stage before
 compared to the AH received from backend. If they do not match, the file is
 judged unsafe.
 
-The Origin Domain (OD) is used to determine how \SYSTEM{} communicates with the
-distributed backend. In a browser-based implementation, the OD is the
+The Origin Domain (OD) is used to determine how \SYSTEM{} communicates with the backend. In a browser-based implementation, the OD is the
 Second-Level Domain (SLD) fragment of the current tab's URL. For example:
 \emph{google.com} would be the OD for the URL \emph{frag.something.google.com}
 and \emph{fakesite.io} would be the OD for the URL \emph{git.fakesite.io}.
@@ -44,7 +43,8 @@ the DNSSEC/DHT implementations addressing co-hosting.}
 \PUNT{Frontend:}
 \subsection{Transparency and User Apathy}
 
-
+Though the concept of using some distributed storage mechanism to record and
+query a global mapping between RIs and AHs sounds intuitive and straightforward, 
 
 \PUNT{Backend:}
 \subsection{Defeating Co-Hosting for Free}
