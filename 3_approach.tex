@@ -25,7 +25,7 @@ Schemes that are otherwise reasonably cryptographically solid can fail
 catastrophically due to human error, confusion, or simple lack of interest. Some
 users are likely to avoid using a security measure altogether if it presents
 even a minor obstacle to immediate gratification~\cite{Clickthrough, PGPBad}. In
-the browser, for example, can observe this empirically.
+the browser, for example, this phenomenon can be observed empirically.
 
 Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
 passively observe over 25 million warning impressions in 2013, Akhawe et al.
@@ -33,7 +33,7 @@ found that users of Google Chrome clicked through a quarter of \emph{malware and
 phishing warnings} and \emph{70\% of TLS warnings}~\cite{Clickthrough}. Users
 also clicked through a third of Mozilla Firefox's TLS warnings and a tenth of
 their malware and phishing warnings. That is to say: a significant percentage of
-browser users are \emph{determined} not to be let TLS trust issues and/or the
+browser users are \emph{determined} not to let TLS trust issues and/or the
 threat of malware prevent them from receiving their desired content. Hence, we
 must assume: some non-trivial number of users, similarly \emph{determined} to
 transact resources over the internet, will not be burdened with the off-path
@@ -42,7 +42,7 @@ jargon) and verifying the integrity of the resources they're downloading.
 
 With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
 the human factor altogether by providing a completely transparent and
-unobtrusive fully automated method of checksum calculation and verification. We
+unobtrusive, fully-automated method of checksum calculation and verification. We
 achieve this through 1) the unique identification of individual hosted resources
 and 2) a globally available mapping of unique resource identifiers to
 corresponding checksums.
@@ -110,7 +110,7 @@ This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
 
 \subsubsection{\SYSTEM{} as a Google Chrome Extension}
 
-We implemented \SYSTEM{} as a proof-of-concept Google Chrome extension that can
+We implement \SYSTEM{} as a proof-of-concept Google Chrome extension that can
 be configured to work with either global DNS or local DHT as its backend. Our
 Chrome extension does not make any modifications to the Chrome user interface or
 viewport (other than the extension icon itself). Further, downloads work exactly
@@ -136,7 +136,7 @@ would be the OD for the URL \texttt{git.fakesite.io}.
 The OD is then appended to the Primary Label (PL), which is then appended to the
 RI Sub-Label (SL). The Primary Label (PL) is a standard string used to identify
 DNS records that belong to \SYSTEM{}; we used ``\_dnschk''. It will always
-appear as the third-level domain following the OD in any request to backend. The
+appear as the third-level domain following the OD in any request to the backend. The
 RI Sub-Label (SL) is a standard string used to identify DNS records that contain
 RIs; we used ``\_ri'' in our implementation. The resulting construction,
 consisting of \texttt{SL.PL.OD}, is appended to the RI calculated earlier. This
@@ -189,7 +189,7 @@ necessary given a different choice of backend.
 \subsubsection{\SYSTEM{} as a FileZilla Source Patch}
 
 We implemented \SYSTEM{} as a proof-of-concept patch to the FileZilla source.
-Our does not make any modifications to FileZilla's user interface. As with the
+Our implementation does not make any modifications to FileZilla's user interface. As with the
 Chrome extension, FTP downloads work exactly the same whether a user is using a
 patched or non-patched version of FileZilla. The extension is similarly
 transparent to end users. If a failure is experienced during NAC Validation,
@@ -200,7 +200,7 @@ The extension computes RIs from the full URI path of a resource on the server
 \texttt{/~user/var/downloadme.txt}, our implementation would hash
 \texttt{/~user/var/downloadme.txt} to yield an RI.
 
-Unlike the Chrome extension patch implementation, the FileZilla patch required
+Unlike the Chrome extension patch implementation, the FileZilla patch requires
 no special \emph{Origin Domain (OD)} resolution step. The domain to be used for
 backend queries is the domain of the FTP server itself. The remainder of the
 implementation comports with the Chrome extension implementation of \SYSTEM{}.
