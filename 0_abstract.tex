@@ -1,26 +1,23 @@
 \begin{abstract}
 
 Downloading resources over the internet comes with many risks, including the
-chance that a malicious actor has replaced the resource you think you are
-accessing with a compromised version. The current standard for addressing this
-risk is the use of \emph{checksums} coupled with a secure transport layer; users
-download a resource and compare its checksum with a posted checksum from the
-developers to ensure a match. Among the many problems with the current use of
-checksums are (1) user apathy---for most users, hand-calculating the checksum
-and comparing to the published version is too tedious; and (2) co-hosting
-resources and checksums---a malicious actor who compromises a resource can
-usually trivially compromise a checksum hosted on the same system. In this
-paper, we propose \SYSTEM{}, a novel resource validation scheme meant as a
-complete replacement for current checksum based approaches. \SYSTEM{} automates
-the tedious parts of verification to eliminate user apathy while leveraging
-authenticated highly-available distributed systems to separate resources from
-checksums, making these systems and their end users more resilient to resource
-integrity attacks by avoiding co-hosting. We carefully evaluate the security,
-performance, and practicality of \SYSTEM{} through implementing extensions in
-both a web browser (Chrome) and FTP client (FileZilla); implementations are
-tested versus common resource integrity violations. We find that \SYSTEM{} is
-more effective than existing solutions, detects a wide variety of real-world
-integrity errors across a diverse set of platforms, and is a scalable and
-immediately deployable solution.
+chance that an attacker has replaced your desired resource with a compromised
+version. The de facto standard for addressing this risk is the use of
+\emph{checksums} coupled with a secure transport layer; users download a
+resource, compute its checksum, and compare that with an authoritative checksum.
+Problems with this include (1) \emph{user apathy}—for most users, calculating
+and validating the checksum is too tedious; and (2) \emph{co-hosting}—an
+attacker who compromises a resource can trivially compromise a checksum hosted
+on the same system. In this paper we propose \emph{\SYSTEM{}}, a novel resource
+validation scheme meant as a complete replacement for current checksum-based
+approaches. \SYSTEM{} implementations automate the tedious parts of checksum
+verification to sidestep user apathy while leveraging authenticated high
+availability distributed systems to address co-hosting. We carefully evaluate
+the security, performance, and practicality of our approach through
+proof-of-concept implementations in Google Chrome and FileZilla; implementations
+are tested versus common resource integrity violations. While not a panacea, we
+find that our approach is more effective than existing mitigation methods,
+significantly raises the bar for the attacker, and is scalable and immediately
+deployable.
 
 \end{abstract}
