@@ -1,19 +1,19 @@
 \section{Background} \label{sec:background}
 
 In this section, we describe the motivation for \SYSTEM{}, including four case
-studies that frame the threat posed by Supply Chain Attacks (SCAs). We then
-examine current methods to detect and prevent resource corruption including
-checksums, HTTPS, anti-malware, PKI, and others.
+studies that frame the threat we model against. We then examine current methods
+to detect and prevent resource corruption including checksums, HTTPS,
+anti-malware, purely PKI-based solutions, and others.
 
 \subsection{Supply Chain Attacks on Resource Integrity}
 
 Modern software development requires a complex globally distributed supply chain
 and development ecosystem for organizations and other entities to design,
-develop, and deploy, and maintain products efficiently~\cite{SCA}. Such a
+develop, deploy, and maintain products efficiently~\cite{SCA}. Such a
 globally distributed ecosystem necessitates integration with potentially many
-third party entities be they specialty driver manufacturers, external content
+third party entities, be they specialty driver manufacturers, external content
 distribution network (CDN) providers, third party database management software,
-etc.
+download mirrors, etc.
 
 Critically, reliance on third parties, while often cost-effective and
 feature-rich, also increases the risk of a security compromise at some point in
@@ -24,10 +24,10 @@ upstream asset compromise, trusted hardware/vendor compromise, or some other
 attack on one or more phases of the software development life cycle or ``supply
 chain'' to infect an unsuspecting end user~\cite{NIST-SCA}.
 
-Every year, major supply chain attacks become more frequent and their fallout
-more widely felt~\cite{SCA, NIST-SCA}. Whether major or minor, SCAs are hard to
-detect, even harder to prevent, and have the goal of infecting and exploiting
-victims by violating the trust between consumer and reputable software vendor.
+Every year, major SCAs become more frequent and their fallout more widely
+felt~\cite{SCA, NIST-SCA}. Whether major or minor, SCAs are hard to detect, even
+harder to prevent, and have the goal of infecting and exploiting victims by
+violating the trust between consumer and reputable software vendor.
 
 \begin{table*}[t]
     \centering
@@ -84,10 +84,10 @@ intrusion into their official HTTPS-protected distribution
 server~\cite{SCA-MINT1}. Attackers mutated download links originally pointing to
 the Linux Mint 17.3 Cinnamon edition ISO, redirecting unsuspecting users to a
 disparate system hosting a custom Mint ISO compiled with the IRC-based Linux
-backdoor malware \emph{Tsunami}~\cite{SCA-MINT2}. The attack affected several
-hundred of the downloads during that day, with the attackers claiming that a
-``few hundred'' Linux Mint installs were explicitly under their control. The
-primary motivation behind the intrusion was the construction of a
+backdoor malware \emph{Tsunami}~\cite{SCA-MINT2}. The attack affected hundreds
+of the downloads during that day, with the attackers claiming that a ``few
+hundred'' Linux Mint installs were explicitly under their control. The primary
+motivation behind the intrusion was the construction of a
 botnet~\cite{SCA-MINT3}. The authoritative checksum displayed on the official
 website was also mutated to corroborate the backdoored ISO~\cite{SCA-MINT3},
 illustrating the \emph{co-hosting} problem.
@@ -95,8 +95,8 @@ illustrating the \emph{co-hosting} problem.
 Storing the checksum elsewhere may have prevented mutations on the checksum;
 still, as demonstrated by the first case, such an effort is not itself a
 solution. Hosting a checksum on a secondary system is not very useful if users
-downloading the resource protected by that checksum are not actually
-\emph{checking} it against a manual calculation. \\
+downloading the resource protected by that checksum cannot find it or are
+not actually \emph{checking} it against a manual calculation.\\
 
 \noindent\textbf{Case 3: Havex.} As part of a widespread espionage campaign
 beginning in 2010, Russian Intelligence Services targeted the industrial control
@@ -157,7 +157,7 @@ Detecting and/or mitigating resource integrity SCAs and other active attacks is
 a non-trivial and well studied problem~\cite{MD5Header, HTTP1.1, HTTPS, SRI, LF,
 OpenPGP1, DNSSEC, PKI}. What follows is a brief overview of current and popular
 methods to ensure the integrity of resources exchanged over the internet other
-than checksums.
+than checksums and HTTPS/TLS.
 
 \subsubsection{Anti-Malware Software}
 
@@ -169,7 +169,7 @@ distribution mirror, users who first ran the compromised HandBrake image through
 \textit{VirusTotal}---a web service that will run a resource through several
 dozen popular anti-malware products---received a report claiming no infections
 were detected, despite the empirically verifiable presence of the Proton
-Malware.
+malware.
 
 Worse, not all resource compromises end up looking like malware. In the 2012
 compromise of SourceForge's CDN, where a malicious version of phpMyAdmin was
@@ -181,7 +181,7 @@ being distributed.
 At the time of writing (2018), VirusTotal correctly identifies the compromised
 version of the Handbrake image as malware.
 
-\subsubsection{HTTPS / Encrypted Channel}
+\PUNT{\subsubsection{HTTPS / Encrypted Channel}
 
 The state of the art in secure communications is the Transport Layer Security
 (TLS) standard and its Hyper Text Transfer Protocol (HTTP)/PKI based
@@ -213,7 +213,7 @@ control of some aspect of the software deployment process (cf. case 3).
 Moreover, an attacker can render HTTPS-protected HTML-based protections such as
 co-hosted resource checksums, the content-MD5 header~\cite{MD5Header} and
 Subresource Integrity (SRI)~\cite{SRI} digests ineffective by trivially mutating
-the compromised download portal and/or update/maintenance mechanism.
+the compromised download portal and/or update/maintenance mechanism.}
 
 \subsubsection{Browser-based Heuristics and Blacklists}
 

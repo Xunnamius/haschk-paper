@@ -154,10 +154,10 @@ Using Merkle trees~\cite{Merkle} instead of pure cryptographic hashing functions
 for resource validation would enable partial verification of large files. For
 example, suppose we are downloading a 10TiB resource and it is compromised. By
 calculating a Merkle tree beforehand, we do not have to wait for the resource to
-finish downloading before we render a failing judgment. This partial verification has the potential
-to save the user a significant amount of time, though using Merkle trees for
-resource integrity validation over the internet is decidedly
-not-trivial~\cite{Merkle-HTTP}.
+finish downloading before we render a failing judgment. This partial
+verification has the potential to save the user a significant amount of time,
+though using Merkle trees for resource integrity validation over the internet is
+decidedly not-trivial~\cite{Merkle-HTTP}.
 
 For a production example of Merkle tree based resource integrity validation, we
 can look to the so-called \emph{Tiger tree hash}~\cite{TTH, Merkle} (TTH)
