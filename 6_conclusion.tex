@@ -1,0 +1,22 @@
+\section{Conclusion} \label{sec:conclusion}
+
+Downloading resources over the internet is indeed a risky endeavor. Resource
+integrity attacks, and Supply Chain Attacks more broadly, are becoming more
+frequent and their impact more widely felt. This paper shows that the de facto
+standard for addressing resource integrity risk---the use of \emph{checksums}
+coupled with a secure transport layer---is an insufficient and often ineffective
+solution. We propose a novel resource validation approach meant as a complete
+replacement for checksum based approaches: \SYSTEM{}, which automates the
+tedious parts of verification to eliminate user apathy while leveraging
+highly-available authenticated distributed systems to ensure resources and
+checksums are not co-hosted. Further, we demonstrate the effectiveness and
+practicality of our approach versus resource integrity attacks in a real-world
+system.
+
+The results of our evaluation show that our approach is more effective than
+checksums and other attempts at mitigating resource integrity attacks
+against arbitrary resources on the internet. Further, we show \DNSSYS{} is
+capable of detecting a wide variety of real-world integrity errors,
+significantly raising the bar for the attacker. \DNSSYS{}, as it is backed by
+DNS, is immediately deployable at scale for entities that secure their DNS
+zone(s) with DNSSEC.

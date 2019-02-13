@@ -18,8 +18,8 @@ developers recommended users perform checksum validation to determine if their
 install was compromised~\cite{SCA-HB2}.
 
 As every internet user is certainly aware, downloading resources over the
-internet comes with considerable risk. This risk can be divided into three
-categories: response authentication, communication confidentiality, and resource
+internet comes with considerable risk. This risk can be divided into three broad
+concerns: response authentication, communication confidentiality, and resource
 integrity. Response authentication allows us to determine if a response received
 indeed originates from its purported source through,
 for instance, the adoption of a Public Key Infrastructure (PKI)
@@ -45,12 +45,12 @@ integrity of resources at the application layer (rather than the transport
 layer) is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
 
 Attacks on resource integrity can be considered a subset of \emph{Supply Chain
-Attacks} (SCA). Rather than attack an organization directly, SCAs are the
-compromise of an organization's software source code (or any product) via cyber
-attack, insider threat, upstream asset compromise, trusted hardware/vendor
-compromise, or other attack on one or more phases of the software development
-life cycle~\cite{NIST-SCA}. These attacks are hard to detect, even harder to
-prevent, and have the goal of infecting and exploiting victims by abusing the
+Attacks} (SCA). Rather than attack an entity directly, SCAs are the compromise
+of an entity's software source code (or any product) via cyber attack, insider
+threat, upstream asset compromise, trusted hardware/vendor compromise, or other
+attack on one or more phases of the software development life
+cycle~\cite{NIST-SCA}. These attacks are hard to detect, even harder to prevent,
+and have the goal of infecting and exploiting targets and victims by abusing the
 trust between consumer and reputable software vendor~\cite{SCA}.
 
 Ensuring the integrity of resources exchanged over the internet despite SCAs and
@@ -87,18 +87,18 @@ expected to ``do the right thing,'' whatever that happens to be in context.
 Then there is the futility of \emph{co-hosting} a resource and its checksum on the same
 distribution system. While cost-effective compared to hosting two or more
 discrete systems---one for the resource and one for the resource's
-checksum---an adversary that compromises a single distribution system hosting
+checksum---an attacker that compromises a single distribution system hosting
 a resource and its checksum can mutate both, rendering the checksum
 irrelevant. The co-hosting problem was demonstrated by the 2016 hack of Linux Mint's distribution
 server~\cite{SCA-MINT1, SCA-MINT2}.
 
 Checksums as they are employed currently are not effective at guaranteeing
-resource integrity. Recognizing this, some corporations and large organizations
-rely instead on PKI-based solutions such as digital signature validation and
-code signing~\cite{PKI}. These solutions have been deployed successfully to
-mitigate resource integrity attacks in mature software package ecosystems (\eg
-Debian/apt, Red Hat/yum, Arch/pacman) and walled-garden app stores like Google
-Play, Apple App Store, and the Microsoft Store.
+resource integrity. Recognizing this, some corporations and large entities rely
+instead on PKI-based approaches such as digital signature validation and code
+signing~\cite{PKI}. These roll-your-own solutions, often proprietary, have been
+deployed successfully to mitigate resource integrity attacks in mature software
+package ecosystems (\eg Debian/apt, Red Hat/yum, Arch/pacman) and walled-garden
+app stores like Google Play, Apple App Store, and the Microsoft Store.
 
 \PUNT{Unfortunately, ... --> (solution proposal)}
 
@@ -106,63 +106,76 @@ Unfortunately, not all resources available on the internet are acquired through
 software package ecosystems with built-in PKI support, nor are all resources
 software binaries; moreover, these PKI schemes are not compatible with one
 another and cannot scale to secure arbitrary resources on the internet without
-significant cost and effort. Worse, roll-your-own PKI is \emph{hard to get
-right}~\cite{PKI}, implying systems built atop them are inherently more
+significant cost and effort. Worse, roll-your-own PKI is hard to get
+right~\cite{PKI}, implying systems built atop them are inherently more
 \emph{fragile}---susceptible to malfunction due to small errors or
 misconfigurations.
 
-In this paper, we propose \SYSTEM{}, a novel method of verifying the integrity
-of resources downloaded over the internet that is a complete replacement for
-traditional checksums. We approach the problem with four key concerns in mind:
-a) implementations provide security guarantees transparently without adding any
-extra burden on the end user---here, an optimal solution avoids relying on the
-user to overcome apathy in the interest of security; b) configuring the
-validation method is simple for service administrators and system operators to
-integrate and deploy while ensuring configuration of a potentially-expensive
-discrete secondary system to host checksums is unnecessary; c) the validation
-method is not tightly coupled with any particular highly-available system; and
-d) no new HTML or JavaScript language additions, application source changes, or
-user-facing web server/infrastructure alterations are necessary. We implement
-\SYSTEM{} as a proof-of-concept Google Chrome extension as well as a patch to
-the FileZilla FTP client.
+In this paper, we propose \SYSTEM{}, a novel approach for verifying the
+integrity of resources downloaded over the internet that is a complete
+replacement for traditional checksums.
 
-We evaluate the security, scalability, and performance of our automated defense
-against resource corruption to demonstrate the effectiveness and
-practicality of the \SYSTEM{} approach. Specifically, we find no obstacles to
-efficient scalability given choice of authenticated distributed system and no
-performance overhead compared to downloads without \SYSTEM{}. We further provide
-a publicly accessible empirical demonstration of \SYSTEM{}'s protective utility
-via a patched HotCRP instance\footnote{The patched HotCRP instance is available
-at https://tinyurl.com/dnschk-hotcrp}.
+We view the problem with four key concerns in mind: a) implementations must
+provide security guarantees transparently without adding any extra burden on the
+end user in the average case---here, an optimal solution avoids relying on the
+user to overcome apathy in the interest of security; b) configuring the
+validation method is simple for developers and system operators to integrate and
+deploy while ensuring configuration of a potentially-expensive discrete
+secondary system to host checksums is unnecessary; c) the validation method is
+not tightly coupled with any particular highly-available system; and d) no
+application or website source code changes or end user -facing web server/web
+infrastructure alterations are necessary. We implemented \SYSTEM{} as two
+proof-of-concept Google Chrome extensions: \DNSSYS{} and \DHTSYS{}. Our
+\DNSSYS{} implementation uses DNSSEC-secured DNS as its highly available backend
+while our \DHTSYS{} implementation relies on an OpenDHT-based dummy backend.
+
+We then evaluate the security, scalability, and performance of our automated
+defense against resource corruption and demonstrate the effectiveness and
+practicality of the \SYSTEM{} approach. Specifically, we find no additional
+obstacles to efficient deployment at scale outside of those imposed by the
+chosen authenticated distributed high availability system.
+
+For the proof-of-concept \DNSSYS{} implementation, we find the only practical
+obstacle to immediate deployment to be the adoption of DNSSEC (cf.
+\secref{discussion}). We further provide a publicly accessible empirical
+demonstration of \DNSSYS{}'s protective utility via a patched HotCRP instance
+(cf. \secref{availability}). We observed no download performance overhead
+compared to downloads without \DNSSYS{}.
 
 In summary, our primary contributions are:
 
 \begin{itemize}
 
-  \item We propose a novel practical defense against receiving corrupted or
-  compromised resources over the internet. Contrasted with current solutions,
-  our defense requires no source code or end user facing web
-  server/infrastructure changes in a browser-based or similar environment, does
-  not employ unreliable heuristics, does not interfere with other software or
-  extensions that also handle download security, and can be transparently
-  deployed without adding to the \textit{fragility} of DNSSEC-enabled systems;
-  \ie, it can protect users whose software implements the \SYSTEM{} approach
-  while remaining unnoticeable to users whose software does not.
+  \item We propose a practical approach to defending against receiving corrupted
+  or compromised resources over the internet. Contrasted with current solutions,
+  our concrete implementations require no app/website source code or end user
+  facing web server/web infrastructure changes, do not employ unreliable
+  heuristics, do not interfere with other protocols or software extensions that
+  might also deal with download security, and can be transparently deployed
+  without adding to application/infrastructure fragility; \eg Chrome clients
+  with \DNSSYS{} installed will have their downloads secured while the user
+  experience of clients without the extension remains completely unaffected.
 
-  \item We present our prototype \SYSTEM{} implementations for Google Chrome and
-  FileZilla and demonstrate their effectiveness in automatically and
-  transparently mitigating the accidental consumption of compromised resources
-  from a compromised server hosting a compromised web portal. To the best of our
-  knowledge, this is the \emph{first} system providing such capabilities with
-  little implementation cost while requiring no additional work from the end
-  user.
+  \item We present our prototype \SYSTEM{} implementations: \DNSSYS{} and
+  \DHTSYS{}. Both are implemented as Google Chrome extensions. We specifically
+  demonstrate \DNSSYS{}'s effectiveness in automatically and transparently
+  mitigating the accidental consumption of compromised resources from a
+  compromised HotCRP server. To the best of our knowledge, this is the
+  first system providing such capabilities with marginal deployment cost
+  and, unlike a traditional checksum-based approach, does not require the end
+  user to overcome apathy in the average case.
 
-  \item We carefully and extensively evaluate the security, scalability, and
-  performance of the \SYSTEM{} approach and provide a publicly accessible
-  empirical demonstration of its protective utility.
+  \item We extensively evaluate the security, performance (overhead), and
+  deployment costs of \DNSSYS{}. We find that our approach is more effective
+  than checksums for mitigating resource integrity attacks. Further, we show
+  \DNSSYS{} is capable of detecting a wide variety of real-world integrity
+  errors, significantly raising the bar for the attacker. \DNSSYS{}, as it is
+  backed by DNS, is immediately deployable at scale for entities that secure
+  their DNS zone(s) with DNSSEC. Finally, we observed no download performance
+  overhead compared to downloads without \DNSSYS{}.
 
 \end{itemize}
 
-We release the \SYSTEM{} solution to the community as open source software to
-prompt exploration of the \SYSTEM{} approach.\footnote{The \SYSTEM{} Chrome
-extension is available at https://tinyurl.com/dnschk-actual}
+We release our \DNSSYS{} and \DHTSYS{} proof-of-concept implementations to the
+community as open source software to promote exploration of the \SYSTEM{}
+approach (cf. \secref{availability}).

@@ -10,74 +10,70 @@ papers published in previous \CONFERENCE{} proceedings.
 
 \subsubsection{Compromised Resource}
 
-We consider the case where an adversary can influence or even completely control
+We consider the case where an attacker can influence or even completely control
 the victim's resource distribution mechanism (web page, file server, CDN, etc)
-in any way. In this context, the adversary can trick the user into downloading a
-compromised resource of the adversary's choice. This can be accomplished by
+in any way. In this context, the attacker can trick the user into downloading a
+compromised resource of the attacker's choice. This can be accomplished by
 compromising the resource on the victim's system or tricking the user into
-downloading a compromised resource on the adversary's remote system.
+downloading a compromised resource on the attacker's remote system.
 
-In this case, the adversary does not have control over any DNS zone(s) relevant
+In this case, the attacker does not have control over any DNS zone(s) relevant
 to the function of \SYSTEM{}.
 
-If the adversary does not alter the Resource Identifier, the compromised
+If the attacker does not alter the Resource Identifier, the compromised
 resource will fail integrity validation during the NAC Validation step.
 
-If the adversary does alter the Resource Identifier, there are two
+If the attacker does alter the Resource Identifier, there are two
 possibilities: a) the new Resource Identifier \textit{does not} exist in the DNS
 zone, in which case \SYSTEM{} will fail to resolve the NAC, hence the NAC
 Validation step will fail silently; b) the new Resource Identifier \textit{does}
 exist in the DNS zone, therefore the ``new'' RI must be pointing to a different
-resource's checksum. Unless the adversary's goal is to swap one or more
+resource's checksum. Unless the attacker's goal is to swap one or more
 resources protected by \SYSTEM{} and a particular DNS zone with another resource
 also protected by \SYSTEM{} and in that same zone, the NAC Validation step will
-fail. For the aforementioned ``swap'' to work, the adversary would be required
+fail. For the aforementioned ``swap'' to work, the attacker would be required
 to both change the RI and also offer to the victim the \SYSTEM{} protected
 resource the ``new'' RI corresponds to, which shrinks the attack surface
 significantly.
 
-We note that, in our proof-of-concept implementation, the ``silent failure''
-above allows \SYSTEM{} to be immediately deployed without risk of annoying the
-user with false negatives. See \secref{discussion} for further discussion.
-
 \subsubsection{Compromised Authoritative Checksum}
 
-We consider the case where an adversary can completely control the victim DNS
-zone(s) that allow \SYSTEM{} to function. Therefore, the adversary can return an
+We consider the case where an attacker can completely control the victim DNS
+zone(s) that allow \SYSTEM{} to function. Therefore, the attacker can return an
 authoritative response of their choice to any DNS query.
 
-In this case, the adversary does not have control over the victim's resource
+In this case, the attacker does not have control over the victim's resource
 distribution mechanism (web page, file server, CDN, etc).
 
 DNSSEC ensures the validity and authenticity of DNS responses. In order for the
-adversary to control any relevant DNS zones, they must have access to the
+attacker to control any relevant DNS zones, they must have access to the
 authoritative DNS server and/or the appropriate DNSSEC keys.
 
-Even if the adversary achieved this level of compromise, they do not have the
-ability to deliver a malicious payload in this case. However, the adversary
+Even if the attacker achieved this level of compromise, they do not have the
+ability to deliver a malicious payload in this case. However, the attacker
 could use control over the relevant DNS zones to cause denial-of-service style
 attacks against those attempting to download the resource by causing all NAC
 Validation checks to fail. This is mitigated by \SYSTEM{} allowing the user to
-``override'' its error states; \ie, \SYSTEM{} does not (and cannot, thanks to
+``override'' its error states; \ie \SYSTEM{} does not (and cannot, thanks to
 the Chrome/WebExtensions API) mutate a downloaded resource. See
 \secref{discussion} for further discussion on limitations due to the
 Chrome/WebExtensions API.
 
 \subsubsection{Compromised Resource and Authoritative Checksum}
 
-We consider the case where an adversary can influence or even completely control
+We consider the case where an attacker can influence or even completely control
 the victim's resource distribution mechanism (web page, file server, CDN, etc)
-in any way. Additionally, the adversary can completely control the victim DNS
-zone(s) that allow \SYSTEM{} to function. Therefore, the adversary can make the
+in any way. Additionally, the attacker can completely control the victim DNS
+zone(s) that allow \SYSTEM{} to function. Therefore, the attacker can make the
 user download a compromised resource and also return a (compromised) AC that
 legally corresponds to said compromised resource.
 
 \subsubsection{Determining the Origin Domain}
 
-If an adversary manages to compromise a web page/server, they have two options.
+If an attacker manages to compromise a web page/server, they have two options.
 They can mutate the resource directly, which would be observable via \SYSTEM{}.
 They could also mutate the web/download page itself, replacing the anchor with a
-malicious one that points to a compromised resource on the adversary's remote
+malicious one that points to a compromised resource on the attacker's remote
 system. \SYSTEM{} will still catch this due to the Chrome API's
 \texttt{DownloadItem::referrer} property (distinct from the concept of an HTTP
 referrer).
@@ -144,9 +140,9 @@ quickly triggering the download of a corrupted resource from a disparate domain.
 successfully warning the user.
 
 We conclude that our proof-of-concept \SYSTEM{} implementation and approach are
-more effective than existing solutions at detecting integrity violations in
-arbitrary resources on the internet; this is especially true when \SYSTEM{} is
-compared to the de facto standard, checksums.
+more effective than existing approaches at detecting integrity violations in
+arbitrary resources on the internet at scale; this is evident especially when
+\SYSTEM{} is compared to the de facto standard, checksums.
 
 \subsection{Deployment and Scalability}
 
@@ -158,7 +154,7 @@ a mapping between a RI and its corresponding AC.
 We find a DNS record addition or update during the resource deployment process
 to be simple enough for service administrators to implement and presents no
 significant burden to deployment outside of DNS API integration into an
-organization's software development supply chain.
+development team or other entity's software build and deployment toolchain.
 
 As \SYSTEM{} is predicated on a distributed authenticated highly-available
 backend, we conclude that the scalability of \SYSTEM{} can be reduced to the
@@ -169,7 +165,7 @@ In respect to DNS specifically, packet fragmentation can be a concern for high
 performance networks~\cite{EDNS}, but this is an artifact of DNSSEC and related
 protocols rather than \SYSTEM{}~\cite{DNSSEC}. Further, we are aware of no
 practical limits or protocol-based restrictions on the scalability of a DNS zone
-file itself or its subzones. A service can host tens of thousands of resource
+file itself or its sub-zones. A service can host tens of thousands of resource
 records in their DNS zone file~\cite{DNS1, DNS2}.
 
 \subsection{Performance Overhead}

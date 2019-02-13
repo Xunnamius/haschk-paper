@@ -74,7 +74,7 @@ Funding and maintaining a single server/system to host all of your assets can be
 extremely cost-effective in the short term compared to hosting two or more
 discrete systems---one hosting the resource and one hosting the resource's
 checksum. Unfortunately, this establishes a single point of failure: an
-adversary that compromises such a system can both mutate the resource and update
+attacker that compromises such a system can both mutate the resource and update
 the checksum to match the mutation. Hence, \emph{co-hosting} a resource and its
 corresponding checksum on the same distribution system virtually negates the
 effectiveness of having a checksum at all. This is widely understood in the
@@ -90,9 +90,9 @@ establishment and maintenance of this potentially complex secondary system?
 
 Fortunately, there exists a highly-available fully authenticated globally
 distributed high performance low latency mapping service that web-facing
-organizations and IT teams are already quite familiar with (and already pay
-for): the Domain Name System (DNS). Adding extra resource records to a DNS zone
-is essentially a costless operation, meaning any organization that already has a
+entities and IT teams are already quite familiar with (and already pay for): the
+Domain Name System (DNS). Adding extra resource records to a DNS zone is
+essentially a costless operation, meaning any entity that already has a
 DNSSEC-protected web presence can immediately deploy \SYSTEM{}.
 
 To avoid co-hosting in our implementations, we preferred DNS to other candidate
@@ -124,14 +124,16 @@ considering a web resource hosted at
 \texttt{https://somesite.com/var/downloadme.txt}, our implementation would hash
 \texttt{/var/downloadme.txt} to yield an RI.
 
-Unlike the FileZilla patch implementation, the Chrome extension implementation
-required a special \emph{Origin Domain (OD)} resolution step based on the Chrome
-API's \texttt{DownloadItem::referrer} and the current Chrome tab's URL. The
-Origin Domain is the base domain used to query the backend---in this case
-DNS---and will always be the Second-Level Domain (SLD) fragment of the current
-tab's URL in our implementation. For example: \texttt{somesite.com} would be the
-OD for the URL \texttt{frag.something.somesite.com} and \texttt{fakesite.io}
-would be the OD for the URL \texttt{git.fakesite.io}.
+% VVVVVVVVVV FIX ME!
+
+Due to how we implemented our Chrome extension, we required a special
+\emph{Origin Domain (OD)} resolution step based on the Chrome API's
+\texttt{DownloadItem::referrer} and the current Chrome tab's URL. The Origin
+Domain is the base domain used to query the backend---in this case DNS---and
+will always be the Second-Level Domain (SLD) fragment of the current tab's URL
+in our implementation. For example: \texttt{somesite.com} would be the OD for
+the URL \texttt{frag.something.somesite.com} and \texttt{fakesite.io} would be
+the OD for the URL \texttt{git.fakesite.io}.
 
 The OD is then appended to the Primary Label (PL), which is then appended to the
 RI Sub-Label (SL). The Primary Label (PL) is a standard string used to identify
@@ -185,22 +187,3 @@ necessary given a different choice of backend.
     \end{algorithmic}
     }
 \end{algorithm}}
-
-\subsubsection{\SYSTEM{} as a FileZilla Source Patch}
-
-We implement \SYSTEM{} as a proof-of-concept patch to the FileZilla source.
-Our implementation does not make any modifications to FileZilla's user
-interface. As with the Chrome extension, FTP downloads work exactly the same
-whether a user is using a patched or non-patched version of FileZilla. The
-extension is similarly transparent to end users. If a failure is experienced
-during NAC Validation, \SYSTEM{} will alert the user via a popup alert.
-
-The extension computes RIs from the full URI path of a resource on the server
-(including root). For example, considering a resource hosted on an FTP server at
-\texttt{/~user/var/downloadme.txt}, our implementation would hash
-\texttt{/~user/var/downloadme.txt} to yield an RI.
-
-Unlike the Chrome extension patch implementation, the FileZilla patch requires
-no special \emph{Origin Domain (OD)} resolution step. The domain to be used for
-backend queries is the domain of the FTP server itself. The remainder of the
-implementation comports with the Chrome extension implementation of \SYSTEM{}.

@@ -8,20 +8,21 @@ checksums, HTTPS, anti-malware, PKI, and others.
 \subsection{Supply Chain Attacks on Resource Integrity}
 
 Modern software development requires a complex globally distributed supply chain
-and development ecosystem for organizations to design, develop, and deploy, and
-maintain products efficiently~\cite{SCA}. Such a globally distributed ecosystem
-necessitates integration with potentially many third party entities be they
-specialty driver manufacturers, external content distribution network (CDN)
-providers, third party database management software, etc.
+and development ecosystem for organizations and other entities to design,
+develop, and deploy, and maintain products efficiently~\cite{SCA}. Such a
+globally distributed ecosystem necessitates integration with potentially many
+third party entities be they specialty driver manufacturers, external content
+distribution network (CDN) providers, third party database management software,
+etc.
 
 Critically, reliance on third parties, while often cost-effective and
 feature-rich, also increases the risk of a security compromise at some point in
 the supply chain~\cite{SCA}. These types of compromises are known as Supply
 Chain Attacks (SCA). In the context of software development, SCAs are the
-compromise of an organization's software source code via cyber attack, insider
-threat, upstream asset compromise, trusted hardware/vendor compromise, or some
-other attack on one or more phases of the software development life cycle or
-``supply chain'' to infect an unsuspecting end user~\cite{NIST-SCA}.
+compromise of an entity's software source code via cyber attack, insider threat,
+upstream asset compromise, trusted hardware/vendor compromise, or some other
+attack on one or more phases of the software development life cycle or ``supply
+chain'' to infect an unsuspecting end user~\cite{NIST-SCA}.
 
 Every year, major supply chain attacks become more frequent and their fallout
 more widely felt~\cite{SCA, NIST-SCA}. Whether major or minor, SCAs are hard to
@@ -43,7 +44,7 @@ victims by violating the trust between consumer and reputable software vendor.
      \label{tbl:attacks}
 \end{table*}
 
-\figref{attacks} details the phases of a generic software development supply
+\tblref{attacks} details the phases of a generic software development supply
 chain. For the purposes of this research, we focus exclusively on SCAs targeting
 the deployment, maintenance, and retirement phases.
 
@@ -75,7 +76,8 @@ Hence, a user who was sufficiently motivated, had sufficient technical knowledge
 of checksums and how to calculate them, and was also privy to the location of
 the correct checksum for the official phpMyAdmin image \emph{might} have noticed
 the discrepancy between the two digests. Clearly, a non-trivial number of users
-do not meet these criteria, and this attack demonstrates the problem of \emph{user-apathy}. \\
+do not meet these criteria, and this attack demonstrates the problem of
+\emph{user-apathy}.\\
 
 \noindent\textbf{Case 2: Linux Mint.} In 2016, the Linux Mint team discovered an
 intrusion into their official HTTPS-protected distribution
@@ -205,10 +207,10 @@ Hence, despite the resilient nature of HTTPS and the powerful security
 properties it guarantees, end users are still vulnerable to attacks on resource
 integrity. This can occur at the point of distribution, such as a compromised
 node in a third party CDN that delivers malicious resources masquerading as
-popular software (cf. cases 1-4). It can occur when an adversary gains
+popular software (cf. cases 1-4). It can occur when an attacker gains
 control of some aspect of the software deployment process (cf. case 3).
 
-Moreover, an adversary can render HTTPS-protected HTML-based protections such as
+Moreover, an attacker can render HTTPS-protected HTML-based protections such as
 co-hosted resource checksums, the content-MD5 header~\cite{MD5Header} and
 Subresource Integrity (SRI)~\cite{SRI} digests ineffective by trivially mutating
 the compromised download portal and/or update/maintenance mechanism.
