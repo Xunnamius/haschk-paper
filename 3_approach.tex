@@ -2,14 +2,10 @@
 
 In this section we detail the \SYSTEM{} approach: a practical defense against
 receiving corrupted or compromised resources over the internet. We further
-present the challenges and their solutions in implementing \SYSTEM{} concretely
-(\ie the \DNSSYS{} and \DHTSYS{} Google Chrome extensions) so as to transparently
-mitigates resource integrity attacks and other Supply Chain Attacks (SCA)
-without degrading the experience of users that do not implement the \SYSTEM{}
-approach.
+present our proof-of-concept Google Chrome extension implementations, \DNSSYS{}
+and \DHTSYS{}.
 
-\PUNT{\TODO{Create the overview image or remove this sentence} \figref{overview}
-illustrates the \SYSTEM{} approach.}
+\figref{overview} illustrates the \SYSTEM{} approach.
 
 \PUNT{Frontend:}
 \subsection{Transparency and User Apathy}
@@ -22,35 +18,36 @@ even a minor obstacle to immediate gratification~\cite{Clickthrough, PGPBad}. In
 the browser, for example, this phenomenon can be observed empirically.
 
 Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
-passively observe over 25 million warning impressions in 2013, Akhawe et al.
-found that users of Google Chrome clicked through a quarter of \emph{malware and
-phishing warnings} and \emph{70\% of TLS warnings}~\cite{Clickthrough}. Users
-also clicked through a third of Mozilla Firefox's TLS warnings and a tenth of
-their malware and phishing warnings. That is to say: a significant percentage of
-browser users are \emph{determined} not to let TLS trust issues and/or the
-threat of malware prevent them from receiving their desired content. Hence, we
-must assume: some non-trivial number of users, similarly \emph{determined} to
-transact resources over the internet, will not be burdened with the off-path
-minutiae of manually calculating a checksum (if they are even familiar with the
-jargon) and verifying the integrity of the resources they are downloading.
+passively observe over 25 million warning impressions in 2013 (see
+\figref{telemetry}), Akhawe et al. found that users of Google Chrome clicked
+through a quarter of \emph{malware and phishing warnings} and \emph{70\% of TLS
+warnings}~\cite{Clickthrough}. Users also clicked through a third of Mozilla
+Firefox's TLS warnings and a tenth of their malware and phishing warnings. That
+is to say: a significant percentage of browser users are \emph{determined} not
+to let TLS trust issues and/or the threat of malware prevent them from receiving
+their desired content. Hence, we must assume: some non-trivial number of users,
+similarly \emph{determined} to transact resources over the internet, will not be
+burdened with the off-path minutiae of manually calculating a checksum (if they
+are even familiar with the jargon) and verifying the integrity of the resources
+they are downloading.
 
 With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
 the human factor altogether by providing a completely transparent and
-unobtrusive, fully-automated method of checksum calculation and verification. We
-achieve this through 1) the unique identification of individual hosted resources
-and 2) a globally available mapping of unique resource identifiers to
-corresponding checksums.
+unobtrusive, fully-automated method of checksum calculation and verification in
+the average case. We achieve this through 1) the unique identification of
+individual hosted resources and 2) a highly available mapping of unique
+resource identifiers to corresponding checksums.
 
-\SYSTEM{} can be imagined as a completely transparent security layer sitting
-between the user and the resource. Immediately after a resource is downloaded,
-the \SYSTEM{} layer will generate two cryptographic digests. One digest uniquely
-fingerprints said resource based on its name. This is known as the
-\emph{Non-Authoritative Checksum} (NAC) and is yielded from running the
-cryptographic hashing function over the contents of the resource file. The
-second digest uniquely fingerprints said resource based on its contents. This is
-known as the \emph{Resource Identifier} (RI) and is yielded from running the
-cryptographic hashing function over the resource's public path on the
-distribution system.
+\figref{overview} illustrates the \SYSTEM{} approach. \SYSTEM{} implementations
+can be imagined as a security layer sitting between the user and the resource.
+Immediately after a resource is downloaded, two cryptographic digests are
+generated. One digest uniquely fingerprints said resource based on its name.
+This is known as the \emph{Non-Authoritative Checksum} (NAC) and is yielded from
+running the cryptographic hashing function over the contents of the resource
+file. The second digest uniquely fingerprints said resource based on its
+contents. This is known as the \emph{Resource Identifier} (RI) and is yielded
+from running the cryptographic hashing function over the resource's public path
+on the distribution system.
 
 Next, \SYSTEM{} uses the RI to retrieve an \emph{Authoritative Checksum} (AC)
 from the backend. If successful, \SYSTEM{} will compare the NAC to the AC---we
@@ -59,10 +56,11 @@ Only in the case where they do not match will the user even realize \SYSTEM{}
 exists. Otherwise, \SYSTEM{} remains completely transparent the the end user, as
 demonstrated in our browser-based implementation.
 
-\PUNT{\TODO{I want a figure here too as well!}}
+Note that we consider URNs as an alternative fingerprinting scheme combining RIs
+and NACs in the discussion (cf. \secref{discussion}).
 
 \PUNT{Backend:}
-\subsection{Defeating Co-Hosting, Perhaps for Free}
+\subsection{Defeating Co-Hosting}
 
 Funding and maintaining a single server/system to host all of your assets can be
 extremely cost-effective in the short term compared to hosting two or more
@@ -132,9 +130,9 @@ the OD for the URL \texttt{git.fakesite.io}.
 The OD is then appended to the Primary Label (PL), which is then appended to the
 RI Sub-Label (SL). The Primary Label (PL) is a standard string used to identify
 DNS records that belong to \SYSTEM{}; we used ``\_dnschk''. It will always
-appear as the third-level domain following the OD in any request to the backend. The
-RI Sub-Label (SL) is a standard string used to identify DNS records that contain
-RIs; we used ``\_ri'' in our implementation. The resulting construction,
+appear as the third-level domain following the OD in any request to the backend.
+The RI Sub-Label (SL) is a standard string used to identify DNS records that
+contain RIs; we used ``\_ri'' in our implementation. The resulting construction,
 consisting of \texttt{SL.PL.OD}, is appended to the RI calculated earlier. This
 forms the subject of the query to our DNS backend, whereafter the DNS network
 responds with a TXT record containing the AC or an indication that the RI does

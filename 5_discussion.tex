@@ -206,23 +206,23 @@ among several large P2P file sharing applications such as WireShare
 the Tiger cryptographic hashing function. The high-speed BLAKE2, SHA2, or SHA3
 cryptographic hashing functions would perform just as well, if not better.
 
-\subsubsection{URNs for Better CDN/Mirror Handling}
+\subsubsection{URNs for Wider Compatibility in \DNSSYS{}}
 
-The goal of the Resource Identifiers (RI) is very similar to that of Uniform
-Resource Names (URN). It may make sense to replace the mapping between RIs and
-Authoritative Checksums with purely URN-based DNS lookups that return specially
-formatted TXT records upon success. This would further simplify the deployment
-process for service administrators since DNS updates would be based upon the
-resource's contents instead of both its contents \textit{and where it is located
-physically on a distribution system}. It may also allow for additional
-confirmation methods of the identical resources in different domains and in
-different locations.
+The goal of Resource Identifiers (RI) and Non-Authoritative Checksums (NAC) is
+very similar to that of Uniform Resource Names (URN). It may make sense to
+replace the mapping between NACs/RIs and Authoritative Checksums with purely
+URN-based DNS lookups that return specially formatted TXT records upon success.
+This would further simplify the deployment process for service administrators
+since DNS updates would be based upon the resource's contents instead of both
+its contents \textit{and where it is located physically on a distribution
+system}. It may also allow for additional confirmation methods of the identical
+resources in different domains and in different locations.
 
 We did not choose a URN-based scheme in our initial approach due to a new URN
 scheme requiring the registration of a unique identifier with the Internet
 Assigned Numbers Authority. Going forward, we can potentially adopt a URN scheme
 that already exists, such as Magnet links~\cite{MagnetLinks} or the informal
-IETF draft for hash-based URN namespaces~\cite{draft-URN}. URNs would enable
-\DNSSYS{} and \DHTSYS{} to be much more resilient in how they map resources to
-Authoritative Checksums, handling mirrors and CDNs without relying on a
-well-known resource path as our proof-of-concept implementations currently do.
+IETF draft for hash-based URN namespaces~\cite{draft-URN}. URNs would allow
+\DNSSYS{} and \DHTSYS{} to be much more flexible in how they map resources to
+Authoritative Checksums, \ie our proof-of-concept implementations would be able
+to handle mirrors and CDNs without relying on a well-known resource path.
