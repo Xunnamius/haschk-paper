@@ -1,18 +1,12 @@
-\section{(unfinished) The \SYSTEM{} Approach} \label{sec:approach}
+\section{The \SYSTEM{} Approach} \label{sec:approach}
 
-In this section we detail the \SYSTEM{} approach: a novel defense against
+In this section we detail the \SYSTEM{} approach: a practical defense against
 receiving corrupted or compromised resources over the internet. We further
-present the challenges and their solutions in designing \SYSTEM{} that
-transparently mitigates resource integrity Supply Chain Attacks (SCA) without
-degrading the experience of users that do not implement the \SYSTEM{} approach.
-
-Further, though our concrete implementations relies on DNS authenticated with
-DNS Security (DNSSEC), the approach itself is flexible and completely agnostic
-of any single component. The implementation choice of highly-available
-distributed \emph{backend}, for instance, is not restricted to the DNS network.
-The approach works just as well with an authenticated Distributed Hash Table
-(DHT) or some distributed authenticated key-value store (\eg Redis) as the
-backend.
+present the challenges and their solutions in implementing \SYSTEM{} concretely
+(\ie the \DNSSYS{} and \DHTSYS{} Google Chrome extensions) so as to transparently
+mitigates resource integrity attacks and other Supply Chain Attacks (SCA)
+without degrading the experience of users that do not implement the \SYSTEM{}
+approach.
 
 \PUNT{\TODO{Create the overview image or remove this sentence} \figref{overview}
 illustrates the \SYSTEM{} approach.}
