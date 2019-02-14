@@ -5,8 +5,6 @@ receiving corrupted or compromised resources over the internet. We further
 present our proof-of-concept Google Chrome extension implementations, \DNSSYS{}
 and \DHTSYS{}.
 
-\figref{overview} illustrates the \SYSTEM{} approach.
-
 \subsection{Defeating User Apathy}
 
 Human factors such as user apathy have stymied cryptographers for decades.
@@ -139,44 +137,50 @@ To remain in compliance with DNS protocol label limits, we chose to split the
 RI---a 64 character string---into two labels separated by a period. We do this
 for both implementations, though it is only relevant with \DNSSYS{}.
 
-The final query sent to the backend consists of \texttt{RI1.RI2.SL.PL.OD}.
-Continuing with our previous example, that yields: \\ \texttt{RIPart1.RIPart2.\_ri.\_dnschk.fakesite.io}.
+The ultimate query sent to the backend (including example):\\
+\makebox[\linewidth]{\texttt{RI1.RI2.SL.PL.OD}}
+\makebox[\linewidth]{\texttt{RI1.RI2.\_ri.\_dnschk.fakesite.io}}
 
-If the backend responds with the AC and NAC Validation succeeds, our extensions
-render a ``safe'' judgement via the extension UI. If the backend responds with
-the AC but NAC Validation fails, our extensions render an ``unsafe'' judgement.
-If the backend response indicates the RI-to-AC mapping was not found, there are
-two possible outcomes: the extensions render a ``neutral'' judgement if they are
-not operating under strict mode conditions, otherwise it will render an
-``unsafe'' judgement (as if NAC Validation had taken place and failed).
+Finally, the backend responds to our query and NAC Validation is performed. If
+NAC Validation succeeds, our extensions render a ``safe'' judgement via the
+extension UI. If NAC Validation fails, our extensions render an ``unsafe''
+judgement. If the backend response indicates the RI mapping we queried does not
+exist, there are two possible outcomes: the extensions render a ``neutral''
+judgement if they are not operating under strict mode conditions, otherwise an
+``unsafe'' judgement is rendered (as if NAC Validation had taken place and
+failed).
 
 ``Strict mode'' status, if active, prevents \DNSSYS{} and \DHTSYS{} from
-rendering ``neutral'' judgements for a particular OD. Normally, neutral
-judgements allow our extensions to be deployed immediately on the open internet
-without pestering the end user with false positives when downloading resources
-that are not protected by our approach. For resources that are, strict mode
-ensures the judgements rendered by \DNSSYS{} and \DHTSYS{} for a given OD remain
-binary: ``safe'' if NAC Validation succeeds or ``unsafe'' in all other
-circumstances.
+rendering ``neutral'' judgements for a particular OD. The point of neutral
+judgements is to allow our extensions to be deployed immediately on the open
+internet without pestering the end user with false positives when downloading
+resources that are not protected by our approach. For resources that are, strict
+mode ensures there are only two possible judgements rendered by \DNSSYS{} and
+\DHTSYS{} for a given OD: either ``safe'' if NAC Validation succeeds or
+``unsafe'' in all other circumstances.
 
 To determine if strict mode status applies to an OD, an additional backend query
 is made of the form \texttt{SML.PL.OD}, where SML is the Strict Mode Sub-Label
 consisting of the standard string ``\_smode''. Continuing with our previous
 example, our query would take the form \texttt{\_smode.\_dnschk.fakesite.io}. If
-and only if the subject of the query does in fact exist in the backend, strict
-mode status is assumed.
+and only if the subject of this additional query does in fact exist in the
+backend, strict mode status is assumed.
 
 \subsubsection{Determining Origin Domain in the Browser}
 
-If an attacker manages to compromise a web page/server, they have two options.
-They can mutate the resource directly, which would be observable via \SYSTEM{}.
-They could also mutate the web/download page itself, replacing the anchor with a
-malicious one that points to a compromised resource on the attacker's remote
-system. \SYSTEM{} will still catch this due to the Chrome API's
-\texttt{DownloadItem::referrer} property (distinct from the concept of an HTTP
-referrer).
+To execute a resource integrity attack on a web server, an attacker generally
+has two options. They can mutate the resource in place, which would cause NAC
+Validation to fail. They could also mutate the web page hosting the resource,
+replacing the resource anchor with a malicious one that points to a compromised
+resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will still
+catch this due to how we calculate the OD.
 
-However, a clever attacker might be able to trick the Chrome API into populating
+In our proof-of-concept implementations, we rely on the Chrome Extension API's
+special \texttt{DownloadItem::referrer} property. We note that this
+\texttt{DownloadItem} ``referrer'' is distinct from the concept of the more
+malleable and unreliable HTTP protocol ``referrer''.
+
+However, a clever attacker might be able to trick Google Chrome into populating
 \texttt{DownloadItem::referrer} by redirecting the user to a valid and innocuous
 page that very quickly redirects the user again to a compromised resource with
 the goal of tricking the Chrome API into supplying \SYSTEM{} with a chosen
