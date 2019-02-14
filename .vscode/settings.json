@@ -11,6 +11,7 @@
         "ipseckey",
         "labelformat",
         "labelsep",
+        "nacs",
         "natbib",
         "openpgpkey",
         "pgfplots",

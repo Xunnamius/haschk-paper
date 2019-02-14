@@ -7,8 +7,7 @@ and \DHTSYS{}.
 
 \figref{overview} illustrates the \SYSTEM{} approach.
 
-\PUNT{Frontend:}
-\subsection{Transparency and User Apathy}
+\subsection{Defeating User Apathy}
 
 Human factors such as user apathy have stymied cryptographers for decades.
 Schemes that are otherwise reasonably cryptographically solid can fail
@@ -20,13 +19,13 @@ the browser, for example, this phenomenon can be observed empirically.
 Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
 passively observe over 25 million warning impressions in 2013 (see
 \figref{telemetry}), Akhawe et al. found that users of Google Chrome clicked
-through a quarter of \emph{malware and phishing warnings} and \emph{70\% of TLS
+through a \emph{quarter of malware and phishing warnings} and \emph{70\% of TLS
 warnings}~\cite{Clickthrough}. Users also clicked through a third of Mozilla
 Firefox's TLS warnings and a tenth of their malware and phishing warnings. That
 is to say: a significant percentage of browser users are \emph{determined} not
 to let TLS trust issues and/or the threat of malware prevent them from receiving
 their desired content. Hence, we must assume: some non-trivial number of users,
-similarly \emph{determined} to transact resources over the internet, will not be
+similarly determined to transact resources over the internet, will not be
 burdened with the off-path minutiae of manually calculating a checksum (if they
 are even familiar with the jargon) and verifying the integrity of the resources
 they are downloading.
@@ -35,8 +34,8 @@ With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
 the human factor altogether by providing a completely transparent and
 unobtrusive, fully-automated method of checksum calculation and verification in
 the average case. We achieve this through 1) the unique identification of
-individual hosted resources and 2) a highly available mapping of unique
-resource identifiers to corresponding checksums.
+individual hosted resources and 2) a highly available mapping of unique resource
+identifiers to corresponding checksums.
 
 \figref{overview} illustrates the \SYSTEM{} approach. \SYSTEM{} implementations
 can be imagined as a security layer sitting between the user and the resource.
@@ -52,22 +51,22 @@ on the distribution system.
 Next, \SYSTEM{} uses the RI to retrieve an \emph{Authoritative Checksum} (AC)
 from the backend. If successful, \SYSTEM{} will compare the NAC to the AC---we
 refer to this as \emph{Non-Authoritative Checksum Validation} (NAC Validation).
-Only in the case where they do not match will the user even realize \SYSTEM{}
-exists. Otherwise, \SYSTEM{} remains completely transparent the the end user, as
-demonstrated in our browser-based implementation.
+Only in the case where NAC Validation fails, \ie they do not match, will the
+user realize \SYSTEM{} exists. Otherwise, \SYSTEM{} remains completely
+transparent the the end user, as demonstrated by our browser-based
+implementations.
 
-Note that we consider URNs as an alternative fingerprinting scheme combining RIs
-and NACs in the discussion (cf. \secref{discussion}).
+Note that we consider URNs as an alternative fingerprinting scheme that combines
+RIs and NACs in the discussion (cf. \secref{discussion}).
 
-\PUNT{Backend:}
 \subsection{Defeating Co-Hosting}
 
 Funding and maintaining a single server/system to host all of your assets can be
 extremely cost-effective in the short term compared to hosting two or more
 discrete systems---one hosting the resource and one hosting the resource's
-checksum. Unfortunately, this establishes a single point of failure: an
-attacker that compromises such a system can both mutate the resource and update
-the checksum to match the mutation. Hence, \emph{co-hosting} a resource and its
+checksum. Unfortunately, this establishes a single point of failure: an attacker
+that compromises such a system can both mutate the resource and update the
+checksum to match the mutation. Hence, \emph{co-hosting} a resource and its
 corresponding checksum on the same distribution system virtually negates the
 effectiveness of having a checksum at all. This is widely understood in the
 security community~\cite{SCA-MINT2}.
@@ -76,8 +75,8 @@ Hence, deployment of \SYSTEM{} necessitates the existence of a separate
 distribution mechanism for resources and ACs. Though the concept of using some
 distributed authenticated storage service to query a global mapping between RIs
 and ACs sounds intuitive and straightforward, two natural concerns arise. The
-first: modern fully authenticated schemes are based on PKI; who is managing
-this infrastructure and can they be trusted? The second: who is funding the
+first: modern fully authenticated schemes are based on PKI; who is managing this
+infrastructure and can they be trusted? The second: who is funding the
 establishment and maintenance of this potentially complex secondary system?
 
 Fortunately, there exists a highly-available fully authenticated globally
@@ -86,9 +85,6 @@ entities and IT teams are already quite familiar with (and already pay for): the
 Domain Name System (DNS). Adding extra resource records to a DNS zone is
 essentially a costless operation, meaning any entity that already has a
 DNSSEC-protected web presence can immediately deploy \SYSTEM{}.
-
-To avoid co-hosting in our implementations, we preferred DNS to other candidate
-highly-available authenticated systems for just these reasons.
 
 \subsection{Platform Diversity}
 
@@ -100,82 +96,104 @@ This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
 
 \subsection{Proof-of-Concept Implementations}
 
-\subsubsection{\SYSTEM{} as a Google Chrome Extension}
+\subsubsection{\DNSSYS{} and \DHTSYS{}}
 
-We implement \SYSTEM{} as a proof-of-concept Google Chrome extension that can
-be configured to work with either global DNS or local DHT as its backend. Our
-Chrome extension does not make any modifications to the Chrome user interface or
-viewport (other than the extension icon itself). Further, downloads work exactly
-the same whether \SYSTEM{} is installed or not---the extension is transparent to
-end users. If a failure is experienced during NAC Validation, however, \SYSTEM{}
-will alert the user to the dangerous download via the extension's icon and popup
-interface.
+We implement \SYSTEM{} as two proof-of-concept Google Chrome extensions:
+\DNSSYS{} and \DHTSYS{}. They work with DNS and Ring OpenDHT as their highly
+available backends, respectively. Our Chrome extensions do not make any
+modifications to the Chrome user interface or viewport other than the extension
+icon in the toolbar. Further, downloads work exactly the same whether or not
+\DNSSYS{} or \DHTSYS{} are installed; the extensions are transparent to end
+users. However, if a failure is experienced during NAC Validation (\ie a
+``non-average'' case), the extensions will alert the user to the dangerous
+download via toolbar icon and popup interface.
 
-The extension computes RIs from the full URL path of a resource. For example,
-considering a web resource hosted at
-\texttt{https://somesite.com/var/downloadme.txt}, our implementation would hash
-\texttt{/var/downloadme.txt} to yield an RI.
+Immediately after a resource download is first detected, the extensions compute
+an RI from the full URL path of the resource. For the purposes of our
+proof-of-concept implementations, we calculate the RI as a hash digest of the
+path component of the URL pointing to the resource. For example, consider a web
+resource hosted at \texttt{https://somesite.com/var/downloadme.txt}. Our
+implementations would hash \texttt{/var/downloadme.txt} to yield an RI. Note
+that there are several ways a browser extension could calculate an RI. See
+\secref{discussion} for a discussion of a more robust RI calculation strategy.
 
-% VVVVVVVVVV FIX ME!
-
-Due to how we implemented our Chrome extension, we required a special
-\emph{Origin Domain (OD)} resolution step based on the Chrome API's
-\texttt{DownloadItem::referrer} and the current Chrome tab's URL. The Origin
-Domain is the base domain used to query the backend---in this case DNS---and
-will always be the Second-Level Domain (SLD) fragment of the current tab's URL
-in our implementation. For example: \texttt{somesite.com} would be the OD for
-the URL \texttt{frag.something.somesite.com} and \texttt{fakesite.io} would be
-the OD for the URL \texttt{git.fakesite.io}.
+Next, we fetch the so-called \emph{Origin Domain} (OD). The OD is the base
+domain used to query the backend, and will always be the Second-Level Domain
+(SLD) fragment of the active browser tab's URL in our implementations. For
+example: \texttt{somesite.com} would be the OD for the URL
+\texttt{frag.something.somesite.com} and \texttt{fakesite.io} would be the OD
+for the URL \texttt{git.fakesite.io}.
 
 The OD is then appended to the Primary Label (PL), which is then appended to the
-RI Sub-Label (SL). The Primary Label (PL) is a standard string used to identify
-DNS records that belong to \SYSTEM{}; we used ``\_dnschk''. It will always
-appear as the third-level domain following the OD in any request to the backend.
-The RI Sub-Label (SL) is a standard string used to identify DNS records that
-contain RIs; we used ``\_ri'' in our implementation. The resulting construction,
-consisting of \texttt{SL.PL.OD}, is appended to the RI calculated earlier. This
-forms the subject of the query to our DNS backend, whereafter the DNS network
-responds with a TXT record containing the AC or an indication that the RI does
-not exist in the zone; the latter case is silently ignored.
+RI Sub-Label (SL). The PL is a standard string used to more easily identify the
+backend records our implementations rely upon; we used ``\_dnschk''. It will
+always appear as the third-level domain following the OD in any request to the
+backend. The SL is a standard string used to identify DNS records that contain
+RIs; we used ``\_ri'' in our implementations. The resulting construction,
+consisting of \texttt{SL.PL.OD} (\eg \texttt{\_ri.\_dnschk.fakesite.io}), is
+appended to the RI calculated earlier. This forms the subject of the query to
+our backend, whereafter the backend responds with the AC or an indication that
+the RI-to-AC mapping was not found.
 
-Note: to remain in compliance with DNS protocol label limits, we split the
-RI---a 64 character string---into two labels separated by a period. The final
-construction sent to DNS consists of \texttt{RI1.RI2.SL.PL.OD}. This may not be
-necessary given a different choice of backend.
+To remain in compliance with DNS protocol label limits, we chose to split the
+RI---a 64 character string---into two labels separated by a period. We do this
+for both implementations, though it is only relevant with \DNSSYS{}.
 
-\PUNT{\begin{algorithm}[t]
-    %\floatname{algorithm}{Algorithm}
-    \caption{Handling an incoming download in Chrome} \label{algo:dnschk}
-    {\footnotesize
-    \begin{algorithmic}[1]
-    \Require The read request is over a contiguous segment of the backing
-    store
-    \Require $\ell, \ell' \leftarrow$ read requested length
-    \Require $\aleph \leftarrow$ master secret
-    \Require $n_{index} \leftarrow$ first nugget index to be read
-    \State $data \leftarrow$ \emph{empty}
-    \While{$\ell \neq 0$}
-        \State $k_{n_{index}} \leftarrow GenKey_{nugget}(n_{index}, \aleph)$
-        \State Fetch nugget keycount $n_{kc}$ from Keycount Store.
-        \State Calculate indices touched by request: $f_{first}$, $f_{last}$
-        \State $n_{flakedat} \leftarrow ReadFlakes(f_{first},\dots,f_{last})$
-        \For{$f_{current} = f_{first}$ \textbf{to} $f_{last}$}
-            \State $k_{f_{current}} \leftarrow GenKey_{flake}(k_{n_{index}},
-            f_{current}, n_{kc})$
-            \State $tag_{f_{current}} \leftarrow GenMac(k_{f_{current}},
-            n_{flakedat}[f_{current}])$
-            \State Verify $tag_{f_{current}}$ in Merkle Tree.
-        \EndFor
-        \LineComment{(\textbf{*}) denotes requested subset of nugget data}
-        \State $data \leftarrow data + Decrypt(*n_{flakedat}, k_{n_{index}},
-        n_{kc})$
-        \State $\ell \leftarrow \ell - \|*n_{flakedat}\|$
-        \State $n_{index} \leftarrow n_{index} + 1$
-    \EndWhile
-    \\\Return $data$ \Comment{Fulfill the read request}
-    \Ensure $\|data\| <= \ell'$
-    \Ensure $\ell = 0$
-    \vskip -1.5em
-    \end{algorithmic}
-    }
-\end{algorithm}}
+The final query sent to the backend consists of \texttt{RI1.RI2.SL.PL.OD}.
+Continuing with our previous example, that yields: \\ \texttt{RIPart1.RIPart2.\_ri.\_dnschk.fakesite.io}.
+
+If the backend responds with the AC and NAC Validation succeeds, our extensions
+render a ``safe'' judgement via the extension UI. If the backend responds with
+the AC but NAC Validation fails, our extensions render an ``unsafe'' judgement.
+If the backend response indicates the RI-to-AC mapping was not found, there are
+two possible outcomes: the extensions render a ``neutral'' judgement if they are
+not operating under strict mode conditions, otherwise it will render an
+``unsafe'' judgement (as if NAC Validation had taken place and failed).
+
+``Strict mode'' status, if active, prevents \DNSSYS{} and \DHTSYS{} from
+rendering ``neutral'' judgements for a particular OD. Normally, neutral
+judgements allow our extensions to be deployed immediately on the open internet
+without pestering the end user with false positives when downloading resources
+that are not protected by our approach. For resources that are, strict mode
+ensures the judgements rendered by \DNSSYS{} and \DHTSYS{} for a given OD remain
+binary: ``safe'' if NAC Validation succeeds or ``unsafe'' in all other
+circumstances.
+
+To determine if strict mode status applies to an OD, an additional backend query
+is made of the form \texttt{SML.PL.OD}, where SML is the Strict Mode Sub-Label
+consisting of the standard string ``\_smode''. Continuing with our previous
+example, our query would take the form \texttt{\_smode.\_dnschk.fakesite.io}. If
+and only if the subject of the query does in fact exist in the backend, strict
+mode status is assumed.
+
+\subsubsection{Determining an Origin Domain in a Browser}
+
+If an attacker manages to compromise a web page/server, they have two options.
+They can mutate the resource directly, which would be observable via \SYSTEM{}.
+They could also mutate the web/download page itself, replacing the anchor with a
+malicious one that points to a compromised resource on the attacker's remote
+system. \SYSTEM{} will still catch this due to the Chrome API's
+\texttt{DownloadItem::referrer} property (distinct from the concept of an HTTP
+referrer).
+
+However, a clever attacker might be able to trick the Chrome API into populating
+\texttt{DownloadItem::referrer} by redirecting the user to a valid and innocuous
+page that very quickly redirects the user again to a compromised resource with
+the goal of tricking the Chrome API into supplying \SYSTEM{} with a chosen
+\texttt{DownloadItem::referrer}.
+
+In order to prevent such implementation-specific attacks, we make a distinction
+between the domain that the hyperlink containing the desired resource references
+and the Origin Domain (OD)---or the domain of the document within which said
+hyperlink exists. The extension is implemented such that the OD is computed as
+early as possible in the page loading process. The scope of the OD is at the tab
+level, meaning there is one OD determined for each open browser tab. Once
+determined for a tab, the OD should not be recalculated for some period of time.
+If the tab is navigated and a download is started within a chosen time window,
+the user will be asked to verify that the OD is what they expect it to be
+(should be a familiar URL).
+
+We catch potential redirection attacks by assuming any navigation that results
+in a direct download up to three (3) seconds after the page has loaded is
+suspicious and requires affirmation by the user. We expect this extreme
+Chrome-specific edge case to occurrence very rarely, if at all.

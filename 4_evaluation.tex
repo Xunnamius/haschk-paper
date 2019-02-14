@@ -68,38 +68,6 @@ zone(s) that allow \SYSTEM{} to function. Therefore, the attacker can make the
 user download a compromised resource and also return a (compromised) AC that
 legally corresponds to said compromised resource.
 
-\subsubsection{Determining the Origin Domain}
-
-If an attacker manages to compromise a web page/server, they have two options.
-They can mutate the resource directly, which would be observable via \SYSTEM{}.
-They could also mutate the web/download page itself, replacing the anchor with a
-malicious one that points to a compromised resource on the attacker's remote
-system. \SYSTEM{} will still catch this due to the Chrome API's
-\texttt{DownloadItem::referrer} property (distinct from the concept of an HTTP
-referrer).
-
-However, a clever attacker might be able to trick the Chrome API into populating
-\texttt{DownloadItem::referrer} by redirecting the user to a valid and innocuous
-page that very quickly redirects the user again to a compromised resource with
-the goal of tricking the Chrome API into supplying \SYSTEM{} with a chosen
-\texttt{DownloadItem::referrer}.
-
-In order to prevent such implementation-specific attacks, we make a distinction
-between the domain that the hyperlink containing the desired resource references
-and the Origin Domain (OD)---or the domain of the document within which said
-hyperlink exists. The extension is implemented such that the OD is resolved as
-early as possible in the page loading process. The scope of the OD is at the tab
-level, meaning there is one OD determined for each open browser tab. Once
-determined for a tab, the OD should not be recalculated for some period of time.
-If the tab is navigated and a download is started within a chosen time window,
-the user will be asked to verify that the OD is what they expect it to be
-(should be a familiar URL).
-
-We catch potential redirection attacks by assuming any navigation that results
-in a direct download up to three (3) seconds after the page has loaded is
-suspicious and requires affirmation by the user. We expect this extreme
-Chrome-specific edge case to occurrence very rarely, if at all.
-
 \subsection{Real-World Resource Corruption Detection with Google Chrome and HotCRP}
 
 \PUNT{As described in the IETF ACME draft specification, HTTP and DNS based
@@ -168,7 +136,18 @@ practical limits or protocol-based restrictions on the scalability of a DNS zone
 file itself or its sub-zones. A service can host tens of thousands of resource
 records in their DNS zone file~\cite{DNS1, DNS2}.
 
+\subsubsection{Mirrors, CDNs, and Redirection}
+
+Text some goes here more text write me write this. Text some goes here more text
+write me write this. Text some goes here more text write me write this. Text
+some goes here more text write me write this. Text some goes here more text
+write me write this.
+
+Naive RI resolution assumed a well-known path. Mirrors with well-known paths handled. Mirrors that change path handled with URNs. Mirrors that redirect users to another page and don't automate the download are handled with URNs. Mirrors that redirect and then automate the download may end up as false positives.
+
 \subsection{Performance Overhead}
+
+Describe how we measured this.
 
 While evaluating \SYSTEM{}, we observed no discernible additional network load
 or CPU usage with the extension loaded into Chrome; hence, we found that
