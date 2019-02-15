@@ -168,21 +168,21 @@ fire immediately before a file download completed and the file became
 executable, \ie had its \texttt{.crdownload} or \texttt{.download} extension
 removed. The hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that
 kept the download in its non-complete state until said \texttt{Promise}
-completed. This protocol would allow the extensions' background pages to do
-something like alter the download's \texttt{DangerType} property and alert the
-end user to the dangerous download naturally. These modifications would have the
-advantage of communicating intent through the browser's familiar UI and
-preventing the potentially-malicious download from becoming immediately
-executable. Unfortunately, the closest the Chrome/WebExtensions API comes to
-allowing \texttt{DangerType} mutations is the \texttt{acceptDanger} method on
-the downloads API, but it is not suitable for use with \DNSSYS{} as a background
+completed. This would allow the extensions' background pages to do something
+like alter a download's \texttt{DangerType} property and alert the end user to
+a dangerous download naturally. These modifications would have the advantage
+of communicating intent through the browser's familiar UI and preventing the
+potentially-malicious download from becoming immediately executable.
+Unfortunately, the closest the Chrome/WebExtensions API comes to allowing
+\texttt{DangerType} mutations is the \texttt{acceptDanger} method on the
+downloads API, but it is not suitable for use with \DNSSYS{} as a background
 page based extension.
 
 While nice to have, we stress that none of the aforesaid functionality is
 critical to the ability of our implementations to more effectively mitigate SCA
 risk than checksums and other solutions (cf. \secref{evaluation}).
 
-\subsection{Future Work}
+\PUNT{\subsection{Future Work}
 
 \subsubsection{Merkle Trees and Early Resource Validation}
 
@@ -204,9 +204,9 @@ resources as they are downloaded. Tiger tree hashes in particular are popular
 among several large P2P file sharing applications such as WireShare
 (LimeWire)~\cite{LimeWire}. Of course, a solution need not be tightly coupled to
 the Tiger cryptographic hashing function. The high-speed BLAKE2, SHA2, or SHA3
-cryptographic hashing functions would perform just as well, if not better.
+cryptographic hashing functions would perform just as well, if not better.}
 
-\subsubsection{URNs for Wider Compatibility}
+\subsection{URNs vs RIs for Wider Compatibility}
 
 The goal of Resource Identifiers (RI) and Non-Authoritative Checksums (NAC) is
 very similar to that of Uniform Resource Names (URN). It may make sense to

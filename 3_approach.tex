@@ -30,8 +30,9 @@ they are downloading.
 
 With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
 the human factor altogether by providing a completely transparent and
-unobtrusive, fully-automated method of checksum calculation and verification in
-the average case. We achieve this through 1) the unique identification of
+unobtrusive in the average case, fully-automated method of checksum calculation
+and verification in the average case that requires no changes to application
+logic or source code. We achieve this through 1) the unique identification of
 individual hosted resources and 2) a highly available mapping of unique resource
 identifiers to corresponding checksums.
 
@@ -49,13 +50,9 @@ on the distribution system.
 Next, \SYSTEM{} uses the RI to retrieve an \emph{Authoritative Checksum} (AC)
 from the backend. If successful, \SYSTEM{} will compare the NAC to the AC---we
 refer to this as \emph{Non-Authoritative Checksum Validation} (NAC Validation).
-Only in the case where NAC Validation fails, \ie they do not match, will the
-user realize \SYSTEM{} exists. Otherwise, \SYSTEM{} remains completely
-transparent the the end user, as demonstrated by our browser-based
-implementations.
-
-Note that we consider URNs as an alternative fingerprinting scheme that combines
-RIs and NACs in the discussion (cf. \secref{discussion}).
+In the case where NAC Validation fails, \ie they do not match, the user will be
+alerted. Otherwise, \SYSTEM{} remains completely transparent the the end user,
+as demonstrated by our browser-based implementations.
 
 \subsection{Defeating Co-Hosting}
 
@@ -70,25 +67,47 @@ effectiveness of having a checksum at all. This is widely understood in the
 security community~\cite{SCA-MINT2}.
 
 Hence, deployment of \SYSTEM{} necessitates the existence of a separate
-distribution mechanism for resources and ACs. Though the concept of using some
-distributed authenticated storage service to query a global mapping between RIs
-and ACs sounds intuitive and straightforward, two natural concerns arise. The
-first: modern fully authenticated schemes are based on PKI; who is managing this
-infrastructure and can they be trusted? The second: who is funding the
-establishment and maintenance of this potentially complex secondary system?
+distribution mechanism for resources and for ACs. Though the concept of using
+some distributed authenticated storage service to query a global mapping between
+RIs and ACs is not new and seems straightforward, but the problem is more
+complex than perhaps first meets the eye.
 
-Fortunately, there exists a highly-available fully authenticated globally
-distributed high performance low latency mapping service that web-facing
-entities and IT teams are already quite familiar with (and already pay for): the
-Domain Name System (DNS). Adding extra resource records to a DNS zone is
+The state of the art in modern fully authenticated highly available schemes are
+based on some form of PKI; an entity must roll its own PKI solution,
+actively maintain it, and hope it is bug free. Examples include the Windows
+Store, Google Play Store for Android, and the Apple Store for iPhone.
+
+There are several problems with purely PKI-based resource integrity
+verification. For one: a roll-your-own PKI-based model clearly cannot scale to
+secure \emph{arbitrary} resources on the entire internet. This is doubly true
+when considering the primary consumers of those resources---end users---who
+likely cannot distinguish a digital signature from, for instance, a
+key~\cite{PGPBad}. Further, unlike a standardized approach like HTTPS/TLS or
+DNSSEC, which are notoriously hard to implement correctly in their own right,
+rolling your own PKI-based solution is a path fraught with even greater peril.
+It is well known in the community that these often very complex PKI systems are
+hard to design correctly, hard implement correctly, and hard to effectively
+maintain.
+
+Fortunately, there has been a lot of effort put into researching, designing, and
+standardizing several high availability fully authenticated globally distributed
+high performance storage technologies, some of which web-facing entities and IT
+teams are already quite familiar with and most already pay for, \eg the Domain
+Name System (DNS). Adding extra resource records to a DNS zone, for instance, is
 essentially a costless operation, meaning any entity that already has a
-DNSSEC-protected web presence can immediately deploy \SYSTEM{}.
+DNSSEC-protected web presence can immediately deploy \SYSTEM{}. This is key to
+the motivation behind the \SYSTEM{} approach as well as the design of our
+\DNSSYS{} proof-of-concept implementation.
+
+Other candidate high availability systems include DHTs, storage clusters,
+relational and non-relational databases, and any high availability authenticated
+key value store.
 
 \subsection{Platform Diversity}
 
-From our evaluation, the computational overhead of running \SYSTEM{} is minimal
-for most resources. Further, additional network load is negligible (cf.
-\secref{evaluation}). Hence, the \SYSTEM{} approach can be incorporated into
+From our evaluation (cf. \secref{evaluation}), the computational overhead of
+running \SYSTEM{} is minimal for most resources. Further, additional network
+load is negligible. Hence, the \SYSTEM{} approach can be incorporated into
 software on most any device capable of communicating with the chosen backend.
 This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
 
@@ -127,12 +146,12 @@ The OD is then appended to the Primary Label (PL), which is then appended to the
 RI Sub-Label (SL). The PL is a standard string used to more easily identify the
 backend records our implementations rely upon; we used ``\_dnschk''. It will
 always appear as the third-level domain following the OD in any query to the
-backend. The SL is a standard string used to identify DNS records that contain
-RIs; we used ``\_ri'' in our implementations. The resulting construction,
-consisting of \texttt{SL.PL.OD} (\eg \texttt{\_ri.\_dnschk.fakesite.io}), is
-appended to the RI calculated earlier. This forms the subject of the query to
-our backend, whereafter the backend responds with the AC or an indication that
-the RI-to-AC mapping was not found.
+backend. The SL is a standard string used to identify backend entries that
+contain RIs; we used ``\_ri'' in our implementations. The resulting
+construction, consisting of \texttt{SL.PL.OD} (\eg
+\texttt{\_ri.\_dnschk.fakesite.io}), is appended to the RI calculated earlier.
+This forms the subject of the query to our backend, whereafter the backend
+responds with the AC or an indication that the RI-to-AC mapping was not found.
 
 To remain in compliance with DNS protocol label limits, we chose to split the
 RI---a 64 character string---into two labels separated by a period. We do this
@@ -153,12 +172,15 @@ failed).
 
 ``Strict mode'' status, if active, prevents \DNSSYS{} and \DHTSYS{} from
 rendering ``neutral'' judgements for a particular OD. The point of neutral
-judgements is to allow our extensions to be deployed immediately on the open
-internet without pestering the end user with false positives when downloading
-resources that are not protected by our approach. For resources that are, strict
-mode ensures there are only two possible judgements rendered by \DNSSYS{} and
-\DHTSYS{} for a given OD: either ``safe'' if NAC Validation succeeds or
-``unsafe'' in all other circumstances.
+judgements is to allow the \SYSTEM{} approach to be incrementally adopted and
+deployed on the open internet without ``breaking the internet'' or pestering the
+end user with false positives when downloading resources that are not explicitly
+protected by our approach. For resources that are protected by our approach,
+strict mode ensures there are only two possible judgements rendered by \DNSSYS{}
+and \DHTSYS{} for a given OD: either ``safe'' if NAC Validation succeeds or
+``unsafe'' in all other circumstances. For this reason, it is recommended that
+any adopter of our approach ensure their resources are protected under strict
+mode by default.
 
 To determine if strict mode status applies to an OD, an additional backend query
 is made of the form \texttt{SML.PL.OD}, where SML is the Strict Mode Sub-Label
