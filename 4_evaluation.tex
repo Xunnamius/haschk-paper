@@ -1,12 +1,15 @@
-\section{(unfinished) Evaluation} \label{sec:evaluation}
+\section{Evaluation} \label{sec:evaluation}
 
 The primary goal of any \SYSTEM{} implementation is to alert end-users when the
 resource they have downloaded is something other than what they were expecting.
-We tested the effectiveness of our approach using the \SYSTEM{} extension for
-Google Chrome, a real-world deployment of HotCRP, and a random sampling of
-papers published in previous \CONFERENCE{} proceedings.
+In this section, we evaluate our approach by first assessing the threat model
+\SYSTEM{} addresses, followed by an examination of our proof-of-concept Google
+Chrome extensions, \DNSSYS{} and \DHTSYS{}. Specifically, we evaluate the
+obstacles to scalability and potential performance overhead of our extensions.
+We then test our implementations versus a real-world deployment of HotCRP and/or
+a random sampling of papers published in previous \CONFERENCE{} proceedings.
 
-\subsection{Threat Model and Considerations}
+\subsection{The Threat Model}
 
 \subsubsection{Compromised Resource}
 
@@ -14,61 +17,55 @@ We consider the case where an attacker can influence or even completely control
 the victim's resource distribution mechanism (web page, file server, CDN, etc)
 in any way. In this context, the attacker can trick the user into downloading a
 compromised resource of the attacker's choice. This can be accomplished by
-compromising the resource on the victim's system or tricking the user into
+compromising the resource on a victim system or tricking the user into
 downloading a compromised resource on the attacker's remote system.
 
-In this case, the attacker does not have control over any DNS zone(s) relevant
-to the function of \SYSTEM{}.
+In either case, the attacker does not have control over the backend system
+responsible for mapping RIs to ACs relevant to the function of \SYSTEM{}.
 
-If the attacker does not alter the Resource Identifier, the compromised
-resource will fail integrity validation during the NAC Validation step.
+If the attacker does not alter the RI, the compromised resource will fail
+integrity validation during the NAC Validation step.
 
-If the attacker does alter the Resource Identifier, there are two
-possibilities: a) the new Resource Identifier \textit{does not} exist in the DNS
-zone, in which case \SYSTEM{} will fail to resolve the NAC, hence the NAC
-Validation step will fail silently; b) the new Resource Identifier \textit{does}
-exist in the DNS zone, therefore the ``new'' RI must be pointing to a different
-resource's checksum. Unless the attacker's goal is to swap one or more
-resources protected by \SYSTEM{} and a particular DNS zone with another resource
-also protected by \SYSTEM{} and in that same zone, the NAC Validation step will
-fail. For the aforementioned ``swap'' to work, the attacker would be required
-to both change the RI and also offer to the victim the \SYSTEM{} protected
-resource the ``new'' RI corresponds to, which shrinks the attack surface
-significantly.
+If the attacker does alter the RI, there are two possibilities: a) the new RI
+\textit{does not} exist in the backend, in which case \SYSTEM{} will fail to
+resolve the NAC, hence the NAC Validation step will fail silently; b) the
+``compromised'' RI \textit{does} exist in the backend, therefore the RI must be
+pointing to a different resource's checksum. Unless the attacker's goal is to
+swap one or more resources protected by \SYSTEM{} and a particular backend with
+another resource also protected by \SYSTEM{} and that backend, the NAC
+Validation step will fail. For such a ``swap'' to work, the attacker would be
+required to both change the RI and also offer to the victim the
+\SYSTEM{}-protected resource the ``compromised'' RI corresponds to, which
+shrinks the attack surface here significantly.
 
 \subsubsection{Compromised Authoritative Checksum}
 
-We consider the case where an attacker can completely control the victim DNS
-zone(s) that allow \SYSTEM{} to function. Therefore, the attacker can return an
-authoritative response of their choice to any DNS query.
+We consider the case where an attacker can completely control the victim highly
+available backend that allows \SYSTEM{} to function. Therefore, the attacker can
+return an authoritative response of their choice to any query.
 
 In this case, the attacker does not have control over the victim's resource
 distribution mechanism (web page, file server, CDN, etc).
 
-DNSSEC ensures the validity and authenticity of DNS responses. In order for the
-attacker to control any relevant DNS zones, they must have access to the
-authoritative DNS server and/or the appropriate DNSSEC keys.
-
-Even if the attacker achieved this level of compromise, they do not have the
-ability to deliver a malicious payload in this case. However, the attacker
-could use control over the relevant DNS zones to cause denial-of-service style
-attacks against those attempting to download the resource by causing all NAC
-Validation checks to fail. This is mitigated by \SYSTEM{} allowing the user to
-``override'' its error states; \ie \SYSTEM{} does not (and cannot, thanks to
-the Chrome/WebExtensions API) mutate a downloaded resource. See
-\secref{discussion} for further discussion on limitations due to the
-Chrome/WebExtensions API.
+Even if the attacker achieved this egregious level of compromise, they do not
+have the ability to deliver a malicious payload in this case. However, the
+attacker could use control over the relevant backends to cause denial-of-service
+style attacks against those attempting to download the resource by causing all
+NAC Validation checks to fail. This is mitigated by \SYSTEM{} allowing the user
+to ``override'' its error states; \ie \SYSTEM{} does not mutate or quarantine
+downloaded resources. See \secref{discussion} for further discussion on
+limitations due to the Chrome/WebExtensions API.
 
 \subsubsection{Compromised Resource and Authoritative Checksum}
 
 We consider the case where an attacker can influence or even completely control
 the victim's resource distribution mechanism (web page, file server, CDN, etc)
-in any way. Additionally, the attacker can completely control the victim DNS
-zone(s) that allow \SYSTEM{} to function. Therefore, the attacker can make the
-user download a compromised resource and also return a (compromised) AC that
-legally corresponds to said compromised resource.
+in any way. Additionally, the attacker can completely control the victim highly
+available backend that allows \SYSTEM{} to function. Therefore, the attacker can
+make the user download a compromised resource and also return a (compromised) AC
+that legally corresponds to said compromised resource.
 
-\subsection{Real-World Resource Corruption Detection with Google Chrome and HotCRP}
+\subsection{Real-World Resource Corruption and Detection}
 
 \PUNT{As described in the IETF ACME draft specification, HTTP and DNS based
 authentication challenges are a good enough basis to issue TLS certificates for
@@ -76,10 +73,13 @@ services such as the popular TLS Certificate Authority \emph{Let's
 Encrypt}~\cite{draft-ACME}.}
 
 To further evaluate the effectiveness of our mitigation, we tested our
-proof-of-concept \SYSTEM{} Chrome extension implementation against a series of
+proof-of-concept \SYSTEM{} Chrome extensions implementation against a series of
 common real-world resource integrity violations. The impetus behind any such
-resource integrity SCA is to have the resource pass through undetected with the
-hope that an unsuspecting user will interact with it.
+resource integrity SCA is to have the resource pass through undetected by
+abusing the trust between client and provider with the hope that an unsuspecting
+user will interact with it.
+
+\subsubsection{\DNSSYS{}}
 
 As a test bed, we launched a heavily modified version of the popular open source
 research submission and peer review software, \emph{HotCRP}. Our modifications
@@ -94,12 +94,14 @@ validate PDFs downloaded from HotCRP after the fact, something most users are
 not willing to do. Further, leveraging our administrator access to the instance,
 we manually uploaded files known to be malicious, replacing previously submitted
 innocuous PDFs in the HotCRP backend. We also uploaded resources without
-including them in our DNS zone file.
+including them in our backend file.
 
 When we attempted to download the corrupted resources, including those uploaded
 manually via side channel, \SYSTEM{} correctly flagged each corrupted resource.
 Unmodified resources were not flagged and so were not affected; this includes
-the resources whose ACs we purposely excluded from our DNS zone file.
+the resources whose ACs we purposely excluded from our backend file.
+
+\subsubsection{\DHTSYS{}}
 
 Further, we implemented a ``redirection'' attack wherein a ``compromised'' PHP
 script added to the HotCRP instance redirected users several times before
@@ -112,10 +114,10 @@ more effective than existing approaches at detecting integrity violations in
 arbitrary resources on the internet at scale; this is evident especially when
 \SYSTEM{} is compared to the de facto standard, checksums.
 
-\subsection{Deployment and Scalability}
+\subsection{Obstacles to Scalability}
 
 With the HotCRP demo, the totality of our resource deployment scheme consisted
-of the addition of a new TXT entry to our DNS zone file---accomplished via API
+of the addition of a new TXT entry to our backend file---accomplished via API
 call---during HotCRP's paper submission process. This new TXT entry consisted of
 a mapping between a RI and its corresponding AC.
 
@@ -132,9 +134,9 @@ beyond those imposed by the underlying distributed system.
 In respect to DNS specifically, packet fragmentation can be a concern for high
 performance networks~\cite{EDNS}, but this is an artifact of DNSSEC and related
 protocols rather than \SYSTEM{}~\cite{DNSSEC}. Further, we are aware of no
-practical limits or protocol-based restrictions on the scalability of a DNS zone
+practical limits or protocol-based restrictions on the scalability of a backend
 file itself or its sub-zones. A service can host tens of thousands of resource
-records in their DNS zone file~\cite{DNS1, DNS2}.
+records in their backend file~\cite{DNS1, DNS2}.
 
 \subsubsection{Mirrors and CDNs}
 
@@ -148,32 +150,6 @@ handled. Mirrors that change path handled with URNs. Mirrors that redirect users
 to another page and do not automate the download are handled with URNs. Mirrors
 that redirect and then automate the download may end up as false positives.
 
-\subsubsection{Attacking Origin Domain Resolution in the Browser}
-
-While determining ODs, a clever attacker might attempt to fool this process by
-redirecting users one or more times before triggering a direct download of a
-compromised resource. The redirects would allow an attacker to completely
-manipulate the OD, with the ability to trick an unsuspecting user into
-downloading a compromised resource with valid entries in the backend system.
-
-We mitigate this threat by leveraging JavaScript's document-wide trusted event
-delegation capability. Specifically, when a tab navigation event is observed,
-the tab is flagged \texttt{suspicious} by default and the determined OD is not
-updated (\ie it remains at its previous value). If the user interacts with the
-tab (\ie a trusted click or key press event is observed after navigation
-completes), the \texttt{suspicious} flag is cleared and the OD is updated. If
-another navigation occurs without user interaction first, this process repeats
-recursively. If a download is observed coming from a tab flagged
-\texttt{suspicious}, the user is warned about the suspicious circumstances
-similarly to receiving an ``unsafe'' judgement.
-
-While this mitigates the attack as described, it has the side effect of
-potentially generating false positive warnings when 1) the user is redirected to
-a legitimate website---such as a download mirroring service---that automatically
-triggers a download after some amount of time while 2) the user does not
-interact with the page at all before the download begins. We argue such cases
-are non-average and the tradeoff here is worthy.
-
 \subsection{Performance Overhead}
 
 Describe how we measured this. What specific metrics? How? What do we conclude?
@@ -184,3 +160,30 @@ or CPU usage with the extension loaded into Chrome; hence, we found that
 Chrome to function. As \SYSTEM{} does not interrupt or manipulate resources as
 they are being downloaded, there is no additional download latency introduced by
 \SYSTEM{}.
+
+\subsection{Attacking OD Resolution in the Browser}
+
+While determining ODs, a clever attacker might attempt to fool this process by
+redirecting users one or more times before triggering a direct download of a
+compromised resource. The redirects would allow an attacker to completely
+manipulate the OD, with the ability to trick an unsuspecting user into
+downloading a compromised resource with valid entries in the backend system.
+
+We mitigate this threat by leveraging JavaScript's document-wide \emph{trusted
+event}~\cite{TrustedEvents} delegation capability. Specifically, when a tab
+navigation event is observed, the tab is flagged \texttt{suspicious} by default
+and the determined OD is not updated (\ie it remains at its previous value). If
+the user interacts with the tab (\ie a trusted click or key press event is
+observed after navigation completes), the \texttt{suspicious} flag is cleared
+and the OD is updated. If another tab navigation event occurs without user
+interaction first (\eg a quick redirect), this process repeats recursively. If a
+download is observed coming from a tab flagged \texttt{suspicious}, the user is
+warned about the suspicious circumstances similarly to receiving an ``unsafe''
+judgement.
+
+While this mitigates the attack as described, it has the side effect of
+potentially generating false positive warnings when 1) the user is redirected to
+a legitimate website---such as a download mirroring service---that automatically
+triggers a download after some amount of time while 2) the user does not
+interact with the page at all before the download begins. We argue such cases
+are non-average and the tradeoff here is worthy.
