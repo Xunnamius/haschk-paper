@@ -169,16 +169,19 @@ backend, strict mode status is assumed.
 \subsubsection{Determining Origin Domain in the Browser}
 
 To execute a resource integrity attack on a web server, an attacker generally
-has two options. They can mutate the resource in place, which would cause NAC
+has two paths. They can mutate the resource in place, which would cause NAC
 Validation to fail. They could also mutate the web page hosting the resource,
 replacing the resource anchor with a malicious one that points to a compromised
 resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will still
 catch this due to how we calculate the OD.
 
 In our proof-of-concept implementations, we rely on the Chrome Extension API's
-special \texttt{DownloadItem::referrer} property. We note that this
-\texttt{DownloadItem} ``referrer'' is distinct from the concept of the more
-malleable and unreliable HTTP protocol ``referrer''.
+\texttt{DownloadItem::referrer} property. We note that this
+\texttt{DownloadItem} ``referrer'' is not entirely synonymous with the concept
+of an HTTP protocol ``referrer''~\cite{ChromiumReferrerSource} (\ie it is
+yielded from the originating tab's state) and is considered reliable enough to
+be used internally with Google's Safe Browsing
+technology~\cite{ChromiumReferrer}.
 
 However, a clever attacker might be able to trick Google Chrome into populating
 \texttt{DownloadItem::referrer} by redirecting the user to a valid and innocuous
