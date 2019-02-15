@@ -61,7 +61,7 @@ modified by proxies and other intermediaries~\cite{MD5Header}. \\
 deterministic build system is one that, when given the same source, will
 deterministically output the same binary on every run. For example, many
 packages in Debian~\cite{ReproBuildsDebian} and Arch Linux can be rebuilt from
-source, yielding an identical byte for byte result each time via a reproducible
+source to yield an identical byte for byte result each time via a reproducible
 build process~\cite{ReproBuilds}. When a deterministic build system is coupled
 with the \SYSTEM{} approach, a chain of trust can be established that links the
 \emph{Development} and \emph{Integration} supply chain phases to the
@@ -143,8 +143,8 @@ have the benefit of being able to rely on a high availability distributed
 authenticated backend that is already established, is well-tested, and exists
 globally like DNS. Such an entity would have to either maintain their own
 network of DHT nodes, which can incur significant cost if such a network was not
-already deployed, or piggy back off an open authenticated network, as is the
-case with our proof-of-concept \DHTSYS{} implementation.
+already deployed, or piggy back off an open authenticated network, as was done
+with the case with our proof-of-concept \DHTSYS{} implementation.
 
 These reasons make DNS with DNSSEC more appealing as an authenticated backend in
 comparison. Regardless, we provide \DHTSYS{} to demonstrate the utility and
@@ -206,7 +206,7 @@ among several large P2P file sharing applications such as WireShare
 the Tiger cryptographic hashing function. The high-speed BLAKE2, SHA2, or SHA3
 cryptographic hashing functions would perform just as well, if not better.
 
-\subsubsection{URNs for Wider Compatibility in \DNSSYS{}}
+\subsubsection{URNs for Wider Compatibility}
 
 The goal of Resource Identifiers (RI) and Non-Authoritative Checksums (NAC) is
 very similar to that of Uniform Resource Names (URN). It may make sense to
@@ -218,11 +218,11 @@ its contents \textit{and where it is located physically on a distribution
 system}. It may also allow for additional confirmation methods of the identical
 resources in different domains and in different locations.
 
-We did not choose a URN-based scheme in our initial approach due to a new URN
+We did not create a URN-based scheme in our initial approach due to a new URN
 scheme requiring the registration of a unique identifier with the Internet
 Assigned Numbers Authority. Going forward, we can potentially adopt a URN scheme
 that already exists, such as Magnet links~\cite{MagnetLinks} or the informal
 IETF draft for hash-based URN namespaces~\cite{draft-URN}. URNs would allow
 \DNSSYS{} and \DHTSYS{} to be much more flexible in how they map resources to
 Authoritative Checksums, \ie our proof-of-concept implementations would be able
-to handle mirrors and CDNs without relying on a well-known resource path.
+to handle mirrors and CDNs that may mangle resource path.

@@ -65,7 +65,7 @@ available backend that allows \SYSTEM{} to function. Therefore, the attacker can
 make the user download a compromised resource and also return a (compromised) AC
 that legally corresponds to said compromised resource.
 
-\subsection{Real-World Resource Corruption and Detection}
+\subsection{Real-World Resource Corruption Detection}
 
 \PUNT{As described in the IETF ACME draft specification, HTTP and DNS based
 authentication challenges are a good enough basis to issue TLS certificates for
@@ -114,22 +114,12 @@ more effective than existing approaches at detecting integrity violations in
 arbitrary resources on the internet at scale; this is evident especially when
 \SYSTEM{} is compared to the de facto standard, checksums.
 
-\subsection{Obstacles to Scalability}
-
-With the HotCRP demo, the totality of our resource deployment scheme consisted
-of the addition of a new TXT entry to our backend file---accomplished via API
-call---during HotCRP's paper submission process. This new TXT entry consisted of
-a mapping between a RI and its corresponding AC.
-
-We find a DNS record addition or update during the resource deployment process
-to be simple enough for service administrators to implement and presents no
-significant burden to deployment outside of DNS API integration into an
-development team or other entity's software build and deployment toolchain.
+\subsection{Obstacles to Scalability, Deployment}
 
 As \SYSTEM{} is predicated on a distributed authenticated highly-available
 backend, we conclude that the scalability of \SYSTEM{} can be reduced to the
 scalability of its backend. We are aware of no other obstacles to scalability
-beyond those imposed by the underlying distributed system.
+beyond those inherited from the underlying backend system.
 
 In respect to DNS specifically, packet fragmentation can be a concern for high
 performance networks~\cite{EDNS}, but this is an artifact of DNSSEC and related
@@ -138,28 +128,37 @@ practical limits or protocol-based restrictions on the scalability of a backend
 file itself or its sub-zones. A service can host tens of thousands of resource
 records in their backend file~\cite{DNS1, DNS2}.
 
-\subsubsection{Mirrors and CDNs}
+With the HotCRP demo, the totality of our resource deployment scheme consisted
+of the addition of a new TXT entry to our backend file---accomplished via API
+call---during HotCRP's paper submission process. This new TXT entry consisted of
+a mapping between a RI and its corresponding AC.
 
-Text some goes here more text write me write this. Text some goes here more text
-write me write this. Text some goes here more text write me write this. Text
-some goes here more text write me write this. Text some goes here more text
-write me write this.
+We find a DNS record addition or update during the resource deployment process
+to be simple enough for service administrators to implement and presents no
+significant burden to deployment outside of DNS API integration into a
+development team or other entity's software deployment toolchain. For reference,
+we implemented the functionality that automatically adds (and updates) the DNS
+records mapping the ACs and RIs of papers uploaded to our HotCRP instance in
+under 10 lines of JavaScript.
 
-Naive RI resolution assumed a well-known path. Mirrors with well-known paths
-handled. Mirrors that change path handled with URNs. Mirrors that redirect users
-to another page and do not automate the download are handled with URNs. Mirrors
-that redirect and then automate the download may end up as false positives.
+We note that, in the case where an entity's content distribution mechanism
+relies on, for instance, a mirroring service, third-party CDN, et cetera
+\emph{that randomly or disparately mangles resource URL paths}, our
+proof-of-concept implementations currently require each "mangled" RI permutation
+representing a resource to be added to the backend, even if they all represent
+the same resource by a different name/path. This is discussed further in the
+context of URNs in \secref{discussion}.
 
 \subsection{Performance Overhead}
 
-Describe how we measured this. What specific metrics? How? What do we conclude?
-
-While evaluating \SYSTEM{}, we observed no discernible additional network load
-or CPU usage with the extension loaded into Chrome; hence, we found that
-\SYSTEM{} introduces no additional performance overhead outside of requiring
-Chrome to function. As \SYSTEM{} does not interrupt or manipulate resources as
-they are being downloaded, there is no additional download latency introduced by
-\SYSTEM{}.
+While evaluating our \SYSTEM{} implementations, we observed no additional
+non-trivial network load or CPU usage with the extension loaded into Chrome.
+Measurements were taken using the Chrome developer tools. Intuitively, this
+makes sense since our \SYSTEM{} implementations make at most two queries to the
+backend before rendering a judgement. Hence, we find that \SYSTEM{} introduces
+no additional performance overhead to function. Further, as our implementations
+of \SYSTEM{} do not interrupt or manipulate resources as they are being
+downloaded, there is no additional download latency introduced by \SYSTEM{}.
 
 \subsection{Attacking OD Resolution in the Browser}
 
@@ -184,6 +183,6 @@ judgement.
 While this mitigates the attack as described, it has the side effect of
 potentially generating false positive warnings when 1) the user is redirected to
 a legitimate website---such as a download mirroring service---that automatically
-triggers a download after some amount of time while 2) the user does not
+triggers a download after some amount of time when also 2) the user does not
 interact with the page at all before the download begins. We argue such cases
 are non-average and the tradeoff here is worthy.
