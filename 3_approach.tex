@@ -115,17 +115,18 @@ implementations would hash \texttt{/var/downloadme.txt} to yield an RI. Note
 that there are several ways a browser extension could calculate an RI. See
 \secref{discussion} for a discussion of a more robust RI calculation strategy.
 
-Next, we fetch the so-called \emph{Origin Domain} (OD). The OD is the base
-domain used to query the backend, and will always be the Second-Level Domain
-(SLD) fragment of the active browser tab's URL in our implementations. For
-example: \texttt{somesite.com} would be the OD for the URL
-\texttt{frag.something.somesite.com} and \texttt{fakesite.io} would be the OD
-for the URL \texttt{git.fakesite.io}.
+Next, we determine the so-called \emph{Origin Domain} (OD). The OD is the base
+domain used to query the backend and should always be the Second-Level Domain
+(SLD) fragment of the \emph{active browser tab's URL}, \ie the URL of the tab
+that initiated the download. For example: \texttt{somesite.com} would be the OD
+for a Chrome tab at URL \texttt{frag.something.somesite.com} and
+\texttt{fakesite.io} would be the OD for a Chrome tab at
+\texttt{git.fakesite.io}.
 
 The OD is then appended to the Primary Label (PL), which is then appended to the
 RI Sub-Label (SL). The PL is a standard string used to more easily identify the
 backend records our implementations rely upon; we used ``\_dnschk''. It will
-always appear as the third-level domain following the OD in any request to the
+always appear as the third-level domain following the OD in any query to the
 backend. The SL is a standard string used to identify DNS records that contain
 RIs; we used ``\_ri'' in our implementations. The resulting construction,
 consisting of \texttt{SL.PL.OD} (\eg \texttt{\_ri.\_dnschk.fakesite.io}), is
@@ -137,7 +138,7 @@ To remain in compliance with DNS protocol label limits, we chose to split the
 RI---a 64 character string---into two labels separated by a period. We do this
 for both implementations, though it is only relevant with \DNSSYS{}.
 
-The ultimate query sent to the backend (including example):\\
+The ultimate query sent to the backend (including example): \\
 \makebox[\linewidth]{\texttt{RI1.RI2.SL.PL.OD}}
 \makebox[\linewidth]{\texttt{RI1.RI2.\_ri.\_dnschk.fakesite.io}}
 
@@ -163,8 +164,8 @@ To determine if strict mode status applies to an OD, an additional backend query
 is made of the form \texttt{SML.PL.OD}, where SML is the Strict Mode Sub-Label
 consisting of the standard string ``\_smode''. Continuing with our previous
 example, our query would take the form \texttt{\_smode.\_dnschk.fakesite.io}. If
-and only if the subject of this additional query does in fact exist in the
-backend, strict mode status is assumed.
+and only if the subject of this additional query exists in the backend, strict
+mode status is assumed.
 
 \subsubsection{Determining Origin Domain in the Browser}
 
@@ -172,35 +173,19 @@ To execute a resource integrity attack on a web server, an attacker generally
 has two paths. They can mutate the resource in place, which would cause NAC
 Validation to fail. They could also mutate the web page hosting the resource,
 replacing the resource anchor with a malicious one that points to a compromised
-resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will still
-catch this due to how we calculate the OD.
-
-In our proof-of-concept implementations, we rely on the Chrome Extension API's
-\texttt{DownloadItem::referrer} property. We note that this
-\texttt{DownloadItem} ``referrer'' is not entirely synonymous with the concept
-of an HTTP protocol ``referrer''~\cite{ChromiumReferrerSource} (\ie it is
-yielded from the originating tab's state) and is considered reliable enough to
-be used internally with Google's Safe Browsing
-technology~\cite{ChromiumReferrer}.
-
-However, a clever attacker might be able to trick Google Chrome into populating
-\texttt{DownloadItem::referrer} by redirecting the user to a valid and innocuous
-page that very quickly redirects the user again to a compromised resource with
-the goal of tricking the Chrome API into supplying \SYSTEM{} with a chosen
-\texttt{DownloadItem::referrer}.
+resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will catch
+this due to how we calculate the Origin Domain (OD).
 
 In order to prevent such implementation-specific attacks, we make a distinction
-between the domain that the hyperlink containing the desired resource references
-and the Origin Domain (OD)---or the domain of the document within which said
-hyperlink exists. The extension is implemented such that the OD is computed as
-early as possible in the page loading process. The scope of the OD is at the tab
-level, meaning there is one OD determined for each open browser tab. Once
-determined for a tab, the OD should not be recalculated for some period of time.
-If the tab is navigated and a download is started within a chosen time window,
-the user will be asked to verify that the OD is what they expect it to be
-(should be a familiar URL).
+between the domain a resource's hyperlink might be pointing to (which might
+belong to the attacker) and the OD, which is the domain of the web document that
+contains said hyperlink. The scope of the OD is at the tab level, meaning there
+is one OD determined for each open browser tab.
 
-We catch potential redirection attacks by assuming any navigation that results
-in a direct download up to three (3) seconds after the page has loaded is
-suspicious and requires affirmation by the user. We expect this extreme
-Chrome-specific edge case to occurrence very rarely, if at all.
+In our proof-of-concept implementations, we rely on the Chrome Tabs and
+WebRequest APIs to associate downloads with ODs. Our extensions are implemented
+such that the OD is determined as early as possible in a Chrome tab's navigation
+lifecycle. Further, in our implementations, determined ODs are ultimately
+ordered as a LIFO construction. This ensures the resource-to-tab mappings remain
+accurate in the case where two tabs share the same OD when a resource download
+is observed.

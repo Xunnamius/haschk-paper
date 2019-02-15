@@ -136,18 +136,47 @@ practical limits or protocol-based restrictions on the scalability of a DNS zone
 file itself or its sub-zones. A service can host tens of thousands of resource
 records in their DNS zone file~\cite{DNS1, DNS2}.
 
-\subsubsection{Mirrors, CDNs, and Redirection}
+\subsubsection{Mirrors and CDNs}
 
 Text some goes here more text write me write this. Text some goes here more text
 write me write this. Text some goes here more text write me write this. Text
 some goes here more text write me write this. Text some goes here more text
 write me write this.
 
-Naive RI resolution assumed a well-known path. Mirrors with well-known paths handled. Mirrors that change path handled with URNs. Mirrors that redirect users to another page and don't automate the download are handled with URNs. Mirrors that redirect and then automate the download may end up as false positives.
+Naive RI resolution assumed a well-known path. Mirrors with well-known paths
+handled. Mirrors that change path handled with URNs. Mirrors that redirect users
+to another page and do not automate the download are handled with URNs. Mirrors
+that redirect and then automate the download may end up as false positives.
+
+\subsubsection{Attacking Origin Domain Resolution in the Browser}
+
+While determining ODs, a clever attacker might attempt to fool this process by
+redirecting users one or more times before triggering a direct download of a
+compromised resource. The redirects would allow an attacker to completely
+manipulate the OD, with the ability to trick an unsuspecting user into
+downloading a compromised resource with valid entries in the backend system.
+
+We mitigate this threat by leveraging JavaScript's document-wide trusted event
+delegation capability. Specifically, when a tab navigation event is observed,
+the tab is flagged \texttt{suspicious} by default and the determined OD is not
+updated (\ie it remains at its previous value). If the user interacts with the
+tab (\ie a trusted click or key press event is observed after navigation
+completes), the \texttt{suspicious} flag is cleared and the OD is updated. If
+another navigation occurs without user interaction first, this process repeats
+recursively. If a download is observed coming from a tab flagged
+\texttt{suspicious}, the user is warned about the suspicious circumstances
+similarly to receiving an ``unsafe'' judgement.
+
+While this mitigates the attack as described, it has the side effect of
+potentially generating false positive warnings when 1) the user is redirected to
+a legitimate website---such as a download mirroring service---that automatically
+triggers a download after some amount of time while 2) the user does not
+interact with the page at all before the download begins. We argue such cases
+are non-average and the tradeoff here is worthy.
 
 \subsection{Performance Overhead}
 
-Describe how we measured this.
+Describe how we measured this. What specific metrics? How? What do we conclude?
 
 While evaluating \SYSTEM{}, we observed no discernible additional network load
 or CPU usage with the extension loaded into Chrome; hence, we found that
