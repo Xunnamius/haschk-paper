@@ -67,25 +67,25 @@ that legally corresponds to said compromised resource.
 
 \subsection{Real-World Resource Corruption Detection}
 
-\PUNT{As described in the IETF ACME draft specification, HTTP and DNS based
-authentication challenges are a good enough basis to issue TLS certificates for
-services such as the popular TLS Certificate Authority \emph{Let's
-Encrypt}~\cite{draft-ACME}.}
+To further evaluate the effectiveness of our mitigation, we tested \DNSSYS{} and
+\DHTSYS{}---our proof-of-concept \SYSTEM{} Chrome extension
+implementations---against a series of common real-world resource integrity
+violations. The impetus behind any such resource integrity SCA is to have the
+resource pass through undetected by abusing the trust between client and
+provider with the hope that an unsuspecting user will interact with it.
 
-To further evaluate the effectiveness of our mitigation, we tested our
-proof-of-concept \SYSTEM{} Chrome extensions implementation against a series of
-common real-world resource integrity violations. The impetus behind any such
-resource integrity SCA is to have the resource pass through undetected by
-abusing the trust between client and provider with the hope that an unsuspecting
-user will interact with it.
+We show that the \SYSTEM{} approach is more effective than existing approaches
+at detecting integrity violations in arbitrary resources on the internet; this
+is especially evident when \DNSSYS{} and \DHTSYS{} are compared to the de facto
+standard: checksums.
 
 \subsubsection{\DNSSYS{}}
 
-As a test bed, we launched a heavily modified version of the popular open source
-research submission and peer review software, \emph{HotCRP}. Our modifications
-allowed us to interactively corrupt submissions and manipulate relevant DNS
-entries. We uploaded a variety of different resources, including legitimate
-PDFs, to our HotCRP instance.
+To empirically evaluate \DNSSYS{}, we launched a heavily modified version of the
+popular open source research submission and peer review software, \emph{HotCRP}.
+Our modifications allow anyone visiting the site to interactively corrupt
+submissions and manipulate relevant DNS entries. We uploaded a variety of
+different resources, including legitimate PDFs, to our HotCRP instance.
 
 We then selectively corrupted half of these resources with random bit flips.
 Interesting to note: the HotCRP instance did not update the checksums of the
@@ -101,25 +101,23 @@ manually via side channel, \SYSTEM{} correctly flagged each corrupted resource.
 Unmodified resources were not flagged and so were not affected; this includes
 the resources whose ACs we purposely excluded from our backend file.
 
-\subsubsection{\DHTSYS{}}
-
 Further, we implemented a ``redirection'' attack wherein a ``compromised'' PHP
 script added to the HotCRP instance redirected users several times before
 quickly triggering the download of a corrupted resource from a disparate domain.
 \SYSTEM{} correctly flagged this download as suspicious once the download began,
 successfully warning the user.
 
-We conclude that our proof-of-concept \SYSTEM{} implementation and approach are
-more effective than existing approaches at detecting integrity violations in
-arbitrary resources on the internet at scale; this is evident especially when
-\SYSTEM{} is compared to the de facto standard, checksums.
+\subsubsection{\DHTSYS{}}
+
+
 
 \subsection{Obstacles to Scalability, Deployment}
 
 As \SYSTEM{} is predicated on a distributed authenticated highly-available
-backend, we conclude that the scalability of \SYSTEM{} can be reduced to the
-scalability of its backend. We are aware of no other obstacles to scalability
-beyond those inherited from the underlying backend system.
+backend and requires no application/frontend source code changes to function, we
+conclude that the scalability of \SYSTEM{} can be reduced to the scalability of
+its backend. We are aware of no other obstacles to scalability beyond those
+inherited from the underlying backend system.
 
 In respect to DNS specifically, packet fragmentation can be a concern for high
 performance networks~\cite{EDNS}, but this is an artifact of DNSSEC and related
@@ -146,8 +144,8 @@ relies on, for instance, a mirroring service, third-party CDN, et cetera
 \emph{that randomly or disparately mangles resource URL paths}, our
 proof-of-concept implementations currently require each "mangled" RI permutation
 representing a resource to be added to the backend, even if they all represent
-the same resource by a different name/path. This is discussed further in the
-context of URNs in \secref{discussion}.
+the same resource by a different name/path. This issue and its solutions are
+discussed further in the context of URNs in \secref{discussion}.
 
 \subsection{Performance Overhead}
 
