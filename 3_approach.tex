@@ -50,9 +50,12 @@ on the distribution system.
 Next, \SYSTEM{} uses the RI to retrieve an \emph{Authoritative Checksum} (AC)
 from the backend. If successful, \SYSTEM{} will compare the NAC to the AC---we
 refer to this as \emph{Non-Authoritative Checksum Validation} (NAC Validation).
-In the case where NAC Validation fails, \ie they do not match, the user will be
-alerted. Otherwise, \SYSTEM{} remains completely transparent the the end user,
-as demonstrated by our browser-based implementations.
+In the case where NAC Validation fails, \ie they do not match, some
+implementation-specific action should be taken to mitigate as much as possible
+the risk to the end user. In most contexts, this means deleting or renaming the
+unsafe resource, forcing the user to deal with the problem. Otherwise, \SYSTEM{}
+remains completely transparent the the end user, as demonstrated by our
+browser-based implementations.
 
 \subsection{Defeating Co-Hosting}
 
@@ -80,14 +83,13 @@ Store, Google Play Store for Android, and the Apple Store for iPhone.
 There are several problems with purely PKI-based resource integrity
 verification. For one: a roll-your-own PKI-based model clearly cannot scale to
 secure \emph{arbitrary} resources on the entire internet. This is doubly true
-when considering the primary consumers of those resources---end users---who
-likely cannot distinguish a digital signature from, for instance, a
-key~\cite{PGPBad}. Further, unlike a standardized approach like HTTPS/TLS or
-DNSSEC, which are notoriously hard to implement correctly in their own right,
-rolling your own PKI-based solution is a path fraught with even greater peril.
-It is well known in the community that these often very complex PKI systems are
-hard to design correctly, hard implement correctly, and hard to effectively
-maintain.
+when considering the primary consumers of those resources---end users---likely
+cannot distinguish a digital signature from, for instance, a key~\cite{PGPBad}.
+Further, unlike a standardized approach like HTTPS/TLS or DNSSEC, which are
+notoriously hard to implement correctly in their own right, rolling your own
+PKI-based solution is a path fraught with even greater peril. It is well known
+in the community that these often very complex PKI systems are hard to design
+correctly, hard implement correctly, and hard to effectively maintain.
 
 Fortunately, there has been a lot of effort put into researching, designing, and
 standardizing several high availability fully authenticated globally distributed
@@ -101,7 +103,7 @@ the motivation behind the \SYSTEM{} approach as well as the design of our
 
 Other candidate high availability systems include DHTs, storage clusters,
 relational and non-relational databases, and any high availability authenticated
-key value store.
+key-value store.
 
 \subsection{Platform Diversity}
 
@@ -132,7 +134,8 @@ path component of the URL pointing to the resource. For example, consider a web
 resource hosted at \texttt{https://somesite.com/var/downloadme.txt}. Our
 implementations would hash \texttt{/var/downloadme.txt} to yield an RI. Note
 that there are several ways a browser extension could calculate an RI. See
-\secref{discussion} for a discussion of a more robust RI calculation strategy.
+\secref{discussion} for a discussion of an alternative calculation based on
+Uniform Resource Name.
 
 Next, we determine the so-called \emph{Origin Domain} (OD). The OD is the base
 domain used to query the backend and should always be the Second-Level Domain
@@ -142,7 +145,7 @@ for a Chrome tab at URL \texttt{frag.something.somesite.com} and
 \texttt{fakesite.io} would be the OD for a Chrome tab at
 \texttt{git.fakesite.io}.
 
-The OD is then appended to the Primary Label (PL), which is then appended to the
+The OD is appended to the Primary Label (PL), which is then appended to the
 RI Sub-Label (SL). The PL is a standard string used to more easily identify the
 backend records our implementations rely upon; we used ``\_dnschk''. It will
 always appear as the third-level domain following the OD in any query to the
@@ -154,10 +157,13 @@ This forms the subject of the query to our backend, whereafter the backend
 responds with the AC or an indication that the RI-to-AC mapping was not found.
 
 To remain in compliance with DNS protocol label limits, we chose to split the
-RI---a 64 character string---into two labels separated by a period. We do this
-for both implementations, though it is only relevant with \DNSSYS{}.
+RI---a 64 character alphanumeric string---into two labels separated by a period.
+We do this for both implementations, though it is only relevant with \DNSSYS{}.
 
-The ultimate query sent to the backend (including example): \\
+The ultimate query sent to the backend consists of an OD (\eg
+\texttt{fakesite.io}), a PL (static; \ie \texttt{\_dnschk}), an SL (static; \ie
+\texttt{\_ri}), and an RI broken into two parts (\ie \texttt{RI1} and
+\texttt{RI2})). This yields the following (with an example on line 2): \\
 \makebox[\linewidth]{\texttt{RI1.RI2.SL.PL.OD}}
 \makebox[\linewidth]{\texttt{RI1.RI2.\_ri.\_dnschk.fakesite.io}}
 
@@ -198,11 +204,11 @@ replacing the resource anchor with a malicious one that points to a compromised
 resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will catch
 this due to how we calculate the Origin Domain (OD).
 
-In order to prevent such implementation-specific attacks, we make a distinction
-between the domain a resource's hyperlink might be pointing to (which might
-belong to the attacker) and the OD, which is the domain of the web document that
-contains said hyperlink. The scope of the OD is at the tab level, meaning there
-is one OD determined for each open browser tab.
+To prevent such implementation-specific attacks, we make a distinction between
+the domain a resource's hyperlink might be pointing to (which might belong to
+the attacker) and the OD, which is the domain of the web document that contains
+said hyperlink. The scope of the OD is at the tab level, meaning there is one OD
+determined for each open browser tab.
 
 In our proof-of-concept implementations, we rely on the Chrome Tabs and
 WebRequest APIs to associate downloads with ODs. Our extensions are implemented

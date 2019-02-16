@@ -4,10 +4,10 @@ The primary goal of any \SYSTEM{} implementation is to alert end-users when the
 resource they have downloaded is something other than what they were expecting.
 In this section, we evaluate our approach by first assessing the threat model
 \SYSTEM{} addresses, followed by an examination of our proof-of-concept Google
-Chrome extensions, \DNSSYS{} and \DHTSYS{}. Specifically, we evaluate the
+Chrome extensions, \DNSSYS{} and \DHTSYS{}. We then test our implementations
+versus a real-world deployment of HotCRP and/or a random sampling of papers
+published in previous \CONFERENCE{} proceedings. Finally, we evaluate the
 obstacles to scalability and potential performance overhead of our extensions.
-We then test our implementations versus a real-world deployment of HotCRP and/or
-a random sampling of papers published in previous \CONFERENCE{} proceedings.
 
 \subsection{The Threat Model}
 
@@ -16,8 +16,8 @@ a random sampling of papers published in previous \CONFERENCE{} proceedings.
 We consider the case where an attacker can influence or even completely control
 the victim's resource distribution mechanism (web page, file server, CDN, etc)
 in any way. In this context, the attacker can trick the user into downloading a
-compromised resource of the attacker's choice. This can be accomplished by
-compromising the resource on a victim system or tricking the user into
+compromised resource of the attacker's choice. This attack can be accomplished
+by compromising the resource on a victim system or tricking the user into
 downloading a compromised resource on the attacker's remote system.
 
 In either case, the attacker does not have control over the backend system
@@ -75,7 +75,7 @@ that legally corresponds to said compromised resource.
 
 \subsection{Real-World Resource Corruption Detection}
 
-To further evaluate the effectiveness of our mitigation, we tested \DNSSYS{} and
+To further evaluate the effectiveness of our mitigation, we test \DNSSYS{} and
 \DHTSYS{}---our proof-of-concept \SYSTEM{} Chrome extension
 implementations---against a series of common real-world resource integrity
 violations. The impetus behind any such resource integrity SCA is to have the
@@ -89,29 +89,29 @@ standard: checksums.
 
 \subsubsection{\DNSSYS{}}
 
-To empirically evaluate \DNSSYS{}, we launched a heavily modified version of the
+To empirically evaluate \DNSSYS{}, we launch a heavily modified version of the
 popular open source research submission and peer review software, \emph{HotCRP}
 (version 2.102). Our modifications allow anyone visiting the site to
 interactively corrupt submissions and manipulate relevant DNS entries at will.
 
-For our evaluation, we uploaded 10 different \CONFERENCE{} PDFs to our HotCRP
+For our evaluation, we upload 10 different \CONFERENCE{} PDFs to our HotCRP
 instance. Upon their upload, HotCRP calculated and displayed the unique checksum
-(a SHA-256 digest) of each PDF. After each PDF was uploaded, we immediately
-downloaded it and manually calculated a local checksum, matching each to the
-checksum displayed by the HotCRP software. Next, we utilized the custom
+(a SHA-256 digest) of each PDF. After each PDF is uploaded, we immediately
+download it and manually calculate a local checksum, matching each to the
+checksum displayed by the HotCRP software. Next, we utilize the custom
 functionality we added to our HotCRP instance to populate our DNS backend with
-each file's current "original" checksum. Each checksum was considered an
+each file's current "original" checksum. Each checksum is considered an
 Authoritative Checksum (AC) mapped to a Resource Identifier (RI) corresponding
 to the uploaded PDF item.
 
-After installing \DNSSYS{} into our Google Chrome browser, we again downloaded
+After installing \DNSSYS{} into our Google Chrome browser, we again download
 each file. For each observed download, \DNSSYS{} reported a ``safe'' judgement
-as expected. We then utilized the custom functionality we added to our HotCRP
+as expected. We then utilize the custom functionality we added to our HotCRP
 instance to add junk data onto the end of each of the uploaded PDFs, corrupting
-them. HotCRP also updated the displayed checksum to match the newly corrupted
-files.
+them. We also modified HotCRP so that it updated the displayed checksums to
+match their now-corrupted counterparts.
 
-Once again, we downloaded each file and calculated a local checksum. \DNSSYS{}
+Once again, we download each file and calculate a local checksum. \DNSSYS{}
 reported an ``unsafe'' judgement (a true positive) for each corrupted PDF file,
 as expected. Calculating the local checksum and checking it against the value
 reported by our HotCRP instance leads to a match (a false negative; \ie the
@@ -119,7 +119,7 @@ result of co-location) as expected.
 
 We ran this experiment three times and observed consistent results.
 
-Finally, we implemented a ``redirection'' attack where, when clicking the link
+Finally, we implement a ``redirection'' attack where, when clicking the link
 to download the PDF document from HotCRP, users were forced to navigate to a
 ``compromised'' PHP script on an adjacent server that very quickly redirected
 clients several times before triggering the download of a corrupted version of
@@ -128,30 +128,30 @@ download as suspicious once the download began, successfully warning the user.
 
 \subsubsection{\DHTSYS{}}
 
-To evaluate \DHTSYS{}, we connected to the authenticated global Ring OpenDHT
+To evaluate \DHTSYS{}, we connect to the authenticated global Ring OpenDHT
 network. Since the OpenDHT software is implemented in C++, it could not be
 included directly in a JavaScript plugin. Therefore, for our proof-of-concept
 implementation, we set up a local HTTP REST server wrapping the C++
-implementation of OpenDHT. The OpenDHT REST server was set up to provide an
-interface consistent with the one expected by \DNSSYS{} (\ie Google DNS REST
-API), allowing for code reuse (\eg redirection protection) between our two
+implementation of OpenDHT. Our OpenDHT REST server provides an interface
+consistent with the one expected by \DNSSYS{} (\ie Google DNS's REST API),
+allowing for code reuse (\eg redirection protection) between our two
 implementations. See \secref{availability}, where we make these implementations
 available open source for community consideration.
 
-For our evaluation, we manually calculated a local checksum (\ie an AC) and an
-RI for 10 different \CONFERENCE{} PDFs. For the OD here we used a static locally
+For our evaluation, we manually calculate a local checksum (\ie an AC) and an
+RI for 10 different \CONFERENCE{} PDFs. For the OD here we use a static locally
 resolved domain name corresponding to a location on a local server. We manually
-stored these RI-to-AC mappings as key-value pairs on the Kademlia-based OpenDHT
+store these RI-to-AC mappings as key-value pairs on the Kademlia-based OpenDHT
 network.
 
-After installing \DHTSYS{} into our Google Chrome browser, we downloaded each
+After installing \DHTSYS{} into our Google Chrome browser, we download each
 file from our local server. For each observed download, \DHTSYS{} reported a
-``safe'' judgement as expected. We then stored randomly generated checksums as
+``safe'' judgement as expected. We then store randomly generated checksums as
 replacement RI-to-AC mappings in the Ring OpenDHT network corresponding to these
 10 PDFs such that the ACs purposely would not match the NACs generated by
 \DHTSYS{}, simulating file corruption by an attacker.
 
-Once again, we downloaded each file and calculated a local checksum. \DHTSYS{}
+Once again, we download each file and calculate a local checksum. \DHTSYS{}
 reported an ``unsafe'' judgement for each corrupted PDF file, as expected.
 
 \subsection{Obstacles to Scalability, Deployment}
@@ -171,8 +171,8 @@ records in their backend file~\cite{DNS1, DNS2}.
 
 With the HotCRP demo, the totality of our resource deployment scheme consisted
 of the addition of a new TXT entry to our backend file---accomplished via API
-call---during HotCRP's paper submission process. This new TXT entry consisted of
-a mapping between a RI and its corresponding AC.
+call to Google DNS---during HotCRP's paper submission process. This new TXT
+entry consisted of a mapping between a RI and its corresponding AC.
 
 We find a DNS record addition or update during the resource deployment process
 to be simple enough for service administrators to implement and presents no
@@ -192,12 +192,12 @@ discussed further in the context of URNs in \secref{discussion}.
 
 \subsection{Performance Overhead}
 
-While evaluating our \SYSTEM{} implementations, we observed no additional
-non-trivial network load or CPU usage with the extension loaded into Chrome.
+While evaluating our \SYSTEM{} implementations, we observe no additional
+network load or CPU usage with the extension loaded into Chrome.
 Measurements were taken using the Chrome developer tools. Intuitively, this
 makes sense since our \SYSTEM{} implementations make at most two queries to the
 backend before rendering a judgement. Hence, we find that \SYSTEM{} introduces
-no additional performance overhead to function. Further, as our implementations
+no additional performance overhead. Further, as our implementations
 of \SYSTEM{} do not interrupt or manipulate resources as they are being
 downloaded, there is no additional download latency introduced by \SYSTEM{}.
 

@@ -118,16 +118,19 @@ replacement for traditional checksums.
 We view the problem with four key concerns in mind: a) implementations must
 provide security guarantees transparently without adding any extra burden on the
 end user in the average case---here, an optimal solution avoids relying on the
-user to overcome apathy in the interest of security; b) configuring the
-validation method is simple for developers and system operators to integrate and
-deploy while ensuring configuration of a potentially-expensive discrete
-secondary system to host checksums is unnecessary; c) the validation method is
-not tightly coupled with any particular highly-available system; and d) no
-application or website source code changes or end user -facing web server/web
-infrastructure alterations are necessary. We implemented \SYSTEM{} as two
-proof-of-concept Google Chrome extensions: \DNSSYS{} and \DHTSYS{}. Our
-\DNSSYS{} implementation uses DNSSEC-secured DNS as its highly available backend
-while our \DHTSYS{} implementation relies on a OpenDHT-based dummy backend.
+user to overcome \textbf{user apathy} in the interest of security; b)
+configuring the validation method is simple for operators and developers to
+integrate and deploy while ensuring configuration of a potentially-expensive
+discrete secondary system to host checksums (\ie \textbf{co-hosting}) is
+unnecessary; c) the validation method is not tightly coupled with any particular
+highly-available system; and d) no application or website source code changes or
+end-user facing web server/web infrastructure alterations are necessary.
+
+Of these concerns, the first two are paramount.
+
+We implemented \SYSTEM{} as two proof-of-concept Google Chrome extensions, one
+relying on DNSSEC-secured DNS as a highly available backend while the other
+relies on an OpenDHT-based dummy backend.
 
 We then evaluate the security, scalability, and performance of our automated
 defense against resource corruption and demonstrate the effectiveness and
@@ -135,12 +138,10 @@ practicality of the \SYSTEM{} approach. Specifically, we find no additional
 obstacles to efficient deployment at scale outside of those imposed by the
 chosen authenticated distributed high availability system.
 
-For the proof-of-concept \DNSSYS{} implementation, we find the only practical
-obstacle to immediate deployment to be the adoption of DNSSEC (cf.
-\secref{discussion}). We further provide a publicly accessible empirical
-demonstration of \DNSSYS{}'s protective utility via a patched HotCRP instance
-(cf. \secref{availability}). We observed no download performance overhead
-compared to downloads without \DNSSYS{}.
+For our proof-of-concept implementations, we provide a publicly accessible
+empirical demonstration of \SYSTEM{}'s protective utility via a patched HotCRP
+instance (cf. \secref{availability}). We observed no download performance
+overhead compared to downloads without \SYSTEM{} during our evaluation.
 
 In summary, our primary contributions are:
 
@@ -152,27 +153,28 @@ In summary, our primary contributions are:
   facing web server/web infrastructure changes, do not employ unreliable
   heuristics, do not interfere with other protocols or software extensions that
   might also deal with download security, and can be transparently deployed
-  without adding to application/infrastructure fragility; \eg Chrome clients
-  with \DNSSYS{} installed will have their downloads secured while the user
-  experience of clients without the extension remains completely unaffected.
+  without adding to application/infrastructure fragility; \eg \SYSTEM{}-aware
+  clients with the extension will have their downloads secured while the user
+  experience of clients unaware of \SYSTEM{} remain completely unaffected.
 
   \item We present our prototype \SYSTEM{} implementations: \DNSSYS{} and
-  \DHTSYS{}. Both are implemented as Google Chrome extensions. We specifically
-  demonstrate \DNSSYS{}'s effectiveness in automatically and transparently
-  mitigating the accidental consumption of compromised resources from a
-  compromised HotCRP server. To the best of our knowledge, this is the
-  first system providing such capabilities with marginal deployment cost
-  and, unlike a traditional checksum-based approach, does not require the end
-  user to overcome apathy in the average case.
+  \DHTSYS{}. Both are implemented as Google Chrome extensions. We demonstrate
+  their effectiveness in automatically and transparently mitigating the
+  accidental consumption of compromised resources from a compromised test
+  servers. To the best of our knowledge, this is the first system providing such
+  capabilities with marginal deployment cost and, unlike a traditional
+  checksum-based approach, does not require the end user to overcome apathy in
+  the average case.
 
   \item We extensively evaluate the security, performance (overhead), and
-  deployment costs of \DNSSYS{}. We find that our approach is more effective
-  than checksums for mitigating resource integrity attacks. Further, we show
-  \DNSSYS{} is capable of detecting a wide variety of real-world integrity
-  errors, significantly raising the bar for the attacker. \DNSSYS{}, as it is
-  backed by DNS, is easily deployable at scale for entities that secure their
-  DNS zone(s) with DNSSEC. Finally, we observed no download performance overhead
-  compared to downloads without \DNSSYS{}.
+  deployment costs of \DNSSYS{} and \DHTSYS{}. We find that our approach is more
+  effective than checksums for mitigating resource integrity attacks. Further,
+  we show that our implementations are capable of detecting a wide variety of
+  real-world integrity errors, significantly raising the bar for the attacker.
+  Finally, we observed no download performance overhead compared to downloads
+  without \DNSSYS{} or \DHTSYS{}. \DNSSYS{} specifically, as it is backed by the
+  (in)famous global DNS network, is able to be deployable at scale for entities
+  that already secure their DNS zone(s) with DNSSEC.
 
 \end{itemize}
 
