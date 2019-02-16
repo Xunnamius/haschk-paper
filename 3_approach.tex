@@ -14,6 +14,14 @@ users are likely to avoid using a security measure altogether if it presents
 even a minor obstacle to immediate gratification~\cite{Clickthrough, PGPBad}. In
 the browser, for example, this phenomenon can be observed empirically.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{impressions.png}
+    \caption{Akhawe et al. estimation of warning clickthroughs by users as a
+    percentage of total warnings observed for two popular
+    browsers.}\label{fig:telemetry}
+\end{figure}
+
 Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
 passively observe over 25 million warning impressions in 2013 (see
 \figref{telemetry}), Akhawe et al. found that users of Google Chrome clicked
@@ -36,16 +44,16 @@ logic or source code. We achieve this through 1) the unique identification of
 individual hosted resources and 2) a highly available mapping of unique resource
 identifiers to corresponding checksums.
 
-\figref{overview} illustrates the \SYSTEM{} approach. \SYSTEM{} implementations
-can be imagined as a security layer sitting between the user and the resource.
-Immediately after a resource is downloaded, two cryptographic digests are
-generated. One digest uniquely fingerprints said resource based on its name.
-This is known as the \emph{Non-Authoritative Checksum} (NAC) and is yielded from
-running the cryptographic hashing function over the contents of the resource
-file. The second digest uniquely fingerprints said resource based on its
-contents. This is known as the \emph{Resource Identifier} (RI) and is yielded
-from running the cryptographic hashing function over the resource's public path
-on the distribution system.
+\PUNT{Next time :( \figref{overview} illustrates the \SYSTEM{} approach.}
+\SYSTEM{} implementations can be imagined as a security layer sitting between
+the user and the resource. Immediately after a resource is downloaded, two
+cryptographic digests are generated. One digest uniquely fingerprints said
+resource based on its name. This is known as the \emph{Non-Authoritative
+Checksum} (NAC) and is yielded from running the cryptographic hashing function
+over the contents of the resource file. The second digest uniquely fingerprints
+said resource based on its contents. This is known as the \emph{Resource
+Identifier} (RI) and is yielded from running the cryptographic hashing function
+over the resource's public path on the distribution system.
 
 Next, \SYSTEM{} uses the RI to retrieve an \emph{Authoritative Checksum} (AC)
 from the backend. If successful, \SYSTEM{} will compare the NAC to the AC---we
@@ -163,7 +171,7 @@ We do this for both implementations, though it is only relevant with \DNSSYS{}.
 The ultimate query sent to the backend consists of an OD (\eg
 \texttt{fakesite.io}), a PL (static; \ie \texttt{\_dnschk}), an SL (static; \ie
 \texttt{\_ri}), and an RI broken into two parts (\ie \texttt{RI1} and
-\texttt{RI2})). This yields the following (with an example on line 2): \\
+\texttt{RI2}). This yields the following (with an example on line 2): \\
 \makebox[\linewidth]{\texttt{RI1.RI2.SL.PL.OD}}
 \makebox[\linewidth]{\texttt{RI1.RI2.\_ri.\_dnschk.fakesite.io}}
 
