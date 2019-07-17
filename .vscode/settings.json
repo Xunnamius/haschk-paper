@@ -27,5 +27,8 @@
     ],
     "latex-workshop.hoverPreview.cursor.enabled": false,
     "latex-workshop.hoverPreview.enabled": false,
-    "latex-workshop.view.autoActivateLatex.enabled": false
+    "latex-workshop.view.autoActivateLatex.enabled": false,
+    "latex-workshop.view.autoFocus.enabled": false,
+    "latex-workshop.hover.preview.enabled": false,
+    "latex-workshop.hover.preview.cursor.enabled": false
 }
