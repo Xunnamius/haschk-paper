@@ -23,10 +23,9 @@ confidentiality, and resource integrity. Response authentication allows us to
 determine if a response received indeed originates from its purported source
 through, for instance, the adoption of a Public Key Infrastructure (PKI)
 scheme~\cite{PKI}. Communication confidentiality allows us to keep the data
-transacted between two or more parties private through
-some form of encryption, such as AES~\cite{AES}. Finally, resource integrity
-allows us to verify that the data we are receiving is the data we are expecting
-to receive.
+transacted between two or more parties private through some form of encryption,
+such as AES~\cite{AES}. Finally, resource integrity allows us to verify that the
+data we are receiving is the data we are expecting to receive.
 
 When it comes to response authentication and communication confidentiality
 concerns on the internet, the state of the art in attack mitigation is Transport
@@ -39,9 +38,10 @@ confidentiality.
 However, as a \textit{communication} protocol, TLS only guarantees the integrity
 of each \textit{end to end communication} via message authentication code
 (MAC)~\cite{TLS1.2}. But protected encrypted communications mean nothing if the
-contents of those communications are corrupted before the fact. Hence, the
-integrity of resources at the application layer (rather than the transport
-layer) is outside of the model addressed by TLS and HTTPS~\cite{TLS1.2, HTTPS}.
+contents of those communications are corrupted before the fact. Hence, attacks
+against the integrity of resources at the application layer (rather than the
+transport layer) are outside the threat model addressed by TLS and
+HTTPS~\cite{TLS1.2, HTTPS}.
 
 Attacks on resource integrity can be considered a subset of \emph{Supply Chain
 Attacks} (SCA). Rather than attack an entity directly, SCAs are the compromise
@@ -65,21 +65,21 @@ to yield a local checksum and then match it with a checksum given to them by
 some trusted authority.
 
 However, checksums come up short as a solution to the resource integrity
-problem. Foremost is a well-understood but harsh reality:
-\emph{user-apathy}---most users will not be inconvenienced with manually
-calculating checksums for the resources they download~\cite{Cherubini, Fagan};
-moreover, most users will not take the time to understand what checksums and
-integrity verification are~\cite{Cherubini, Tan, Hsiao}. While detailing how
-they gained unauthorized access to the servers, one of the hackers behind the
-2016 breach of Linux Mint's distribution system went so far as to comment (in
-respect to checksums): ``Who the [expletive] checks those
-anyway?''~\cite{SCA-MINT3}. Hardly unique to checksum calculation, designers of
-security schemes from HTTPS to PGP have found user apathy a difficult problem
-space to navigate~\cite{PGPBad, Cherubini}. When it comes to user apathy versus
-security warnings (\eg{malicious download alerts, warnings about compromised
-websites, expired certificate notifications}), application developers and user
-interface (UI) designers face similar difficulties~\cite{Clickthrough, Egelman1,
-Egelman2, Jenkins, Modic, Reeder, Silic, Sunshine, Bianchi, Akhawe}.
+problem. Foremost is a well-understood but harsh reality: \textbf{user apathy}.
+Most users will not be inconvenienced with manually calculating checksums for
+the resources they download~\cite{Cherubini, Fagan}; moreover, most users will
+not take the time to understand how checksums and integrity verification
+work~\cite{Cherubini, Tan, Hsiao}. While detailing how they gained unauthorized
+access to the servers, one of the hackers behind the 2016 breach of Linux Mint's
+distribution system went so far as to comment (in respect to checksums): ``Who
+the [expletive] checks those anyway?''~\cite{SCA-MINT3}. Hardly unique to
+checksum calculation, designers of security schemes from HTTPS to PGP have found
+user apathy a difficult problem space to navigate~\cite{PGPBad, Cherubini}. When
+it comes to user apathy versus security warnings (\eg{malicious download alerts,
+warnings about compromised websites, expired certificate notifications}),
+application developers and user interface (UI) designers face similar
+difficulties~\cite{Clickthrough, Egelman1, Egelman2, Jenkins, Modic, Reeder,
+Silic, Sunshine, Bianchi, Akhawe}.
 
 Even if a user felt the urge to manually calculate and verify a resource's
 checksum, they must search for a corresponding ``authoritative checksum'' to
@@ -92,14 +92,14 @@ to protect. If users do manage to find the authoritative checksum manually and
 also recognize the checksums are different, the user is then expected to ``do
 the right thing,'' whatever that happens to be in context.
 
-A major part of the problem is the futility of \emph{co-hosting} a resource and
-its authoritative checksum on the same distribution system. While cost-effective
-compared to hosting two or more discrete systems---one for the resource and one
-for the resource's checksum---an attacker that compromises a single distribution
-system hosting a resource and its checksum can mutate both, rendering the
-checksum irrelevant~\cite{Stickler}. This is true for automated checksum
-verification solutions as well~\cite{Cherubini}. The co-hosting problem was
-demonstrated by the 2016 hack of Linux Mint's distribution
+A major part of the problem is the futility of \textbf{co-hosting} a resource
+and its authoritative checksum on the same distribution system. While
+cost-effective compared to hosting two or more discrete systems---one for the
+resource and one for the resource's checksum---an attacker that compromises a
+single distribution system hosting a resource and its checksum can mutate both,
+rendering the checksum irrelevant~\cite{Stickler}. This is true for automated
+checksum verification solutions as well~\cite{Cherubini}. The co-hosting problem
+was demonstrated by the 2016 hack of Linux Mint's distribution
 server~\cite{SCA-MINT1, SCA-MINT2}.
 
 Though they propose a standardized method of making checksums available through
@@ -132,15 +132,14 @@ replacement for traditional checksum-based schemes.
 We view the problem with four key concerns in mind. 1) \SYSTEM{} implementations
 must provide security guarantees transparently without adding any extra burden
 on the end user in the average case. Here, an optimal implementation avoids
-relying on the user to overcome \textbf{user apathy} in the interest of security
-while accounting for users' tendency to click through security warnings. 2) When
-a developer makes a resource available for download on the internet, \SYSTEM{}
+relying on the user to overcome apathy in the interest of security while
+accounting for users' tendency to click through security warnings. 2) When a
+developer makes a resource available for download on the internet, \SYSTEM{}
 protections must be low effort to integrate and deploy, performant, and avoid
-the need to configure an expensive dedicated secondary system to host checksums
-(\ie \textbf{co-hosting}). 3) The verification method is not tightly coupled
-with any particular highly available system. 4) No application or website source
-code changes or user-facing server or web infrastructure modifications are
-necessary.
+the need to configure an expensive dedicated secondary system to host checksums.
+3) The verification method is not tightly coupled with any particular highly
+available system. 4) No application or website source code changes or
+user-facing server or web infrastructure modifications are necessary.
 
 We implement \SYSTEM{} as two discrete proof-of-concept Google Chrome
 extensions: one relying on DNS as a highly available backend and the other
@@ -153,31 +152,28 @@ no additional obstacles to efficient deployment at scale outside of those
 imposed by the chosen high availability system.
 
 For our implementations, we provide a publicly accessible empirical
-demonstration of \SYSTEM{}'s utility via a patched HotCRP instance. During our
-evaluation, given the obviously lightweight cryptographic operations employed,
-we observe no download performance overhead compared to downloads without
-\SYSTEM{}. We also release our \DNSSYS{} and \DHTSYS{} implementations to the
-community as open source software to promote exploration of the \SYSTEM{}
-approach (cf. \secref{availability}).
+demonstration of \SYSTEM{}'s utility via a patched HotCRP instance. We also
+release our \DNSSYS{} and \DHTSYS{} implementations to the community as open
+source software to promote exploration of the \SYSTEM{} approach (cf.
+\secref{availability}).
 
 In summary, our primary contributions are:
 
 \begin{itemize}
 
-  \item We propose a practical approach to automatically and transparently
-  mitigating the accidental consumption of compromised resources over the
-  internet. Contrasted with current solutions, our concrete implementations
-  require no app/website source, end user facing server or web infrastructure
-  modifications, do not employ unreliable heuristics, do not expect checksums to
-  be co-hosted on the same page as do other automated solutions, and can be
-  transparently deployed without adding to application/infrastructure fragility;
-  \eg \SYSTEM{}-aware clients will have their downloads secured while the user
-  experience of clients unaware of \SYSTEM{} remain completely unaffected.
-  Further, our approach can be applied to more than just browsers. \SYSTEM{} can
-  be implemented to protect downloads in FTP clients, BitTorrent clients, SSH
-  (like rsync), etc.
+  \item We propose a practical automated approach to transparently mitigating
+  the accidental consumption of compromised resources over the internet.
+  Contrasted with current solutions, our approach requires no app/website
+  source, end user facing server or web infrastructure modifications, does not
+  employ unreliable heuristics, does not expect checksums to be co-hosted on the
+  same page as do other automated approaches, and can be transparently
+  implemented and deployed. \SYSTEM{}-aware clients will have their downloads
+  secured while the user experience of clients unaware of \SYSTEM{} remain
+  completely unaffected. Further, our approach can be applied to more than just
+  browsers. \SYSTEM{} can be implemented to protect downloads in FTP clients,
+  BitTorrent clients, SSH (like rsync) clients, etc.
 
-  \item We present our prototype \SYSTEM{} implementations: \DNSSYS{} and
+  \item We present our proof-of-concept \SYSTEM{} implementations: \DNSSYS{} and
   \DHTSYS{}. Both are implemented as Google Chrome extensions. We demonstrate
   our implementations' effectiveness in automatically mitigating compromised
   resource consumption using dummy test servers. To the best of our knowledge,
@@ -187,14 +183,14 @@ In summary, our primary contributions are:
   other automated solutions and 2) provides such capabilities with marginal
   deployment overhead for developers.
 
-  \item We extensively evaluate the security, performance, and deployment
+  \item We evaluate the security, performance, scalability, and deployment
   overhead of \DNSSYS{} and \DHTSYS{}. We find that our approach is more
   effective than manual checksum verification or prior automated verification
   schemes at detecting resource integrity attacks. Further, we show that our
   \DNSSYS{} implementation is capable of detecting real-world integrity errors
   in a patched HotCRP instance, even when the entire server itself is
-  compromised, significantly raising the bar for an attacker. Finally, we
-  observed no download performance overhead compared to downloads without
-  \DNSSYS{}.
+  compromised, significantly raising the bar for an attacker. Finally, given the
+  lightweight nature of the cryptographic operations involved, we observed no
+  download performance overhead compared to downloads without \DNSSYS{}.
 
 \end{itemize}
