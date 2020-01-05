@@ -22,11 +22,11 @@ can be divided into three broad concerns: response authentication, communication
 confidentiality, and resource integrity. Response authentication allows us to
 determine if a response received indeed originates from its purported source
 through, for instance, the adoption of a Public Key Infrastructure (PKI)
-scheme~\cite{PKI}. Communication confidentiality, on the other hand, allows us
-to keep the data transacted between two or more parties private except to said
-parties through some form of encryption, such as AES~\cite{AES}. Finally,
-resource integrity allows us to verify that the data we are receiving is the
-data we are expecting to receive.
+scheme~\cite{PKI}. Communication confidentiality allows us to keep the data
+transacted between two or more parties private except to said parties through
+some form of encryption, such as AES~\cite{AES}. Finally, resource integrity
+allows us to verify that the data we are receiving is the data we are expecting
+to receive.
 
 When it comes to response authentication and communication confidentiality
 concerns on the internet, the state of the art in attack mitigation is Transport
@@ -127,7 +127,7 @@ end-user facing web server/web infrastructure alterations are necessary.
 
 Of these concerns, the first two are paramount.
 
-We implemented \SYSTEM{} as two proof-of-concept Google Chrome extensions, one
+We implemented \SYSTEM{} as two Google Chrome extensions, one
 relying on DNSSEC-secured DNS as a highly available backend while the other
 relies on an OpenDHT-based dummy backend.
 
@@ -137,7 +137,7 @@ practicality of the \SYSTEM{} approach. Specifically, we find no additional
 obstacles to efficient deployment at scale outside of those imposed by the
 chosen authenticated distributed high availability system.
 
-For our proof-of-concept implementations, we provide a publicly accessible
+For our implementations, we provide a publicly accessible
 empirical demonstration of \SYSTEM{}'s protective utility via a patched HotCRP
 instance (cf. \secref{availability}). We observed no download performance
 overhead compared to downloads without \SYSTEM{} during our evaluation.
@@ -177,6 +177,6 @@ In summary, our primary contributions are:
 
 \end{itemize}
 
-We release our \DNSSYS{} and \DHTSYS{} proof-of-concept implementations to the
+We release our \DNSSYS{} and \DHTSYS{} implementations to the
 community as open source software to promote exploration of the \SYSTEM{}
 approach (cf. \secref{availability}).
