@@ -1,21 +1,21 @@
 \begin{abstract}
 
 Downloading resources over the internet comes with many risks, including the
-chance that an attacker has replaced your desired resource with a compromised
-version. The de facto standard for addressing this risk is the use of
-\emph{checksums} coupled with a secure transport layer; users download a
-resource, compute its checksum, and compare that with an authoritative checksum.
-Problems with this include (1) \emph{user apathy}---for most users, calculating
-and validating the checksum is too tedious; and (2) \emph{co-hosting}---an
-attacker who compromises a resource can trivially compromise a checksum hosted
-on the same system. In this paper we propose \emph{\SYSTEM{}}, a novel resource
-validation approach meant as a complete replacement for current checksum-based
-approaches. \SYSTEM{} implementations automate the tedious parts of checksum
-verification to sidestep user apathy while leveraging authenticated highly
-available distributed systems to address co-hosting. We carefully evaluate the
-security, performance, and practicality of our approach through proof-of-concept
-DNS and DHT based implementations in Google Chrome; implementations are tested
-versus common resource integrity violations. While not a panacea, we find that
+chance that the resource has been corrupted, or that an attacker has replaced
+your desired resource with a compromised version. The de facto standard for
+addressing this risk is the use of \emph{checksums} coupled with a secure
+transport layer; users download a resource, compute its checksum, and compare
+that with an authoritative checksum. Problems with this include (1) \emph{user
+apathy}---for most users, calculating and validating the checksum is too
+tedious; and (2) \emph{co-hosting}---an attacker who compromises a resource can
+trivially compromise a checksum hosted on the same system. The co-hosting
+problem remains despite advancements in tools that automate checksum
+verification and generation. In this paper we propose \emph{\SYSTEM{}}, a
+resource validation approach expanding on de facto checksum-based integrity
+protections to defeat co-hosting while automating the tedious parts of checksum
+verification. We evaluate the security, practicality, and ease of deployment of
+our approach through two DNS and DHT based implementations in Google Chrome;
+implementations are tested versus common resource integrity violations. We find
 our approach is more effective than existing mitigation methods, significantly
 raises the bar for the attacker, and is deployable at scale.
 
