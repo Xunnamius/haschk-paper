@@ -3,7 +3,7 @@
 The primary goal of any \SYSTEM{} implementation is to alert end-users when the
 resource they have downloaded is something other than what they were expecting.
 In this section, we evaluate our approach by first assessing the threat model
-\SYSTEM{} addresses, followed by an examination of our proof-of-concept Google
+\SYSTEM{} addresses, followed by an examination of our Google
 Chrome extensions, \DNSSYS{} and \DHTSYS{}. We then test our implementations
 versus a real-world deployment of HotCRP and/or a random sampling of papers
 published in previous \CONFERENCE{} proceedings. Finally, we evaluate the
@@ -76,7 +76,7 @@ that legally corresponds to said compromised resource.
 \subsection{Real-World Resource Corruption Detection}
 
 To further evaluate the effectiveness of our mitigation, we test \DNSSYS{} and
-\DHTSYS{}---our proof-of-concept \SYSTEM{} Chrome extension
+\DHTSYS{}---our \SYSTEM{} Chrome extension
 implementations---against a series of common real-world resource integrity
 violations. The impetus behind any such resource integrity SCA is to have the
 resource pass through undetected by abusing the trust between client and
@@ -130,8 +130,7 @@ download as suspicious once the download began, successfully warning the user.
 
 To evaluate \DHTSYS{}, we connect to the authenticated global Ring OpenDHT
 network. Since the OpenDHT software is implemented in C++, it could not be
-included directly in a JavaScript plugin. Therefore, for our proof-of-concept
-implementation, we set up a local HTTP REST server wrapping the C++
+included directly in a JavaScript plugin. Therefore, for our implementation, we set up a local HTTP REST server wrapping the C++
 implementation of OpenDHT. Our OpenDHT REST server provides an interface
 consistent with the one expected by \DNSSYS{} (\ie Google DNS's REST API),
 allowing for code reuse (\eg redirection protection) between our two
@@ -185,7 +184,7 @@ under 10 lines of JavaScript.
 We note that, in the case where an entity's content distribution mechanism
 relies on, for instance, a mirroring service, third-party CDN, et cetera
 \emph{that randomly or disparately mangles resource URL paths}, our
-proof-of-concept implementations currently require each "mangled" RI permutation
+implementations currently require each "mangled" RI permutation
 representing a resource to be added to the backend, even if they all represent
 the same resource by a different name/path. This issue and its solutions are
 discussed further in the context of URNs in \secref{discussion}.

@@ -98,8 +98,8 @@ slow to rise. Globally, when measured as the availability of IPv6 connectivity
 among users accessing any Google service, it rests at approximately
 21\%~\cite{Google-IPv6}, with only 2\% of Fortune 1000 and 3\% of university
 domains being IPv6-enabled~\cite{NIST-IPv6}; we note that this is the case
-despite IANA and all RIRs having entered the final stage of virtual IPv4
-address space exhaustion as of 2018~\cite{APNIC-exhaustion} while the number of
+despite IANA and all RIRs having entered the final stage of virtual IPv4 address
+space exhaustion as of 2018~\cite{APNIC-exhaustion} while the number of
 internet-connected devices continues its upward climb~\cite{Cisco}.
 
 With that said, if we assume the user has installed the \DNSSYS{} extension,
@@ -144,7 +144,7 @@ authenticated backend that is already established, is well-tested, and exists
 globally like DNS. Such an entity would have to either maintain their own
 network of DHT nodes, which can incur significant cost if such a network was not
 already deployed, or piggy back off an open authenticated network, as was done
-with the case with our proof-of-concept \DHTSYS{} implementation.
+with the case with our \DHTSYS{} implementation.
 
 These reasons make DNS with DNSSEC more appealing as an authenticated backend in
 comparison. Regardless, we provide \DHTSYS{} to demonstrate the utility and
@@ -152,14 +152,14 @@ flexibility of the \SYSTEM{} approach.
 
 \subsubsection{Limitations of a Chrome Extension}
 
-Our current JavaScript proof-of-concept implementations, as Chrome extensions,
-are not allowed to touch the resource files downloaded by Chrome and so cannot
-prevent a potentially-malicious resource from being executed by the end user---a
-feature Chrome/Chromium reserves for its own internal use. The Chrome
-\textit{app} API~\cite{AppAPI} might have been of assistance as it allowed for
-some limited filesystem traversal via a now deprecated native app API; there is
-also a non-standard HTML5/WebExtensions FileSystem API that would provide
-similar functionality were it to be widely considered~\cite{deadSpec}.
+Our current JavaScript implementations, as Chrome extensions, are not allowed to
+touch the resource files downloaded by Chrome and so cannot prevent a
+potentially-malicious resource from being executed by the end user---a feature
+Chrome/Chromium reserves for its own internal use. The Chrome \textit{app}
+API~\cite{AppAPI} might have been of assistance as it allowed for some limited
+filesystem traversal via a now deprecated native app API; there is also a
+non-standard HTML5/WebExtensions FileSystem API that would provide similar
+functionality were it to be widely considered~\cite{deadSpec}.
 
 While still effective, \DNSSYS{} and \DHTSYS{} would be even more effective as
 browser extensions if Chrome/Chromium or the WebExtensions API allowed for an
@@ -169,9 +169,9 @@ executable, \ie had its \texttt{.crdownload} or \texttt{.download} extension
 removed. The hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that
 kept the download in its non-complete state until said \texttt{Promise}
 completed. This would allow the extensions' background pages to do something
-like alter a download's \texttt{DangerType} property and alert the end user to
-a dangerous download naturally. These modifications would have the advantage
-of communicating intent through the browser's familiar UI and preventing the
+like alter a download's \texttt{DangerType} property and alert the end user to a
+dangerous download naturally. These modifications would have the advantage of
+communicating intent through the browser's familiar UI and preventing the
 potentially-malicious download from becoming immediately executable.
 Unfortunately, the closest the Chrome/WebExtensions API comes to allowing
 \texttt{DangerType} mutations is the \texttt{acceptDanger} method on the
@@ -224,5 +224,5 @@ Assigned Numbers Authority. Going forward, we can potentially adopt a URN scheme
 that already exists, such as Magnet links~\cite{MagnetLinks} or the informal
 IETF draft for hash-based URN namespaces~\cite{draft-URN}. URNs would allow
 \DNSSYS{} and \DHTSYS{} to be much more flexible in how they map resources to
-Authoritative Checksums, \ie our proof-of-concept implementations would be able
-to handle mirrors and CDNs that may mangle resource path.
+Authoritative Checksums, \ie our implementations would be able to handle mirrors
+and CDNs that may mangle resource path.

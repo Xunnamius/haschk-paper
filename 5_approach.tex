@@ -2,7 +2,7 @@
 
 In this section we detail the \SYSTEM{} approach: a practical defense against
 receiving corrupted or compromised resources over the internet. We further
-present our proof-of-concept Google Chrome extension implementations, \DNSSYS{}
+present our Google Chrome extension implementations, \DNSSYS{}
 and \DHTSYS{}.
 
 \subsection{Defeating User Apathy}
@@ -107,7 +107,7 @@ Name System (DNS). Adding extra resource records to a DNS zone, for instance, is
 essentially a costless operation, meaning any entity that already has a
 DNSSEC-protected web presence can immediately deploy \SYSTEM{}. This is key to
 the motivation behind the \SYSTEM{} approach as well as the design of our
-\DNSSYS{} proof-of-concept implementation.
+\DNSSYS{} implementation.
 
 Other candidate high availability systems include DHTs, storage clusters,
 relational and non-relational databases, and any high availability authenticated
@@ -121,11 +121,11 @@ load is negligible. Hence, the \SYSTEM{} approach can be incorporated into
 software on most any device capable of communicating with the chosen backend.
 This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
 
-\subsection{Proof-of-Concept Implementations}
+\subsection{Implementations}
 
 \subsubsection{\DNSSYS{} and \DHTSYS{}}
 
-We implement \SYSTEM{} as two proof-of-concept Google Chrome extensions:
+We implement \SYSTEM{} as two Google Chrome extensions:
 \DNSSYS{} and \DHTSYS{}. They work with DNS and Ring OpenDHT as their highly
 available backends, respectively. Our Chrome extensions do not make any
 modifications to the Chrome user interface or viewport other than the extension
@@ -137,7 +137,7 @@ download via toolbar icon and popup interface.
 
 Immediately after a resource download is first detected, the extensions compute
 an RI from the full URL path of the resource. For the purposes of our
-proof-of-concept implementations, we calculate the RI as a hash digest of the
+implementations, we calculate the RI as a hash digest of the
 path component of the URL pointing to the resource. For example, consider a web
 resource hosted at \texttt{https://somesite.com/var/downloadme.txt}. Our
 implementations would hash \texttt{/var/downloadme.txt} to yield an RI. Note
@@ -218,7 +218,7 @@ the attacker) and the OD, which is the domain of the web document that contains
 said hyperlink. The scope of the OD is at the tab level, meaning there is one OD
 determined for each open browser tab.
 
-In our proof-of-concept implementations, we rely on the Chrome Tabs and
+In our implementations, we rely on the Chrome Tabs and
 WebRequest APIs to associate downloads with ODs. Our extensions are implemented
 such that the OD is determined as early as possible in a Chrome tab's navigation
 lifecycle. Further, in our implementations, determined ODs are ultimately
