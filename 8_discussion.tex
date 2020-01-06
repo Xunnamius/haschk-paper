@@ -68,52 +68,7 @@ with the \SYSTEM{} approach, a chain of trust can be established that links the
 \emph{Deployment}, \emph{Maintenance}, and \emph{Retirement} supply chain phases
 (cf. \tblref{attacks}), further raising the bar for the attacker.
 
-\subsection{Implementation-specific Limitations}
-
-\subsubsection{DNSSEC Adoption is Slow}
-
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.95\linewidth]{apnic.png}
-    \caption{APNIC estimate of the percentage of global DNS resolvers (Google
-    PDNS as well as local resolvers) performing DNSSEC validation from October
-    2013 to December 2018. The five year trend is positive.}\label{fig:apnic}
-\end{figure*}
-
-The proof-of-concept \DNSSYS{} implementation is only secure if the
-corresponding DNS zone is secure, \ie it is protected by DNSSEC. As detailed in
-\figref{apnic}, DNSSEC adoption rate---which has increased dramatically since
-the first production root zone was signed in 2010~\cite{Cloudflare, APNIC}---is
-decidedly variable and slow to rise. Only around 3\% of Fortune 1000 and 9\% of
-university domains have properly deployed DNSSEC~\cite{NIST-IPv6}, and the
-number of DNS resolvers validating DNSSEC replies currently sits at
-approximately 12-14\%~\cite{APNIC}.
-
-While this could be happening for a variety of reasons~\cite{DNSSEC-is-hard-1,
-DNSSEC-is-hard-2, DNSSEC-is-hard-3, DNSSEC-is-hard-4, DNSSEC-is-hard-5}, slow
-growth is certainly not outside of the norm for global protocol deployments that
-are perceived as ``nice to have'' rather than ``business critical''. For
-instance: the adoption rate of IPv6, proposed nearly 25 years ago, is similarly
-slow to rise. Globally, when measured as the availability of IPv6 connectivity
-among users accessing any Google service, it rests at approximately
-21\%~\cite{Google-IPv6}, with only 2\% of Fortune 1000 and 3\% of university
-domains being IPv6-enabled~\cite{NIST-IPv6}; we note that this is the case
-despite IANA and all RIRs having entered the final stage of virtual IPv4 address
-space exhaustion as of 2018~\cite{APNIC-exhaustion} while the number of
-internet-connected devices continues its upward climb~\cite{Cisco}.
-
-With that said, if we assume the user has installed the \DNSSYS{} extension,
-slow adoption of DNSSEC globally would in no way impact an individual entity's
-ability to adopt and immediately benefit from \DNSSYS{}. We consider this a key
-feature of the approach. Those entities that consider their resources' integrity
-to be business critical do not have to wait for DNSSEC to be adopted globally.
-Any well-configured DNSSEC-protected zone can opt-in to providing the resource
-records \DNSSYS{} expects, including a strict mode record, offering power users
-verifiable resources while remaining completely transparent to everyone else.
-Otherwise, users receiving resources from an entity that is not yet DNSSEC
-capable (and so they do not support \DNSSYS{}) will not experience any
-interruption in their user experience whether they have a \DNSSYS{}-capable
-browser or not.
+\subsection{Implementation-specific Considerations}
 
 \subsubsection{DNS-Specific Protocol Limitations}
 

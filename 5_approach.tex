@@ -14,27 +14,26 @@ users are likely to avoid using a security measure altogether if it presents
 even a minor obstacle to immediate gratification~\cite{Clickthrough, PGPBad}. In
 the browser, for example, this phenomenon can be observed empirically.
 
-\begin{figure}[t]
+\PUNT{\begin{figure}[t]
     \centering
     \includegraphics[width=0.95\linewidth]{impressions.png}
     \caption{Akhawe et al. estimation of warning clickthroughs by users as a
     percentage of total warnings observed for two popular
     browsers.}\label{fig:telemetry}
-\end{figure}
+\end{figure}}
 
 Leveraging the in-browser telemetry of Mozilla Firefox and Google Chrome to
-passively observe over 25 million warning impressions in 2013 (see
-\figref{telemetry}), Akhawe et al. found that users of Google Chrome clicked
-through a \emph{quarter of malware and phishing warnings} and \emph{70\% of TLS
-warnings}~\cite{Clickthrough}. Users also clicked through a third of Mozilla
-Firefox's TLS warnings and a tenth of their malware and phishing warnings. That
-is to say: a significant percentage of browser users are \emph{determined} not
-to let TLS trust issues and/or the threat of malware prevent them from receiving
-their desired content. Hence, we must assume: some non-trivial number of users,
-similarly determined to transact resources over the internet, will not be
-burdened with the off-path minutiae of manually calculating a checksum (if they
-are even familiar with the jargon) and verifying the integrity of the resources
-they are downloading.
+passively observe over 25 million warning impressions in 2013, Akhawe et al.
+found that users of Google Chrome clicked through a \emph{quarter of malware and
+phishing warnings} and \emph{70\% of TLS warnings}~\cite{Clickthrough}. Users
+also clicked through a third of Mozilla Firefox's TLS warnings and a tenth of
+their malware and phishing warnings. That is to say: a significant percentage of
+browser users are \emph{determined} not to let TLS trust issues and/or the
+threat of malware prevent them from receiving their desired content. Hence, we
+must assume: some non-trivial number of users, similarly determined to transact
+resources over the internet, will not be burdened with the off-path minutiae of
+manually calculating a checksum (if they are even familiar with the jargon) and
+verifying the integrity of the resources they are downloading.
 
 With this assumption in mind, the primary goal of \SYSTEM{} then is to side-step
 the human factor altogether by providing a completely transparent and
