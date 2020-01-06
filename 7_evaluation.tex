@@ -3,91 +3,27 @@
 The primary goal of any \SYSTEM{} implementation is to alert end-users when the
 resource they have downloaded is something other than what they were expecting.
 In this section, we evaluate our approach by first assessing the threat model
-\SYSTEM{} addresses, followed by an examination of our Google
-Chrome extensions, \DNSSYS{} and \DHTSYS{}. We then test our implementations
-versus a real-world deployment of HotCRP and/or a random sampling of papers
-published in previous \CONFERENCE{} proceedings. Finally, we evaluate the
-obstacles to scalability and potential performance overhead of our extensions.
+\SYSTEM{} addresses, followed by an examination of our Google Chrome extensions,
+\DNSSYS{} and \DHTSYS{}. We then test our implementations versus a real-world
+deployment of HotCRP and/or a random sampling of papers published in previous
+\CONFERENCE{} proceedings. Finally, we evaluate the obstacles to scalability and
+potential performance overhead of our extensions.
 
-\subsection{The Threat Model}
+\TODO{Add metrics about solution LoC}
 
-\subsubsection{Compromised Resource}
-
-We consider the case where an attacker can influence or even completely control
-the victim's resource distribution mechanism (web page, file server, CDN, etc)
-in any way. In this context, the attacker can trick the user into downloading a
-compromised resource of the attacker's choice. This attack can be accomplished
-by compromising the resource on a victim system or tricking the user into
-downloading a compromised resource on the attacker's remote system.
-
-In either case, the attacker does not have control over the backend system
-responsible for mapping RIs to ACs relevant to the function of \SYSTEM{}.
-
-If the attacker does not alter the RI, the compromised resource will fail
-integrity validation during the NAC Validation step.
-
-If the attacker does alter the RI, there are two possibilities: 1) the new RI
-\textit{does not} exist in the backend, in which case \SYSTEM{} will fail to
-resolve the NAC, hence the NAC Validation step will fail; 2) the ``compromised''
-RI \textit{does} exist in the backend, therefore the RI must be pointing to a
-different resource's checksum.
-
-In the first case, there are two further possibilities: a) NAC validation fails
-and \SYSTEM{} \emph{is not} in strict mode, so a ``neutral'' judgement is
-rendered; b) NAC validation fails and \SYSTEM{} \emph{is} in strict mode, so an
-``unsafe'' judgement is rendered, warning end users that the resource is likely
-compromised.
-
-In the second case, unless the attacker's goal is to swap one or more resources
-protected by \SYSTEM{} and a particular backend with another resource also
-protected by \SYSTEM{} and the same backend, the NAC Validation step will fail.
-For such a ``swap'' to work, the attacker would be required to both change the
-RI and also offer to the victim the \SYSTEM{}-protected resource the
-``compromised'' RI corresponds to, which shrinks the attack surface here
-significantly.
-
-\subsubsection{Compromised Authoritative Checksum}
-
-We consider the case where an attacker can completely control the highly
-available backend that allows \SYSTEM{} to function. In this context, the
-attacker can return an authoritative response of their choice to any query.
-
-In this case, the attacker does not have control over the victim's resource
-distribution mechanism (web page, file server, CDN, etc).
-
-Even if the attacker achieved this egregious level of compromise, they do not
-have the ability to deliver a malicious payload in this case. However, the
-attacker could use control over the relevant backends to cause denial-of-service
-style attacks against those attempting to download the resource by causing all
-NAC Validation checks to fail. This is mitigated by \SYSTEM{} allowing the user
-to ``override'' its error states; \ie \SYSTEM{} does not mutate or quarantine
-downloaded resources. See \secref{discussion} for further discussion on
-limitations due to the Chrome/WebExtensions API.
-
-\subsubsection{Compromised Resource and Authoritative Checksum}
-
-We consider the case where an attacker can influence or even completely control
-the victim's resource distribution mechanism (web page, file server, CDN, etc)
-in any way. Additionally, the attacker can completely control the victim highly
-available backend that allows \SYSTEM{} to function. Therefore, the attacker can
-make the user download a compromised resource and also return a (compromised) AC
-that legally corresponds to said compromised resource.
-
-\subsection{Real-World Resource Corruption Detection}
-
-To further evaluate the effectiveness of our mitigation, we test \DNSSYS{} and
-\DHTSYS{}---our \SYSTEM{} Chrome extension
-implementations---against a series of common real-world resource integrity
-violations. The impetus behind any such resource integrity SCA is to have the
-resource pass through undetected by abusing the trust between client and
-provider with the hope that an unsuspecting user will interact with it.
+To evaluate the effectiveness of our mitigation, we test \DNSSYS{} and
+\DHTSYS{}---our \SYSTEM{} Chrome extension implementations---against a series of
+common real-world resource integrity violations. The impetus behind any such
+resource integrity SCA is to have the resource pass through undetected by
+abusing the trust between client and provider with the hope that an unsuspecting
+user will interact with it.
 
 We show that the \SYSTEM{} approach is more effective than existing approaches
 at detecting integrity violations in arbitrary resources on the internet; this
 is especially evident when \DNSSYS{} and \DHTSYS{} are compared to the de facto
 standard: checksums.
 
-\subsubsection{\DNSSYS{}}
+\subsection{\DNSSYS{}}
 
 To empirically evaluate \DNSSYS{}, we launch a heavily modified version of the
 popular open source research submission and peer review software, \emph{HotCRP}
@@ -119,36 +55,41 @@ result of co-location) as expected.
 
 We ran this experiment three times and observed consistent results.
 
-Finally, we implement a ``redirection'' attack where, when clicking the link
-to download the PDF document from HotCRP, users were forced to navigate to a
+Finally, we implement a ``redirection'' attack where, when clicking the link to
+download the PDF document from HotCRP, users were forced to navigate to a
 ``compromised'' PHP script on an adjacent server that very quickly redirected
 clients several times before triggering the download of a corrupted version of
 the original HotCRP-hosted resource. Our implementation correctly flagged this
 download as suspicious once the download began, successfully warning the user.
 
-\subsubsection{\DHTSYS{}}
+While evaluating our implementation, we observe no additional onerous network
+load or CPU usage with the extension loaded into Chrome. Measurements were taken
+using the Chrome developer tools. Intuitively, this makes sense since \DNSSYS{}
+makes at most two queries to the backend before rendering a judgement.
+
+\subsection{\DHTSYS{}}
 
 To evaluate \DHTSYS{}, we connect to the authenticated global Ring OpenDHT
 network. Since the OpenDHT software is implemented in C++, it could not be
-included directly in a JavaScript plugin. Therefore, for our implementation, we set up a local HTTP REST server wrapping the C++
-implementation of OpenDHT. Our OpenDHT REST server provides an interface
-consistent with the one expected by \DNSSYS{} (\ie Google DNS's REST API),
-allowing for code reuse (\eg redirection protection) between our two
-implementations. See \secref{availability}, where we make these implementations
-available open source for community consideration.
+included directly in a JavaScript plugin. Therefore, for our implementation, we
+set up a local HTTP REST server wrapping the C++ implementation of OpenDHT. Our
+OpenDHT REST server provides an interface consistent with the one expected by
+\DNSSYS{} (\ie Google DNS's REST API), allowing for code reuse (\eg redirection
+protection) between our two implementations. See \secref{availability}, where we
+make these implementations available open source for community consideration.
 
-For our evaluation, we manually calculate a local checksum (\ie an AC) and an
-RI for 10 different \CONFERENCE{} PDFs. For the OD here we use a static locally
+For our evaluation, we manually calculate a local checksum (\ie an AC) and an RI
+for 10 different \CONFERENCE{} PDFs. For the OD here we use a static locally
 resolved domain name corresponding to a location on a local server. We manually
 store these RI-to-AC mappings as key-value pairs on the Kademlia-based OpenDHT
 network.
 
-After installing \DHTSYS{} into our Google Chrome browser, we download each
-file from our local server. For each observed download, \DHTSYS{} reported a
-``safe'' judgement as expected. We then store randomly generated checksums as
-replacement RI-to-AC mappings in the Ring OpenDHT network corresponding to these
-10 PDFs such that the ACs purposely would not match the NACs generated by
-\DHTSYS{}, simulating file corruption by an attacker.
+After installing \DHTSYS{} into our Google Chrome browser, we download each file
+from our local server. For each observed download, \DHTSYS{} reported a ``safe''
+judgement as expected. We then store randomly generated checksums as replacement
+RI-to-AC mappings in the Ring OpenDHT network corresponding to these 10 PDFs
+such that the ACs purposely would not match the NACs generated by \DHTSYS{},
+simulating file corruption by an attacker.
 
 Once again, we download each file and calculate a local checksum. \DHTSYS{}
 reported an ``unsafe'' judgement for each corrupted PDF file, as expected.
@@ -182,45 +123,7 @@ under 10 lines of JavaScript.
 We note that, in the case where an entity's content distribution mechanism
 relies on, for instance, a mirroring service, third-party CDN, et cetera
 \emph{that randomly or disparately mangles resource URL paths}, our
-implementations currently require each "mangled" RI permutation
-representing a resource to be added to the backend, even if they all represent
-the same resource by a different name/path. This issue and its solutions are
-discussed further in the context of URNs in \secref{discussion}.
-
-\subsection{Performance Overhead}
-
-While evaluating our \SYSTEM{} implementations, we observe no additional
-network load or CPU usage with the extension loaded into Chrome.
-Measurements were taken using the Chrome developer tools. Intuitively, this
-makes sense since our \SYSTEM{} implementations make at most two queries to the
-backend before rendering a judgement. Hence, we find that \SYSTEM{} introduces
-no additional performance overhead. Further, as our implementations
-of \SYSTEM{} do not interrupt or manipulate resources as they are being
-downloaded, there is no additional download latency introduced by \SYSTEM{}.
-
-\subsection{Attacking OD Resolution in the Browser}
-
-While determining ODs, a clever attacker might attempt to fool this process by
-redirecting users one or more times before triggering a direct download of a
-compromised resource. The redirects would allow an attacker to completely
-manipulate the OD, with the ability to trick an unsuspecting user into
-downloading a compromised resource with valid entries in the backend system.
-
-We mitigate this threat by leveraging JavaScript's document-wide \emph{trusted
-event}~\cite{TrustedEvents} delegation capability. Specifically, when a tab
-navigation event is observed, the tab is flagged \texttt{suspicious} by default
-and the determined OD is not updated (\ie it remains at its previous value). If
-the user interacts with the tab (\ie a trusted click or key press event is
-observed after navigation completes), the \texttt{suspicious} flag is cleared
-and the OD is updated. If another tab navigation event occurs without user
-interaction first (\eg a quick redirect), this process repeats recursively. If a
-download is observed coming from a tab flagged \texttt{suspicious}, the user is
-warned about the suspicious circumstances similarly to receiving an ``unsafe''
-judgement.
-
-While this mitigates the attack as described, it has the side effect of
-potentially generating false positive warnings when 1) the user is redirected to
-a legitimate website---such as a download mirroring service---that automatically
-triggers a download after some amount of time when also 2) the user does not
-interact with the page at all before the download begins. We argue such cases
-are non-average and the tradeoff here is worthy.
+implementations currently require each "mangled" RI permutation representing a
+resource to be added to the backend, even if they all represent the same
+resource by a different name/path. This issue and its solutions are discussed
+further in the context of URNs in \secref{discussion}.

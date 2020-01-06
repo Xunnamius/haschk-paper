@@ -9,16 +9,16 @@ anti-malware, purely PKI-based solutions, and others.
 
 Modern software development requires a complex globally distributed supply chain
 and development ecosystem for organizations and other entities to design,
-develop, deploy, and maintain products efficiently~\cite{SCA}. Such a
-globally distributed ecosystem necessitates integration with potentially many
-third party entities, be they specialty driver manufacturers, external content
-distribution network (CDN) providers, third party database management software,
-download mirrors, etc.
+develop, deploy, and maintain products efficiently~\cite{SCA}. Such a globally
+distributed ecosystem necessitates integration with potentially many third party
+entities, be they specialty driver manufacturers, external content distribution
+network (CDN) providers, third party database management software, download
+mirrors, etc.
 
 Critically, reliance on third parties, while often cost-effective and
 feature-rich, also increases the risk of a security compromise at some point in
-the supply chain~\cite{SCA}. These types of compromises are known as Supply
-Chain Attacks (SCA). In the context of software development, SCAs are the
+the supply chain~\cite{SCA, Stickler}. These types of compromises are known as
+Supply Chain Attacks (SCA). In the context of software development, SCAs are the
 compromise of an entity's software source code via cyber attack, insider threat,
 upstream asset compromise, trusted hardware/vendor compromise, or some other
 attack on one or more phases of the software development life cycle or ``supply
@@ -95,8 +95,8 @@ illustrating the \emph{co-hosting} problem.
 Storing the checksum elsewhere may have prevented mutations on the checksum;
 still, as demonstrated by the first case, such an effort is not itself a
 solution. Hosting a checksum on a secondary system is not very useful if users
-downloading the resource protected by that checksum cannot find it or are
-not actually \emph{checking} it against a manual calculation. \\
+downloading the resource protected by that checksum cannot find it or are not
+actually \emph{checking} it against a manual calculation. \\
 
 \noindent\textbf{Case 3: Havex.} As part of a widespread espionage campaign
 beginning in 2010, Russian Intelligence Services targeted the industrial control
@@ -117,8 +117,8 @@ intelligence exfiltration and espionage~\cite{SCA-HAVEX1}. How many of these
 vendors employed checksums and other mitigations as part of their software
 release cycle is not well reported, though investigators note said vendors'
 distribution mechanisms were insecure~\cite{SCA-HAVEX2}; however, an automated
-resource validation method could have helped mitigate the
-delivery of compromised software to end users. \\
+resource validation method could have helped mitigate the delivery of
+compromised software to end users. \\
 
 \noindent\textbf{Case 4: HandBrake.} In May of 2017, users of HandBrake, a
 popular open source video transcoder for Mac/OSX, were made aware that they may
@@ -150,80 +150,3 @@ the GitHub repository---that is \emph{if} users are even aware that a second set
 of checksums are available at all. On top of technical knowledge, a user in this
 confusing situation is then expected to ``do the right thing,'' whatever that
 happens to be in this context.
-
-\subsection{Other Detection and Mitigation Methods}
-
-Detecting and/or mitigating resource integrity SCAs and other active attacks is
-a non-trivial and well studied problem~\cite{MD5Header, HTTP1.1, HTTPS, SRI, LF,
-OpenPGP1, DNSSEC, PKI}. What follows is a brief overview of current and popular
-methods to ensure the integrity of resources exchanged over the internet other
-than checksums and HTTPS/TLS.
-
-\subsubsection{Anti-Malware Software}
-
-Anti-malware software are heuristic-based programs designed for the specific
-purpose of detecting and removing various kinds of malware. However, updates to
-anti-malware definitions often lag behind or occur in response to the release of
-crippling malware. For example, during the 2017 compromise of the HandBrake
-distribution mirror, users who first ran the compromised HandBrake image through
-\textit{VirusTotal}---a web service that will run a resource through several
-dozen popular anti-malware products---received a report claiming no infections
-were detected, despite the empirically verifiable presence of the Proton
-malware.
-
-Worse, not all resource compromises end up looking like malware. In the 2012
-compromise of SourceForge's CDN, where a malicious version of phpMyAdmin was
-delivered to hundreds of users, the PHP source itself was altered to enable
-remote code execution. However, the extraneous code was virtually
-indistinguishable from the rest of the raw PHP source in the phpmyAdmin image
-being distributed.
-
-At the time of writing (2018), VirusTotal correctly identifies the compromised
-version of the Handbrake image as malware.
-
-\PUNT{\subsubsection{HTTPS / Encrypted Channel}
-
-The state of the art in secure communications is the Transport Layer Security
-(TLS) standard and its Hyper Text Transfer Protocol (HTTP)/PKI based
-implementation, HTTPS~\cite{TLS1.2, HTTPS, PKI}. Assuming well behaved
-certificate authorities, modern browsing software, and proper deployment, TLS
-and HTTPS mitigate many authentication and confidentiality related concerns
-through the establishment of an encrypted authenticated communication channel
-between parties~\cite{HTTPS, TLS1.2, DTLS}.
-
-HTTPS and related protocols are not a panacea, however. Unlike concerns relating
-to authenticity and confidentiality, \textit{resource integrity} deals with the
-content of a communication; specifically: ensuring the bytes received at the end
-of a transaction are the bytes we expected to receive. For example, a binary
-expected to be 10MiB, when downloaded over the internet, should not be received
-as an 11MiB executable---even if the compromised resource remained confidential
-in transit between authenticated parties. Similarly, it would be ill advised to
-knowingly execute a 10MiB binary that, for one reason or another, had half its
-bits flipped by the time it was received. This can occur despite the integrity
-guarantee provided by TLS/HTTPS because resource integrity attacks and other
-SCAs fall outside of the threat model addressed by TLS/HTTPS.
-
-Hence, despite the resilient nature of HTTPS and the powerful security
-properties it guarantees, end users are still vulnerable to attacks on resource
-integrity. This can occur at the point of distribution, such as a compromised
-node in a third party CDN that delivers malicious resources masquerading as
-popular software (cf. cases 1-4). It can occur when an attacker gains
-control of some aspect of the software deployment process (cf. case 3).
-
-Moreover, an attacker can render HTTPS-protected HTML-based protections such as
-co-hosted resource checksums, the content-MD5 header~\cite{MD5Header} and
-Subresource Integrity (SRI)~\cite{SRI} digests ineffective by trivially mutating
-the compromised download portal and/or update/maintenance mechanism.}
-
-\subsubsection{Browser-based Heuristics and Blacklists}
-
-Modern browsers employ heuristic and blacklist based detection and prevention
-schemes in an attempt to protect users from encountering malicious content on
-the internet. Implementations include Google Chrome's \textit{Safe Browsing}
-feature, Mozilla Firefox's \textit{Phishing/Download Protection}, and Microsoft
-Edge's \textit{malware sniffing} Windows Defender browser bundle.
-
-Similar to anti-malware software, browser-based heuristics and blacklists are a
-reactive rather than proactive solution; hence, they are ineffective at
-shielding users from attacks on the integrity of the resources downloaded over
-the internet.

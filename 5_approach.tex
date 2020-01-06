@@ -2,8 +2,36 @@
 
 In this section we detail the \SYSTEM{} approach: a practical defense against
 receiving corrupted or compromised resources over the internet. We further
-present our Google Chrome extension implementations, \DNSSYS{}
-and \DHTSYS{}.
+present our Google Chrome extension implementations, \DNSSYS{} and \DHTSYS{}.
+
+The \SYSTEM{} approach can be incorporated into
+software on most any device capable of communicating with the chosen backend.
+This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
+
+\TODO{Also talk about client diversity}
+
+\subsection{URNs as RIs}
+
+\TODO{integrate this section into the surrounding text better}
+
+The goal of Resource Identifiers (RI) and Non-Authoritative Checksums (NAC) is
+very similar to that of Uniform Resource Names (URN). It may make sense to
+replace the mapping between NACs/RIs and Authoritative Checksums with purely
+URN-based DNS lookups that return specially formatted TXT records upon success.
+This would further simplify the deployment process for service administrators
+since DNS updates would be based upon the resource's contents instead of both
+its contents \textit{and where it is located physically on a distribution
+system}. It may also allow for additional confirmation methods of the identical
+resources in different domains and in different locations.
+
+We did not create a URN-based scheme in our initial approach due to a new URN
+scheme requiring the registration of a unique identifier with the Internet
+Assigned Numbers Authority. Going forward, we can potentially adopt a URN scheme
+that already exists, such as Magnet links~\cite{MagnetLinks} or the informal
+IETF draft for hash-based URN namespaces~\cite{draft-URN}. URNs would allow
+\DNSSYS{} and \DHTSYS{} to be much more flexible in how they map resources to
+Authoritative Checksums, \ie our implementations would be able to handle mirrors
+and CDNs that may mangle resource path.
 
 \subsection{Defeating User Apathy}
 
@@ -43,7 +71,6 @@ logic or source code. We achieve this through 1) the unique identification of
 individual hosted resources and 2) a highly available mapping of unique resource
 identifiers to corresponding checksums.
 
-\PUNT{Next time :( \figref{overview} illustrates the \SYSTEM{} approach.}
 \SYSTEM{} implementations can be imagined as a security layer sitting between
 the user and the resource. Immediately after a resource is downloaded, two
 cryptographic digests are generated. One digest uniquely fingerprints said
@@ -83,9 +110,9 @@ RIs and ACs is not new and seems straightforward, but the problem is more
 complex than perhaps first meets the eye.
 
 The state of the art in modern fully authenticated highly available schemes are
-based on some form of PKI; an entity must roll its own PKI solution,
-actively maintain it, and hope it is bug free. Examples include the Windows
-Store, Google Play Store for Android, and the Apple Store for iPhone.
+based on some form of PKI; an entity must roll its own PKI solution, actively
+maintain it, and hope it is bug free. Examples include the Windows Store, Google
+Play Store for Android, and the Apple Store for iPhone.
 
 There are several problems with purely PKI-based resource integrity
 verification. For one: a roll-your-own PKI-based model clearly cannot scale to
@@ -111,115 +138,5 @@ Other candidate high availability systems include DHTs, storage clusters,
 relational and non-relational databases, and any high availability authenticated
 key-value store.
 
-\subsection{Platform Diversity}
-
-From our evaluation (cf. \secref{evaluation}), the computational overhead of
-running \SYSTEM{} is minimal for most resources. Further, additional network
-load is negligible. Hence, the \SYSTEM{} approach can be incorporated into
-software on most any device capable of communicating with the chosen backend.
-This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
-
-\subsection{Implementations}
-
-\subsubsection{\DNSSYS{} and \DHTSYS{}}
-
-We implement \SYSTEM{} as two Google Chrome extensions:
-\DNSSYS{} and \DHTSYS{}. They work with DNS and Ring OpenDHT as their highly
-available backends, respectively. Our Chrome extensions do not make any
-modifications to the Chrome user interface or viewport other than the extension
-icon in the toolbar. Further, downloads work exactly the same whether or not
-\DNSSYS{} or \DHTSYS{} are installed; the extensions are transparent to end
-users. However, if a failure is experienced during NAC Validation (\ie a
-``non-average'' case), the extensions will alert the user to the dangerous
-download via toolbar icon and popup interface.
-
-Immediately after a resource download is first detected, the extensions compute
-an RI from the full URL path of the resource. For the purposes of our
-implementations, we calculate the RI as a hash digest of the
-path component of the URL pointing to the resource. For example, consider a web
-resource hosted at \texttt{https://somesite.com/var/downloadme.txt}. Our
-implementations would hash \texttt{/var/downloadme.txt} to yield an RI. Note
-that there are several ways a browser extension could calculate an RI. See
-\secref{discussion} for a discussion of an alternative calculation based on
-Uniform Resource Name.
-
-Next, we determine the so-called \emph{Origin Domain} (OD). The OD is the base
-domain used to query the backend and should always be the Second-Level Domain
-(SLD) fragment of the \emph{active browser tab's URL}, \ie the URL of the tab
-that initiated the download. For example: \texttt{somesite.com} would be the OD
-for a Chrome tab at URL \texttt{frag.something.somesite.com} and
-\texttt{fakesite.io} would be the OD for a Chrome tab at
-\texttt{git.fakesite.io}.
-
-The OD is appended to the Primary Label (PL), which is then appended to the
-RI Sub-Label (SL). The PL is a standard string used to more easily identify the
-backend records our implementations rely upon; we used ``\_dnschk''. It will
-always appear as the third-level domain following the OD in any query to the
-backend. The SL is a standard string used to identify backend entries that
-contain RIs; we used ``\_ri'' in our implementations. The resulting
-construction, consisting of \texttt{SL.PL.OD} (\eg
-\texttt{\_ri.\_dnschk.fakesite.io}), is appended to the RI calculated earlier.
-This forms the subject of the query to our backend, whereafter the backend
-responds with the AC or an indication that the RI-to-AC mapping was not found.
-
-To remain in compliance with DNS protocol label limits, we chose to split the
-RI---a 64 character alphanumeric string---into two labels separated by a period.
-We do this for both implementations, though it is only relevant with \DNSSYS{}.
-
-The ultimate query sent to the backend consists of an OD (\eg
-\texttt{fakesite.io}), a PL (static; \ie \texttt{\_dnschk}), an SL (static; \ie
-\texttt{\_ri}), and an RI broken into two parts (\ie \texttt{RI1} and
-\texttt{RI2}). This yields the following (with an example on line 2): \\
-\makebox[\linewidth]{\texttt{RI1.RI2.SL.PL.OD}}
-\makebox[\linewidth]{\texttt{RI1.RI2.\_ri.\_dnschk.fakesite.io}}
-
-Finally, the backend responds to our query and NAC Validation is performed. If
-NAC Validation succeeds, our extensions render a ``safe'' judgement via the
-extension UI. If NAC Validation fails, our extensions render an ``unsafe''
-judgement. If the backend response indicates the RI mapping we queried does not
-exist, there are two possible outcomes: the extensions render a ``neutral''
-judgement if they are not operating under strict mode conditions, otherwise an
-``unsafe'' judgement is rendered (as if NAC Validation had taken place and
-failed).
-
-``Strict mode'' status, if active, prevents \DNSSYS{} and \DHTSYS{} from
-rendering ``neutral'' judgements for a particular OD. The point of neutral
-judgements is to allow the \SYSTEM{} approach to be incrementally adopted and
-deployed on the open internet without ``breaking the internet'' or pestering the
-end user with false positives when downloading resources that are not explicitly
-protected by our approach. For resources that are protected by our approach,
-strict mode ensures there are only two possible judgements rendered by \DNSSYS{}
-and \DHTSYS{} for a given OD: either ``safe'' if NAC Validation succeeds or
-``unsafe'' in all other circumstances. For this reason, it is recommended that
-any adopter of our approach ensure their resources are protected under strict
-mode by default.
-
-To determine if strict mode status applies to an OD, an additional backend query
-is made of the form \texttt{SML.PL.OD}, where SML is the Strict Mode Sub-Label
-consisting of the standard string ``\_smode''. Continuing with our previous
-example, our query would take the form \texttt{\_smode.\_dnschk.fakesite.io}. If
-and only if the subject of this additional query exists in the backend, strict
-mode status is assumed.
-
-\subsubsection{Determining Origin Domain in the Browser}
-
-To execute a resource integrity attack on a web server, an attacker generally
-has two paths. They can mutate the resource in place, which would cause NAC
-Validation to fail. They could also mutate the web page hosting the resource,
-replacing the resource anchor with a malicious one that points to a compromised
-resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will catch
-this due to how we calculate the Origin Domain (OD).
-
-To prevent such implementation-specific attacks, we make a distinction between
-the domain a resource's hyperlink might be pointing to (which might belong to
-the attacker) and the OD, which is the domain of the web document that contains
-said hyperlink. The scope of the OD is at the tab level, meaning there is one OD
-determined for each open browser tab.
-
-In our implementations, we rely on the Chrome Tabs and
-WebRequest APIs to associate downloads with ODs. Our extensions are implemented
-such that the OD is determined as early as possible in a Chrome tab's navigation
-lifecycle. Further, in our implementations, determined ODs are ultimately
-ordered as a LIFO construction. This ensures the resource-to-tab mappings remain
-accurate in the case where two tabs share the same OD when a resource download
-is observed.
+\TODO{Re-explain/highlight why web server compromise alone doesn’t defeat HASCHK}
+\TODO{Note we beat Stickler and Cherubini et al because we can survive server compromise}

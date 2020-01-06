@@ -1,1 +1,135 @@
 \section{Implementations} \label{sec:implementation}
+
+We implement \SYSTEM{} as two Google Chrome extensions: \DNSSYS{} and \DHTSYS{}.
+They work with DNS and Ring OpenDHT as their highly available backends,
+respectively. Our Chrome extensions do not make any modifications to the Chrome
+user interface or viewport other than the extension icon in the toolbar.
+Further, downloads work exactly the same whether or not \DNSSYS{} or \DHTSYS{}
+are installed; the extensions are transparent to end users. However, if a
+failure is experienced during NAC Validation (\ie a ``non-average'' case), the
+extensions will alert the user to the dangerous download via toolbar icon and
+popup interface.
+
+Immediately after a resource download is first detected, the extensions compute
+an RI from the full URL path of the resource. For the purposes of our
+implementations, we calculate the RI as a hash digest of the path component of
+the URL pointing to the resource. For example, consider a web resource hosted at
+\texttt{https://somesite.com/var/downloadme.txt}. Our implementations would hash
+\texttt{/var/downloadme.txt} to yield an RI. Note that there are several ways a
+browser extension could calculate an RI. See \secref{discussion} for a
+discussion of an alternative calculation based on Uniform Resource Name.
+
+Next, we determine the so-called \emph{Origin Domain} (OD). The OD is the base
+domain used to query the backend and should always be the Second-Level Domain
+(SLD) fragment of the \emph{active browser tab's URL}, \ie the URL of the tab
+that initiated the download. For example: \texttt{somesite.com} would be the OD
+for a Chrome tab at URL \texttt{frag.something.somesite.com} and
+\texttt{fakesite.io} would be the OD for a Chrome tab at
+\texttt{git.fakesite.io}.
+
+The OD is appended to the Primary Label (PL), which is then appended to the RI
+Sub-Label (SL). The PL is a standard string used to more easily identify the
+backend records our implementations rely upon; we used ``\_dnschk''. It will
+always appear as the third-level domain following the OD in any query to the
+backend. The SL is a standard string used to identify backend entries that
+contain RIs; we used ``\_ri'' in our implementations. The resulting
+construction, consisting of \texttt{SL.PL.OD} (\eg
+\texttt{\_ri.\_dnschk.fakesite.io}), is appended to the RI calculated earlier.
+This forms the subject of the query to our backend, whereafter the backend
+responds with the AC or an indication that the RI-to-AC mapping was not found.
+
+To remain in compliance with DNS protocol label limits, we chose to split the
+RI---a 64 character alphanumeric string---into two labels separated by a period.
+We do this for both implementations, though it is only relevant with \DNSSYS{}.
+
+The ultimate query sent to the backend consists of an OD (\eg
+\texttt{fakesite.io}), a PL (static; \ie \texttt{\_dnschk}), an SL (static; \ie
+\texttt{\_ri}), and an RI broken into two parts (\ie \texttt{RI1} and
+\texttt{RI2}). This yields the following (with an example on line 2): \\
+\makebox[\linewidth]{\texttt{RI1.RI2.SL.PL.OD}}
+\makebox[\linewidth]{\texttt{RI1.RI2.\_ri.\_dnschk.fakesite.io}}
+
+Finally, the backend responds to our query and NAC Validation is performed. If
+NAC Validation succeeds, our extensions render a ``safe'' judgement via the
+extension UI. If NAC Validation fails, our extensions render an ``unsafe''
+judgement. If the backend response indicates the RI mapping we queried does not
+exist, there are two possible outcomes: the extensions render a ``neutral''
+judgement if they are not operating under strict mode conditions, otherwise an
+``unsafe'' judgement is rendered (as if NAC Validation had taken place and
+failed).
+
+``Strict mode'' status, if active, prevents \DNSSYS{} and \DHTSYS{} from
+rendering ``neutral'' judgements for a particular OD. The point of neutral
+judgements is to allow the \SYSTEM{} approach to be incrementally adopted and
+deployed on the open internet without ``breaking the internet'' or pestering the
+end user with false positives when downloading resources that are not explicitly
+protected by our approach. For resources that are protected by our approach,
+strict mode ensures there are only two possible judgements rendered by \DNSSYS{}
+and \DHTSYS{} for a given OD: either ``safe'' if NAC Validation succeeds or
+``unsafe'' in all other circumstances. For this reason, it is recommended that
+any adopter of our approach ensure their resources are protected under strict
+mode by default.
+
+To determine if strict mode status applies to an OD, an additional backend query
+is made of the form \texttt{SML.PL.OD}, where SML is the Strict Mode Sub-Label
+consisting of the standard string ``\_smode''. Continuing with our previous
+example, our query would take the form \texttt{\_smode.\_dnschk.fakesite.io}. If
+and only if the subject of this additional query exists in the backend, strict
+mode status is assumed.
+
+\subsection{Deployment and Scalability}
+
+\TODO{Explain how DNSCHK and DHTCHK would be deployed}
+
+\subsection{Resolving Origin Domain in the Browser}
+
+To execute a resource integrity attack on a web server, an attacker generally
+has two paths. They can mutate the resource in place, which would cause NAC
+Validation to fail. They could also mutate the web page hosting the resource,
+replacing the resource anchor with a malicious one that points to a compromised
+resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will catch
+this due to how we calculate the Origin Domain (OD).
+
+To prevent such implementation-specific attacks, we make a distinction between
+the domain a resource's hyperlink might be pointing to (which might belong to
+the attacker) and the OD, which is the domain of the web document that contains
+said hyperlink. The scope of the OD is at the tab level, meaning there is one OD
+determined for each open browser tab.
+
+In our implementations, we rely on the Chrome Tabs and WebRequest APIs to
+associate downloads with ODs. Our extensions are implemented such that the OD is
+determined as early as possible in a Chrome tab's navigation lifecycle. Further,
+in our implementations, determined ODs are ultimately ordered as a LIFO
+construction. This ensures the resource-to-tab mappings remain accurate in the
+case where two tabs share the same OD when a resource download is observed.
+
+\subsection{Attacking Origin Domain Resolution in the Browser}
+
+While determining ODs, a clever attacker might attempt to fool this process by
+redirecting users one or more times before triggering a direct download of a
+compromised resource. The redirects would allow an attacker to completely
+manipulate the OD, with the ability to trick an unsuspecting user into
+downloading a compromised resource with valid entries in the backend system.
+
+We mitigate this threat by leveraging JavaScript's document-wide \emph{trusted
+event}~\cite{TrustedEvents} delegation capability. Specifically, when a tab
+navigation event is observed, the tab is flagged \texttt{suspicious} by default
+and the determined OD is not updated (\ie it remains at its previous value). If
+the user interacts with the tab (\ie a trusted click or key press event is
+observed after navigation completes), the \texttt{suspicious} flag is cleared
+and the OD is updated. If another tab navigation event occurs without user
+interaction first (\eg a quick redirect), this process repeats recursively. If a
+download is observed coming from a tab flagged \texttt{suspicious}, the user is
+warned about the suspicious circumstances similarly to receiving an ``unsafe''
+judgement.
+
+While this mitigates the attack as described, it has the side effect of
+potentially generating false positive warnings when 1) the user is redirected to
+a legitimate website---such as a download mirroring service---that automatically
+triggers a download after some amount of time when also 2) the user does not
+interact with the page at all before the download begins. We argue such cases
+are non-average and the tradeoff here is worthy.
+
+\subsection{Privileging Security over Choice when Issuing Security Warnings}
+
+\TODO{Argue “override” using Chrome danger download warning UI is effective using Chrome dev data}
