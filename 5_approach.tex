@@ -90,23 +90,22 @@ Store, Google Play Store for Android, and the Apple Store for iPhone.
 There are several problems with purely PKI-based resource integrity
 verification. For one: a roll-your-own PKI-based model clearly cannot scale to
 secure \emph{arbitrary} resources on the entire internet. This is doubly true
-when considering the primary consumers of those resources---end users---likely
-cannot distinguish a digital signature from, for instance, a key~\cite{PGPBad}.
-Further, unlike a standardized approach like HTTPS/TLS or DNSSEC, which are
-notoriously hard to implement correctly in their own right, rolling your own
-PKI-based solution is a path fraught with even greater peril. It is well known
-in the community that these often very complex PKI systems are hard to design
-correctly, hard implement correctly, and hard to effectively maintain.
+when considering the primary consumers of those resources---end users---cannot
+reliably distinguish a digital signature from, for instance, a key~\cite{PGPBad,
+Tan, Hsiao, Cherubini}. Further, unlike a standardized approach like HTTPS/TLS,
+which are notoriously hard to implement correctly in their own right, rolling
+your own PKI-based solution is a path fraught with even greater peril. It is
+well known in the community that these often very complex PKI systems are hard
+to design correctly, hard implement correctly, and hard to effectively maintain.
 
 Fortunately, there has been a lot of effort put into researching, designing, and
-standardizing several high availability fully authenticated globally distributed
-high performance storage technologies, some of which web-facing entities and IT
-teams are already quite familiar with and most already pay for, \eg the Domain
-Name System (DNS). Adding extra resource records to a DNS zone, for instance, is
-essentially a costless operation, meaning any entity that already has a
-DNSSEC-protected web presence can immediately deploy \SYSTEM{}. This is key to
-the motivation behind the \SYSTEM{} approach as well as the design of our
-\DNSSYS{} implementation.
+standardizing several high availability globally distributed high performance
+storage technologies, some of which web-facing entities and IT teams are already
+quite familiar with and most already pay for, \eg the Domain Name System (DNS).
+Adding extra resource records to a DNS zone, for instance, is essentially a
+costless operation, meaning any entity that already has a web presence can
+immediately deploy \SYSTEM{}. This is key to the motivation behind the \SYSTEM{}
+approach as well as the design of our \DNSSYS{} implementation.
 
 Other candidate high availability systems include DHTs, storage clusters,
 relational and non-relational databases, and any high availability authenticated

@@ -161,12 +161,10 @@ conclude that the scalability of \SYSTEM{} can be reduced to the scalability of
 its backend. We are aware of no other obstacles to scalability beyond those
 inherited from the underlying backend system.
 
-In respect to DNS specifically, packet fragmentation can be a concern for high
-performance networks~\cite{EDNS}, but this is an artifact of DNSSEC and related
-protocols rather than \SYSTEM{}~\cite{DNSSEC}. Further, we are aware of no
-practical limits or protocol-based restrictions on the scalability of a backend
-file itself or its sub-zones. A service can host tens of thousands of resource
-records in their backend file~\cite{DNS1, DNS2}.
+In respect to DNS specifically, we are aware of no practical limits or
+protocol-based restrictions on the scalability of a backend file itself or its
+sub-zones. A service can host tens of thousands of resource records in their
+backend file~\cite{DNS1, DNS2}.
 
 With the HotCRP demo, the totality of our resource deployment scheme consisted
 of the addition of a new TXT entry to our backend file---accomplished via API
