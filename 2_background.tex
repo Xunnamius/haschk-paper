@@ -1,9 +1,8 @@
 \section{Background} \label{sec:background}
 
-In this section, we describe the motivation for \SYSTEM{}, including four case
-studies that frame the threat we model against. We then examine current methods
-to detect and prevent resource corruption including checksums, HTTPS,
-anti-malware, purely PKI-based solutions, and others.
+In this section, we discuss Supply Chain Attacks, including four case studies
+describing real-world resource integrity attacks that take advantage of the
+ineffectiveness of checksums. These motivate the \SYSTEM{} approach.
 
 \subsection{Supply Chain Attacks on Resource Integrity}
 
@@ -20,9 +19,10 @@ feature-rich, also increases the risk of a security compromise at some point in
 the supply chain~\cite{SCA, Stickler}. These types of compromises are known as
 Supply Chain Attacks (SCA). In the context of software development, SCAs are the
 compromise of an entity's software source code via cyber attack, insider threat,
-upstream asset compromise, trusted hardware/vendor compromise, or some other
-attack on one or more phases of the software development life cycle or ``supply
-chain'' to infect an unsuspecting end user~\cite{NIST-SCA}.
+upstream asset/package management compromise, trusted hardware/vendor
+compromise, or some other attack on one or more phases of the software
+development life cycle or ``supply chain'' to infect an unsuspecting end
+user~\cite{NIST-SCA}.
 
 Every year, major SCAs become more frequent and their fallout more widely
 felt~\cite{SCA, NIST-SCA}. Whether major or minor, SCAs are hard to detect, even
@@ -50,10 +50,11 @@ the deployment, maintenance, and retirement phases.
 
 \subsection{Motivation: Cases}
 
-Here, we select four historic attacks we believe most effectively articulate the
-threat posed by resource integrity SCAs and how \SYSTEM{} might have been used
-to more effectively mitigate fallout. We examine each attack, noting the
-critical points of failure in their checksum-based resource security model. \\
+Here, we select four relatively recent real-world attacks we believe most
+effectively articulate the threat posed by resource integrity SCAs and how
+\SYSTEM{} might have been used to more effectively mitigate fallout. We examine
+each attack, noting the critical points of failure in their checksum-based
+resource security models. \\
 
 \noindent\textbf{Case 1: PhpMyAdmin.} For an unspecified amount of time circa
 2012, a compromised download mirror in SourceForge's official HTTPS-protected
@@ -76,14 +77,14 @@ Hence, a user who was sufficiently motivated, had sufficient technical knowledge
 of checksums and how to calculate them, and was also privy to the location of
 the correct checksum for the official phpMyAdmin image \emph{might} have noticed
 the discrepancy between the two digests. Clearly, a non-trivial number of users
-do not meet these criteria, and this attack demonstrates the problem of
-\emph{user apathy}.\\
+do not meet these criteria. This attack demonstrates the problem of \emph{user
+apathy}.\\
 
 \noindent\textbf{Case 2: Linux Mint.} In 2016, the Linux Mint team discovered an
 intrusion into their official HTTPS-protected distribution
 server~\cite{SCA-MINT1}. Attackers mutated download links originally pointing to
 the Linux Mint 17.3 Cinnamon edition ISO, redirecting unsuspecting users to a
-disparate system hosting a custom Mint ISO compiled with the IRC-based Linux
+separate system hosting a custom Mint ISO compiled with the IRC-based Linux
 backdoor malware \emph{Tsunami}~\cite{SCA-MINT2}. The attack affected hundreds
 of the downloads during that day, with the attackers claiming that a ``few
 hundred'' Linux Mint installs were explicitly under their control. The primary
@@ -129,7 +130,7 @@ legitimate software with a version containing a novel variant of the
 is unreported.
 
 The goal of the attack was the exfiltration of victims' sensitive data,
-including entire keychains (unlocked), private keys, browser password databases,
+including decrypted keychains, private keys, browser password databases,
 1Password/Lastpass vaults, decrypted files, and victims' personal videos and
 other media~\cite{SCA-HB1}. The HandBrake developers recommended users perform
 manual checksum validation to determine if their installation media was
@@ -149,4 +150,4 @@ authoritative checksums on the official site and the authoritative checksums in
 the GitHub repository---that is \emph{if} users are even aware that a second set
 of checksums are available at all. On top of technical knowledge, a user in this
 confusing situation is then expected to ``do the right thing,'' whatever that
-happens to be in this context.
+happens to be in context.
