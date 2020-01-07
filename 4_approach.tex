@@ -4,34 +4,9 @@ In this section we detail the \SYSTEM{} approach: a practical defense against
 receiving corrupted or compromised resources over the internet. We further
 present our Google Chrome extension implementations, \DNSSYS{} and \DHTSYS{}.
 
-The \SYSTEM{} approach can be incorporated into
-software on most any device capable of communicating with the chosen backend.
-This includes desktops, laptops, tablets, mobile devices, embedded systems, etc.
-
-\TODO{Also talk about client diversity}
-
-\subsection{URNs as RIs}
-
-\TODO{integrate this section into the surrounding text better}
-
-The goal of Resource Identifiers (RI) and Non-Authoritative Checksums (NAC) is
-very similar to that of Uniform Resource Names (URN). It may make sense to
-replace the mapping between NACs/RIs and Authoritative Checksums with purely
-URN-based DNS lookups that return specially formatted TXT records upon success.
-This would further simplify the deployment process for service administrators
-since DNS updates would be based upon the resource's contents instead of both
-its contents \textit{and where it is located physically on a distribution
-system}. It may also allow for additional confirmation methods of the identical
-resources in different domains and in different locations.
-
-We did not create a URN-based scheme in our initial approach due to a new URN
-scheme requiring the registration of a unique identifier with the Internet
-Assigned Numbers Authority. Going forward, we can potentially adopt a URN scheme
-that already exists, such as Magnet links~\cite{MagnetLinks} or the informal
-IETF draft for hash-based URN namespaces~\cite{draft-URN}. URNs would allow
-\DNSSYS{} and \DHTSYS{} to be much more flexible in how they map resources to
-Authoritative Checksums, \ie our implementations would be able to handle mirrors
-and CDNs that may mangle resource path.
+The \SYSTEM{} approach can be incorporated into software on most any device
+capable of communicating with a chosen backend. This includes desktops, laptops,
+tablets, mobile devices, embedded systems, etc.
 
 \subsection{Defeating User Apathy}
 
