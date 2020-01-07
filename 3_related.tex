@@ -61,25 +61,24 @@ of the inconsistent implementation of partial response handling between
 vendors~\cite{HTTP1.1}. Further, the header could be easily stripped off or
 modified by proxies and other intermediaries~\cite{MD5Header}. \\
 
-\noindent\textbf{Reproducible/Deterministic Build Systems, and Binary
-Transparency.} A deterministic build system is one that, when given the same
-source, will deterministically output the same binary on every run. For example,
-many packages in Debian~\cite{ReproBuildsDebian} and Arch Linux can be rebuilt
-from source to yield an identical byte for byte result each time via a
-reproducible build process~\cite{ReproBuilds}. Using a merkle
-tree~\cite{MerkleTree} or similar construction, a chain of trust can be
-established that links the \emph{Development} and \emph{Integration} supply
-chain phases (deterministic builds) to the \emph{Deployment},
-\emph{Maintenance}, and \emph{Retirement} supply chain phases (see
-\tblref{attacks}). Companies such as Mozilla refer to using merkle trees in this
-way as ``Binary Transparency,'' a public verification scheme that allows third
-parties access to a complete listing of source updates applied to a piece of
-software~\cite{BinaryTransparency}. Using the resulting cryptographic hashes
-(checksums), third parties can use Binary Transparency to ensure the binary on
-their system is the same binary deployed to every other system.
+\noindent\textbf{Deterministic Build Systems and Binary Transparency.} A
+deterministic build system is one that, when given the same source, will
+deterministically output the same binary on every run. For example, many
+packages in Debian~\cite{ReproBuildsDebian} and Arch Linux can be rebuilt from
+source to yield an identical byte for byte result each time via a reproducible
+build process~\cite{ReproBuilds}. Further, using a merkle tree~\cite{MerkleTree}
+or similar construction, a chain of trust can be established that links the
+\emph{Development} and \emph{Integration} supply chain phases (deterministic
+builds) to the \emph{Deployment}, \emph{Maintenance}, and \emph{Retirement}
+supply chain phases (see \tblref{attacks}). Companies such as Mozilla refer to
+using merkle trees in this way as ``Binary Transparency,'' a public verification
+scheme that allows third parties access to a complete listing of source updates
+applied to a piece of software~\cite{BinaryTransparency}. Third parties can use
+Binary Transparency to ensure the binary on their system is the same binary
+deployed publicly to every other system.
 
 Unlike \SYSTEM{}, Binary Transparency is about using merkle trees to create
-verifiable update logs. \SYSTEM{}, on the other hand, creates a verifiable
-internet resource, which might be a binary or a PDF or a video or otherwise.\\
+chains of trust for binary updates. \SYSTEM{}, on the other hand, creates a
+chain of trust for any arbitrary internet resource, including binaries.\\
 
 \noindent\textbf{Stickler and Cherubini et al.} \TODO{TODO!} \\
