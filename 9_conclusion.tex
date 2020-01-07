@@ -20,27 +20,3 @@ significantly raising the bar for the attacker. \DNSSYS{}, as it is backed by
 DNS, is deployable at scale for entities that already maintain a web presence;
 this can be done without fear of adversely affecting the user experience of
 non-compliant clients.
-
-\PUNT{\subsection{Future Work}
-
-\subsubsection{Merkle Trees and Early Resource Validation}
-
-Using Merkle trees~\cite{Merkle} instead of pure cryptographic hashing functions
-for resource validation would enable partial verification of large files. For
-example, suppose we are downloading a 10TiB resource and it is compromised. By
-calculating a Merkle tree beforehand, we do not have to wait for the resource to
-finish downloading before we render a failing judgment. This partial
-verification has the potential to save the user a significant amount of time,
-though using Merkle trees for resource integrity validation over the internet is
-decidedly not-trivial~\cite{Merkle-HTTP}.
-
-For a production example of Merkle tree based resource integrity validation, we
-can look to the so-called \emph{Tiger tree hash}~\cite{TTH, Merkle} (TTH)
-construction. The TTH, a Merkle tree implementation, is built on the Tiger
-cryptographic hashing function. Merkle trees and TTHs are well-studied and
-widely deployed constructions capable of supporting ``partial verification'' of
-resources as they are downloaded. Tiger tree hashes in particular are popular
-among several large P2P file sharing applications such as WireShare
-(LimeWire)~\cite{LimeWire}. Of course, a solution need not be tightly coupled to
-the Tiger cryptographic hashing function. The high-speed BLAKE2, SHA2, or SHA3
-cryptographic hashing functions would perform just as well, if not better.}

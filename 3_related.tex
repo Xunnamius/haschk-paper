@@ -84,18 +84,21 @@ of the inconsistent implementation of partial response handling between
 vendors~\cite{HTTP1.1}. Further, the header could be easily stripped off or
 modified by proxies and other intermediaries~\cite{MD5Header}. \\
 
-\noindent\textbf{Reproducible Builds/Deterministic Build Systems.} A
-deterministic build system is one that, when given the same source, will
-deterministically output the same binary on every run. For example, many
-packages in Debian~\cite{ReproBuildsDebian} and Arch Linux can be rebuilt from
-source to yield an identical byte for byte result each time via a reproducible
-build process~\cite{ReproBuilds}. When a deterministic build system is coupled
-with the \SYSTEM{} approach, a chain of trust can be established that links the
-\emph{Development} and \emph{Integration} supply chain phases to the
-\emph{Deployment}, \emph{Maintenance}, and \emph{Retirement} supply chain phases
-(cf. \tblref{attacks}), further raising the bar for the attacker. \\
-
-\noindent\textbf{Transparency Approaches.} \TODO{TODO!} \\
+\noindent\textbf{Reproducible Builds, Deterministic Build Systems, and Binary
+Transparency.} A deterministic build system is one that, when given the same
+source, will deterministically output the same binary on every run. For example,
+many packages in Debian~\cite{ReproBuildsDebian} and Arch Linux can be rebuilt
+from source to yield an identical byte for byte result each time via a
+reproducible build process~\cite{ReproBuilds}. When a deterministic build system
+is coupled with a Merkle Tree or similar construction, a chain of trust can be
+established that links the \emph{Development} and \emph{Integration} supply
+chain phases to the \emph{Deployment}, \emph{Maintenance}, and \emph{Retirement}
+supply chain phases (see \tblref{attacks}). Companies such as Mozilla refer to
+this as Binary Transparency, a public verification scheme that allows third
+parties to access a complete public listing of all updates to a piece of
+software~\cite{BinaryTransparency}. Using cryptographic hashes (checksums),
+third parties can use Binary Transparency to verify updates and the like are not
+compromised. \\
 
 \noindent\textbf{Stickler} \TODO{TODO!} \\
 
