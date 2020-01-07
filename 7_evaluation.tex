@@ -36,7 +36,7 @@ instance. Upon their upload, HotCRP calculated and displayed the unique checksum
 download it and manually calculate a local checksum, matching each to the
 checksum displayed by the HotCRP software. Next, we utilize the custom
 functionality we added to our HotCRP instance to populate our DNS backend with
-each file's current "original" checksum. Each checksum is considered an
+each file's current ``original'' checksum. Each checksum is considered an
 Authoritative Checksum (AC) mapped to a Resource Identifier (RI) corresponding
 to the uploaded PDF item.
 
@@ -69,14 +69,14 @@ makes at most two queries to the backend before rendering a judgement.
 
 \subsection{\DHTSYS{}}
 
-To evaluate \DHTSYS{}, we connect to the authenticated global Ring OpenDHT
-network. Since the OpenDHT software is implemented in C++, it could not be
-included directly in a JavaScript plugin. Therefore, for our implementation, we
-set up a local HTTP REST server wrapping the C++ implementation of OpenDHT. Our
-OpenDHT REST server provides an interface consistent with the one expected by
-\DNSSYS{} (\ie Google DNS's REST API), allowing for code reuse (\eg redirection
-protection) between our two implementations. See \secref{availability}, where we
-make these implementations available open source for community consideration.
+To evaluate \DHTSYS{}, we connect to the global Ring OpenDHT network. Since the
+OpenDHT software is implemented in C++, it could not be included directly in a
+JavaScript plugin. Therefore, for our implementation, we set up a local HTTP
+REST server wrapping the C++ implementation of OpenDHT. Our OpenDHT REST server
+provides an interface consistent with the one expected by \DNSSYS{} (\ie Google
+DNS's REST API), allowing for code reuse (\eg redirection protection) between
+our two implementations. See \secref{availability}, where we make these
+implementations available open source for community consideration.
 
 For our evaluation, we manually calculate a local checksum (\ie an AC) and an RI
 for 10 different \CONFERENCE{} PDFs. For the OD here we use a static locally
@@ -96,10 +96,10 @@ reported an ``unsafe'' judgement for each corrupted PDF file, as expected.
 
 \subsection{Obstacles to Scalability, Deployment}
 
-As \SYSTEM{} is predicated on a distributed authenticated high availability
-backend and requires no application/frontend source code changes to function, we
-conclude that the scalability of \SYSTEM{} can be reduced to the scalability of
-its backend. We are aware of no other obstacles to scalability beyond those
+As \SYSTEM{} is predicated on a distributed high availability backend and
+requires no application/frontend source code changes to function, we conclude
+that the scalability of \SYSTEM{} can be reduced to the scalability of its
+backend. We are aware of no other obstacles to scalability beyond those
 inherited from the underlying backend system.
 
 In respect to DNS specifically, we are aware of no practical limits or
@@ -123,7 +123,7 @@ under 10 lines of JavaScript.
 We note that, in the case where an entity's content distribution mechanism
 relies on, for instance, a mirroring service, third-party CDN, et cetera
 \emph{that randomly or disparately mangles resource URL paths}, our
-implementations currently require each "mangled" RI permutation representing a
+implementations currently require each ``mangled'' RI permutation representing a
 resource to be added to the backend, even if they all represent the same
 resource by a different name/path. This issue and its solutions are discussed
 further in the context of URNs in \secref{discussion}.

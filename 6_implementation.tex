@@ -81,6 +81,19 @@ mode status is assumed.
 
 \TODO{Explain how DNSCHK and DHTCHK would be deployed}
 
+In respect to \DNSSYS{} specifically, storing cryptographic data in DNS resource
+records is not unprecedented. The DNS-Based Authentication of Named Entities
+(DANE) specification~\cite{DANE1, DANE2, DANE3} defines the ``TLSA'' and
+``OPENPGPKEY'' DNS resource records to store cryptographic data. These resource
+record types, along with ``CERT''~\cite{CERT}, ``IPSECKEY''~\cite{IPSECKEY},
+those defined by DNS Security Extensions (DNSSEC)~\cite{DNSSEC}, and others
+demonstrate that storing useful cryptographic data retrievable through the DNS
+network is feasible at scale. Due the unique requirements of \DNSSYS{}, however,
+we use ``TXT'' records to map Resource Identifiers to Authoritative Checksums.
+In accordance with RFC 5507~\cite{RFC5507}, a production \DNSSYS{}
+implementation would necessitate the creation of a new DNS resource record type
+as no current resource record type meets the requirements of \DNSSYS{}.
+
 \subsection{Resolving Origin Domain in the Browser}
 
 To execute a resource integrity attack on a web server, an attacker generally

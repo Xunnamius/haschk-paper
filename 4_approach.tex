@@ -105,14 +105,9 @@ security community~\cite{SCA-MINT2}.
 
 Hence, deployment of \SYSTEM{} necessitates the existence of a separate
 distribution mechanism for resources and for ACs. Though the concept of using
-some distributed authenticated storage service to query a global mapping between
-RIs and ACs is not new and seems straightforward, but the problem is more
-complex than perhaps first meets the eye.
-
-The state of the art in modern fully authenticated high availability schemes are
-based on some form of PKI; an entity must roll its own PKI solution, actively
-maintain it, and hope it is bug free. Examples include the Windows Store, Google
-Play Store for Android, and the Apple Store for iPhone.
+some distributed storage service to query a global mapping between RIs and ACs
+is not new and seems straightforward, but the problem is more complex than
+perhaps first meets the eye.
 
 There are several problems with purely PKI-based resource integrity
 verification. For one: a roll-your-own PKI-based model clearly cannot scale to
@@ -135,8 +130,8 @@ immediately deploy \SYSTEM{}. This is key to the motivation behind the \SYSTEM{}
 approach as well as the design of our \DNSSYS{} implementation.
 
 Other candidate high availability systems include DHTs, storage clusters,
-relational and non-relational databases, and any high availability authenticated
-key-value store.
+relational and non-relational databases, and any high availability key-value
+store.
 
 \TODO{Re-explain/highlight why web server compromise alone doesn’t defeat HASCHK}
 \TODO{Note we beat Stickler and Cherubini et al because we can survive server compromise}

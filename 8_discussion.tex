@@ -30,14 +30,15 @@ key pinning/CAs and about how DNSSEC sucks (but we initially considered it)}
 
 Unlike DNS, an entity seeking to leverage a Distributed Hash Table (DHT) may not
 have the benefit of being able to rely on a high availability distributed
-authenticated backend that is already established, is well-tested, and exists
+backend that is already established, is well-tested, and exists
 globally like DNS. Such an entity would have to either maintain their own
 network of DHT nodes, which can incur significant cost if such a network was not
 already deployed, or piggy back off an open authenticated network, as was done
 with the case with our \DHTSYS{} implementation.
 
-These reasons make DNS more appealing as an authenticated backend (with key
-pinnning) in comparison. Regardless, we provide \DHTSYS{} to demonstrate the
+These reasons make DNS more appealing for general download protection using our
+approach, though software that already relies on DHTs can deploy our approach
+leveraging existing systems. Regardless, we provide \DHTSYS{} to demonstrate the
 utility and flexibility of the \SYSTEM{} approach.
 
 \subsection{Limitations of Any Chrome Extension}
