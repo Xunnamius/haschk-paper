@@ -105,36 +105,36 @@ the 2016 hack of Linux Mint's distribution server~\cite{SCA-MINT1, SCA-MINT2}.
 For these reasons, checksums as they are typically deployed are not very
 effective at guaranteeing resource integrity, even if automatic verification by
 web clients is attempted. Recognizing this, some corporations and large entities
-rely instead on PKI-based approaches such as digital signature validation and
-code signing~\cite{PKI}. These roll-your-own solutions, often proprietary, have
-been deployed successfully to mitigate resource integrity attacks in mature
-software package ecosystems (\eg Debian/apt, Red Hat/yum, Arch/pacman) and
-walled-garden app stores like Google Play, Apple App Store, and the Microsoft
-Store.
+rely instead on approaches like digital signature validation, code signing, and
+Binary Transparency~\cite{PKI, BinaryTransparency}. These roll-your-own
+solutions, often proprietary, have been deployed successfully to mitigate
+resource integrity attacks in mature software package ecosystems like Debian/apt
+and Red Hat/yum, browsers like Mozilla Firefox, and walled-garden app stores
+like Google Play, Apple App Store, and the Microsoft Store.
 
 Unfortunately, not all resources available on the internet are acquired through
 mature software package ecosystems with built-in PKI support, nor are all
 resources software binaries. In the United States for instance, most internet
 users download software directly from developers' websites or other
-locations~\cite{Cherubini, File}. Moreover, such PKI schemes are not compatible
-with one another and cannot scale to secure arbitrary resources on the internet
-without significant cost and implementation/deployment effort.
+locations~\cite{Cherubini, File}. Moreover, such schemes are not always
+compatible with one another and cannot scale to secure arbitrary resources on
+the internet without significant cost and implementation/deployment effort.
 
 In this paper, we propose \SYSTEM{}, a novel approach for verifying the
 integrity of resources downloaded over the internet that is a complete
-replacement for traditional checksum-based schemes for supporting clients.
+replacement for typical checksum-based schemes.
 
 We view the problem with four key concerns in mind. 1) \SYSTEM{} implementations
 must provide security guarantees transparently without adding any extra burden
 on the end user in the average case. Here, an optimal implementation avoids
 relying on the user to overcome apathy in the interest of security while
-accounting for users' tendency to click through security warnings. 2) When a
-developer makes a resource available for download on the internet, \SYSTEM{}
-protections must be low effort to integrate and deploy, performant, and avoid
-the need to configure an expensive dedicated secondary system to host checksums.
-3) The verification method is not tightly coupled with any particular high
-availability system. 4) No application or website source code changes or
-user-facing server or web infrastructure modifications are necessary.
+accounting for users' tendency to click through security warnings. 2) \SYSTEM{}
+must be low effort for developers to integrate and deploy in concert with the
+resource(s) it is meant to protect. There must be no requirement to configure a
+secondary system solely dedicated to hosting checksums. 3) The verification
+method is not tightly coupled with any particular high availability system. 4)
+No application or website source code changes or user-facing server or web
+infrastructure modifications are necessary.
 
 We implement \SYSTEM{} as two discrete proof-of-concept Google Chrome
 extensions: one relying on DNS as a high availability backend and the other
