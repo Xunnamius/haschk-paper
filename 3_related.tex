@@ -67,18 +67,33 @@ deterministically output the same binary on every run. For example, many
 packages in Debian~\cite{ReproBuildsDebian} and Arch Linux can be rebuilt from
 source to yield an identical byte for byte result each time via a reproducible
 build process~\cite{ReproBuilds}. Further, using a merkle tree~\cite{MerkleTree}
-or similar construction, a chain of trust can be established that links the
-\emph{Development} and \emph{Integration} supply chain phases (deterministic
-builds) to the \emph{Deployment}, \emph{Maintenance}, and \emph{Retirement}
-supply chain phases (see \tblref{attacks}). Companies such as Mozilla refer to
-using merkle trees in this way as ``Binary Transparency,'' a public verification
-scheme that allows third parties access to a complete listing of source updates
-applied to a piece of software~\cite{BinaryTransparency}. Third parties can use
-Binary Transparency to ensure the binary on their system is the same binary
-deployed publicly to every other system.
+or similar construction, a chain of trust can be established that allows for
+public verification of the \emph{Deployment}, \emph{Maintenance}, and
+\emph{Retirement} supply chain phases (see \tblref{attacks}). Companies such as
+Mozilla refer to this as ``Binary Transparency,'' a public verification scheme
+that allows third parties access to a complete listing of software source
+updates~\cite{BinaryTransparency}. Third parties can take advantage of Binary
+Transparency to ensure their binary is the same binary deployed to every other
+system. \SYSTEM{}, on the other hand, allows a user to verify the contents of
+any arbitrary internet resource automatically while addressing co-hosting. \\
 
-Unlike \SYSTEM{}, Binary Transparency is about using merkle trees to create
-chains of trust for binary updates. \SYSTEM{}, on the other hand, creates a
-chain of trust for any arbitrary internet resource, including binaries.\\
+\noindent\textbf{Stickler and Cherubini et al.} Stickler~\cite{Stickler} by Levy
+et al. is a JavaScript-based stand-in for Subresource Integrity for protecting
+the integrity of web application files hosted on CDNs. Unlike \SYSTEM{},
+Stickler does not require any modifications to the client to protect resources.
+However, as it was designed for CDNs, concerns like co-hosting are outside of
+Stickler's threat model. If the content server behind the CDN is compromised, as
+was the case with Linux Mint, it would be trivial to modify the manifest file to
+inject corrupted checksums.
 
-\noindent\textbf{Stickler and Cherubini et al.} \TODO{TODO!} \\
+Similarly, the automated checksum verification approach by Cherubini et
+al.~\cite{Cherubini}---also based on Subresource Integrity---is vulnerable to
+co-hosting. Cherubini's browser extension works by 1) looking for embedded
+checksums in download links and 2) extracting hexadecimal strings that look like
+checksums directly from the page. An attacker, after compromising the resource
+file, need only modify the page's HTML file to inject a corrupted checksum
+matching that resource, causing Cherubini's solution to misreport the
+compromised download as safe.
+
+Unlike prior work, \SYSTEM{} is both automated and capable of mitigating the
+co-hosting threat, significantly raising the bar for the attacker.
