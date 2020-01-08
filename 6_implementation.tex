@@ -16,8 +16,7 @@ implementations, we calculate the RI as a hash digest of the path component of
 the URL pointing to the resource. For example, consider a web resource hosted at
 \texttt{https://somesite.com/var/downloadme.txt}. Our implementations would hash
 \texttt{/var/downloadme.txt} to yield an RI. Note that there are several ways a
-browser extension could calculate an RI. See \secref{discussion} for a
-discussion of an alternative calculation based on Uniform Resource Name.
+browser extension could calculate an RI.
 
 Next, we determine the so-called \emph{Origin Domain} (OD). The OD is the base
 domain used to query the backend and should always be the Second-Level Domain
