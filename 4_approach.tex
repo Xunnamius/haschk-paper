@@ -56,14 +56,15 @@ factor altogether by providing a completely transparent and unobtrusive,
 fully-automated method of checksum calculation and verification in the average
 case. In a non-average case (\ie{when a download fails its integrity check}), we
 1) clearly, visibly, and simply assert the danger of the download and 2)
-privilege security over choice by rejecting the download by default while making
-it inconvenient to ignore or click through the security warning.
+privilege security over choice by rejecting the download by default and making
+it inconvenient to ignore or click through the resulting security warning. In
+this way, the security measure cannot be avoided.
 
-Our implementations were designed with this guidance in mind, with an ideal
-implementation able to rely on Google Chrome's dangerous download
-UI~\cite{ChromeClickThrough}. \TODO{talk about how the dangerous download UI is
-"from an authority," is harder to click through, and that this is verified by
-the Chrome dev team}.
+Our \DNSSYS{} and \DHTSYS{} implementations were designed with this guidance in
+mind, with ideal implementations able to rely on Google Chrome's dangerous
+download UI~\cite{ChromeClickThrough}. \TODO{talk about how the dangerous
+download UI is "from an authority," is harder to click through, and that this is
+verified by the Chrome dev team}.
 
 \subsection{Mitigating the Co-Hosting Problem}
 
