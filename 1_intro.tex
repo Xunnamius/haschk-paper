@@ -17,15 +17,16 @@ uploading their sensitive data to a remote server~\cite{SCA-HB1}. HandBrake
 developers recommended users perform \emph{checksum verification} to determine
 if their install was compromised~\cite{SCA-HB2}.
 
-Downloading resources over the internet comes with considerable risk. This risk
-can be divided into three broad concerns: response authentication, communication
-confidentiality, and resource integrity. Response authentication allows us to
-determine if a response received indeed originates from its purported source
-through, for instance, the adoption of a Public Key Infrastructure (PKI)
-scheme~\cite{PKI}. Communication confidentiality allows us to keep the data
-transacted between two or more parties private through some form of encryption,
-such as AES~\cite{AES}. Finally, resource integrity allows us to verify that the
-data we are receiving is the data we are expecting to receive.
+Clearly, downloading resources over the internet comes with considerable risk.
+This risk can be divided into three broad concerns: response authentication,
+communication confidentiality, and resource integrity. Response authentication
+allows us to determine if a response received indeed originates from its
+purported source through, for instance, the adoption of a Public Key
+Infrastructure (PKI) scheme~\cite{PKI}. Communication confidentiality allows us
+to keep the data transacted between two or more parties private through some
+form of encryption, such as AES~\cite{AES}. Finally, resource integrity allows
+us to verify that the data we are receiving is the data we are expecting to
+receive.
 
 When it comes to response authentication and communication confidentiality
 concerns on the internet, the state of the art in attack mitigation is Transport
@@ -92,24 +93,24 @@ to protect. If users do manage to find the authoritative checksum manually and
 also recognize the checksums are different, the user is then expected to ``do
 the right thing,'' whatever that happens to be in context.
 
-A major part of the problem is the futility of \textbf{co-hosting} a resource
-and its authoritative checksum on the same distribution system. While
-cost-effective compared to hosting two or more discrete systems---one for the
-resource and one for the resource's checksum---an attacker that compromises a
-single distribution system hosting a resource and its checksum can mutate both,
-rendering the checksum irrelevant~\cite{Stickler}. This is true for automated
-checksum verification solutions as well~\cite{Cherubini}. The co-hosting problem
-was demonstrated by the 2016 hack of Linux Mint's distribution
-server~\cite{SCA-MINT1, SCA-MINT2}.
+A major contributor to this confusion is the tradeoff made by
+\textbf{co-hosting} a resource and its authoritative checksum on the same
+distribution system or web page. While cost-effective for the developer and less
+confusing for the user, an attacker that compromises a system hosting a resource
+and its checksum together can mutate both, rendering the checksum
+irrelevant~\cite{Stickler}. This is true for automated checksum verification
+solutions as well~\cite{Cherubini}. The co-hosting problem was demonstrated by
+the 2016 hack of Linux Mint's distribution server~\cite{SCA-MINT1, SCA-MINT2}.
 
-Hence, checksums as they are typically deployed are not very effective at
-guaranteeing resource integrity, even if automatic verification by web clients
-is attempted. Recognizing this, some corporations and large entities rely
-instead on PKI-based approaches such as digital signature validation and code
-signing~\cite{PKI}. These roll-your-own solutions, often proprietary, have been
-deployed successfully to mitigate resource integrity attacks in mature software
-package ecosystems (\eg Debian/apt, Red Hat/yum, Arch/pacman) and walled-garden
-app stores like Google Play, Apple App Store, and the Microsoft Store.
+For these reasons, checksums as they are typically deployed are not very
+effective at guaranteeing resource integrity, even if automatic verification by
+web clients is attempted. Recognizing this, some corporations and large entities
+rely instead on PKI-based approaches such as digital signature validation and
+code signing~\cite{PKI}. These roll-your-own solutions, often proprietary, have
+been deployed successfully to mitigate resource integrity attacks in mature
+software package ecosystems (\eg Debian/apt, Red Hat/yum, Arch/pacman) and
+walled-garden app stores like Google Play, Apple App Store, and the Microsoft
+Store.
 
 Unfortunately, not all resources available on the internet are acquired through
 mature software package ecosystems with built-in PKI support, nor are all
