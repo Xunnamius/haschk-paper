@@ -122,7 +122,8 @@ the internet without significant cost and implementation/deployment effort.
 
 In this paper, we propose \SYSTEM{}, a novel approach for verifying the
 integrity of resources downloaded over the internet that is a complete
-replacement for typical checksum-based schemes.
+replacement for typical checksum-based schemes and significantly raises the bar
+for the attacker.
 
 We view the problem with four key concerns in mind. 1) \SYSTEM{} implementations
 must provide security guarantees transparently without adding any extra burden
@@ -141,63 +142,51 @@ extensions: one relying on DNS as a high availability backend and the other
 piggybacking off an OpenDHT-based high availability Ring backend.
 
 We then evaluate the security, deployability, scalability, and performance of
-our automated defense against resource corruption and demonstrate the
-effectiveness and practicality of the \SYSTEM{} approach. Specifically, we find
-no additional obstacles to efficient deployment at scale outside of those
-imposed by the chosen high availability system.
-
-For our implementations, we provide a publicly accessible empirical
-demonstration of \SYSTEM{}'s utility via a patched HotCRP instance. We also
-release our \DNSSYS{} and \DHTSYS{} implementations to the community as open
+our implementations. Specifically, we find no additional obstacles to efficient
+deployment at scale outside of those imposed by the client and the chosen high
+availability system. Additionally, we provide a publicly accessible empirical
+demonstration of \SYSTEM{}'s utility via a patched HotCRP instance. We also make
+available our \DNSSYS{} and \DHTSYS{} implementations to the community as open
 source software to promote exploration of the \SYSTEM{} approach (cf.
 \secref{availability}).
 
-In summary, our primary contributions are: \TODO{Pare these contributions down}
+In summary, our primary contributions are: \\
 
-\begin{itemize}
+1) A practical automated approach to transparently mitigating the accidental
+consumption of compromised resources over the internet. Our approach requires no
+modifications to web standards, web infrastructure, or source code, does not
+employ unreliable heuristics, does not expect checksums to be co-hosted on the
+same page as do other automated approaches, and can be transparently implemented
+and immediately deployed. \SYSTEM{}-aware clients will have their downloads
+secured while the user experience of clients unaware of \SYSTEM{} remain
+completely unaffected. Further, our approach can be applied to more than just
+browsers; \SYSTEM{} can be implemented to protect downloads in FTP clients, SSH
+(like rsync) clients, etc. \\
 
-  \item We propose a practical automated approach to transparently mitigating
-  the accidental consumption of compromised resources over the internet.
-  Contrasted with current solutions, our approach requires no app/website
-  source, end user facing server or web infrastructure modifications, does not
-  employ unreliable heuristics, does not expect checksums to be co-hosted on the
-  same page as do other automated approaches, and can be transparently
-  implemented and deployed. \SYSTEM{}-aware clients will have their downloads
-  secured while the user experience of clients unaware of \SYSTEM{} remain
-  completely unaffected. Further, our approach can be applied to more than just
-  browsers. \SYSTEM{} can be implemented to protect downloads in FTP clients,
-  SSH (like rsync) clients, etc.
+2) We present our proof-of-concept \SYSTEM{} implementations (Google Chrome
+extensions): \DNSSYS{} and \DHTSYS{}. We demonstrate our implementations'
+effectiveness empirically using a publicly available (patched) HotCRP instance.
+We show that our \DNSSYS{} implementation is capable of detecting real-world
+resource compromises in a patched HotCRP instance, even when the entire server
+is compromised and/or the user is redirected to a hostile server, significantly
+raising the bar for an attacker. \\
 
-  \item We present our proof-of-concept \SYSTEM{} implementations: \DNSSYS{} and
-  \DHTSYS{}. Both are implemented as Google Chrome extensions. We demonstrate
-  our implementations' effectiveness in automatically mitigating compromised
-  resource consumption using dummy test servers. To the best of our knowledge,
-  this is the first approach that 1) is not susceptible to the pitfalls of
-  co-hosting or the lack of standard practices for making authoritative
-  checksums available to end users, unlike a manual verification approach or
-  other automated solutions and 2) provides such capabilities with marginal
-  deployment overhead for developers.
-
-  \item We evaluate the security, performance, scalability, and deployment
-  overhead of \DNSSYS{} and \DHTSYS{}. We find that our approach is more
-  effective than manual checksum verification or prior automated verification
-  schemes at detecting resource integrity attacks. Further, we show that our
-  \DNSSYS{} implementation is capable of detecting real-world integrity errors
-  in a patched HotCRP instance, even when the entire server itself is
-  compromised, significantly raising the bar for an attacker. Finally, given the
-  lightweight nature of the cryptographic operations involved, we observed no
-  download performance overhead compared to downloads without \DNSSYS{}.
-
-\end{itemize}
+3) We evaluate the security, performance, scalability, and deployment overhead
+of \DNSSYS{} and \DHTSYS{}. We find that our approach is more effective than
+manual checksum verification or prior automated verification schemes at
+detecting resource integrity attacks. To the best of our knowledge, this is the
+first approach that 1) is not susceptible to the pitfalls of co-hosting or the
+lack of standard practices for making authoritative checksums available to end
+users, unlike a manual verification approach or other automated solutions and 2)
+provides such capabilities with marginal deployment overhead for developers. \\
 
 The remainder of this paper is structured as follows: \secref{background}
-presents background on SCAs and motivating real-world attacks that take
-advantage of the ineffectiveness of checksums. \secref{related} discusses prior
-work securing arbitrary downloads over the internet, including other automated
-approaches similar to \SYSTEM{}. \secref{approach} explains the \SYSTEM{}
-approach. \secref{model} formalizes the threat model and our security goals.
-\secref{implementation} describes our implementations of \SYSTEM{} and related
-considerations. \secref{evaluation} discusses our evaluation of those
-implementations against real-world resource integrity attacks as well as some
-limitations. Finally, \secref{conclusion} concludes and \secref{availability}
-details where to find the HotCRP demo and our solutions' source code.
+presents background on SCAs and motivating real-world attacks that demonstrate
+the ineffectiveness of checksums. \secref{related} discusses prior work securing
+arbitrary downloads over the internet, including other automated approaches
+similar to \SYSTEM{}. \secref{approach} explains the \SYSTEM{} approach.
+\secref{model} formalizes the threat model. \secref{implementation} describes
+our proof-of-concept implementations of \SYSTEM{} and related considerations.
+\secref{evaluation} evaluates those implementations and discusses limitations.
+Finally, \secref{conclusion} concludes and \secref{availability} details
+availability of our implementations' source code.
