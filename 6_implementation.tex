@@ -1,14 +1,24 @@
 \section{Implementations} \label{sec:implementation}
 
-We implement \SYSTEM{} as two Google Chrome extensions: \DNSSYS{} and \DHTSYS{}.
-They work with DNS and Ring OpenDHT as their high availability backends,
-respectively. Our Chrome extensions do not make any modifications to the Chrome
-user interface or viewport other than the extension icon in the toolbar.
-Further, downloads work exactly the same whether or not \DNSSYS{} or \DHTSYS{}
-are installed; the extensions are transparent to end users. However, if a
-failure is experienced during NAC Validation (\ie a ``non-average'' case), the
-extensions will alert the user to the dangerous download via toolbar icon and
-popup interface.
+We implement \SYSTEM{} as two proof-of-concept Google Chrome extensions:
+\DNSSYS{} and \DHTSYS{}. They work with DNS and Ring OpenDHT as their high
+availability backends, respectively. Our Chrome extensions do not make any
+modifications to the Chrome user interface or viewport other than the extension
+icon in the toolbar. Further, downloads work exactly the same whether or not
+\DNSSYS{} or \DHTSYS{} are installed; the extensions are transparent to end
+users. However, if a failure is experienced during NAC Validation (\ie a
+uncommon case), the extensions will alert the user to the dangerous download via
+toolbar icon and popup interface. We additionally note the \SYSTEM{} approach is
+not limited to browsers. It can also be incorporated into, for instance, FTP and
+SSH clients (\eg{rsync}), mobile apps, etc.
+
+Our \DNSSYS{} and \DHTSYS{} implementations were designed with this guidance in
+mind, with ideal implementations able to rely on Google Chrome's dangerous
+download UI~\cite{ChromeClickThrough}. \TODO{talk about how the dangerous
+download UI is "from an authority," is harder to click through, and that this is
+verified by the Chrome dev team}.
+
+\subsection{Overview XXXX}
 
 Immediately after a resource download is first detected, the extensions compute
 an RI from the full URL path of the resource. For the purposes of our
@@ -61,7 +71,7 @@ failed).
 rendering ``neutral'' judgements for a particular OD. The point of neutral
 judgements is to allow the \SYSTEM{} approach to be incrementally adopted and
 deployed on the open internet without ``breaking the internet'' or pestering the
-end user with false positives when downloading resources that are not explicitly
+user with false positives when downloading resources that are not explicitly
 protected by our approach. For resources that are protected by our approach,
 strict mode ensures there are only two possible judgements rendered by \DNSSYS{}
 and \DHTSYS{} for a given OD: either ``safe'' if NAC Validation succeeds or
@@ -140,8 +150,9 @@ potentially generating false positive warnings when 1) the user is redirected to
 a legitimate website---such as a download mirroring service---that automatically
 triggers a download after some amount of time when also 2) the user does not
 interact with the page at all before the download begins. We argue such cases
-are non-average and the tradeoff here is worthy.
+are uncommon and the tradeoff here is worthy.
 
-\subsection{Privileging Security over Choice when Issuing Security Warnings}
+\subsection{Issuing Security Warnings: Privileging Security over Choice}
 
-\TODO{Argue “override” using Chrome danger download warning UI is effective using Chrome dev data}
+\TODO{Argue “override” using Chrome danger download warning UI is effective
+using Chrome dev data}

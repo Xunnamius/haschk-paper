@@ -1,4 +1,6 @@
-\section{Threat Model and Security Goals} \label{sec:model}
+\section{Security Goals and Threat Model} \label{sec:model}
+
+\TODO{Can handle multiple downloads at once.}
 
 \subsection{Compromised Resource}
 
@@ -24,7 +26,7 @@ different resource's checksum.
 In the first case, there are two further possibilities: a) NAC validation fails
 and \SYSTEM{} \emph{is not} in strict mode, so a ``neutral'' judgement is
 rendered; b) NAC validation fails and \SYSTEM{} \emph{is} in strict mode, so an
-``unsafe'' judgement is rendered, warning end users that the resource is likely
+``unsafe'' judgement is rendered, warning users that the resource is likely
 compromised.
 
 In the second case, unless the attacker's goal is to swap one or more resources
