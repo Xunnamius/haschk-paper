@@ -74,15 +74,15 @@ work~\cite{Cherubini, Tan, Hsiao}. While detailing how they gained unauthorized
 access to the servers, one of the hackers behind the 2016 breach of Linux Mint's
 distribution system went so far as to comment (in respect to checksums): ``Who
 the [expletive] checks those anyway?''~\cite{SCA-MINT3}. Hardly unique to
-checksum calculation, designers of security schemes from HTTPS to PGP have found
-user apathy a difficult problem space to navigate~\cite{PGPBad, Cherubini}. When
-it comes to user apathy versus security warnings (\eg{malicious download alerts,
+checksums, designers of security schemes from HTTPS to PGP have found user
+apathy a difficult problem space to navigate~\cite{PGPBad, Cherubini}. When it
+comes to user apathy versus security warnings (\eg{malicious download alerts,
 warnings about compromised websites, expired certificate notifications}),
 application developers and user interface (UI) designers face similar
 difficulties~\cite{Egelman1, Egelman2, Modic, Reeder, Silic, Sunshine, Bianchi,
 Akhawe}.
 
-Even if a user felt the urge to manually calculate and verify a resource's
+Even if a user feels the urge to manually calculate and verify a resource's
 checksum, they must search for a corresponding ``authoritative checksum'' to
 compare against. As there is no standard storage or retrieval methods for
 checksums, they could be stored anywhere, or even in multiple different
@@ -95,12 +95,13 @@ the right thing,'' whatever that happens to be in context.
 
 A major contributor to this confusion is the tradeoff made by
 \textbf{co-hosting} a resource and its authoritative checksum on the same
-distribution system or web page. While cost-effective for the developer and less
-confusing for the user, an attacker that compromises a system hosting a resource
-and its checksum together can mutate both, rendering the checksum
-irrelevant~\cite{Stickler}. This is true for automated checksum verification
-solutions as well~\cite{Cherubini}. The co-hosting problem was demonstrated by
-the 2016 hack of Linux Mint's distribution server~\cite{SCA-MINT1, SCA-MINT2}.
+distribution system (\eg{a web page from a server}). While cost-effective for
+the developer and less confusing for the user, an attacker that compromises a
+system hosting both a resource and its checksum together can mutate both,
+rendering the checksum irrelevant~\cite{Stickler}. This is true for automated
+checksum verification solutions as well~\cite{Cherubini}. Thhis co-hosting
+problem was demonstrated by the 2016 hack of Linux Mint's distribution
+server~\cite{SCA-MINT1, SCA-MINT2}.
 
 For these reasons, checksums as they are typically deployed are not very
 effective at guaranteeing resource integrity, even if automatic verification by
@@ -120,21 +121,21 @@ downloaded over the internet software binaries. Moreover, such schemes are not
 compatible with one another and cannot scale to secure arbitrary resources on
 the internet without significant cost and implementation/deployment effort.
 
-In this paper we address these shortcomings by proposing \SYSTEM{}, a novel
-protocol for verifying the integrity of arbitrary resources downloaded over the
-internet that is a complete replacement for typical checksum-based schemes,
-significantly raises the bar for the attacker, and can be implemented in more
-than just browser software. To overcome the challenges posed by user apathy and
+In this paper we address these problems by proposing \SYSTEM{}, a novel protocol
+for verifying the integrity of arbitrary resources downloaded over the internet
+that is a complete replacement for typical checksum-based schemes, significantly
+raises the bar for the attacker, and can be implemented in more than just
+browser software. To overcome the challenges posed by user apathy and
 co-hosting, \SYSTEM{} is implemented in two parts: a backend for resource
-providers and a frontend for resource consumers. Entities use a high
-availability backend to advertise which resources are available for download. To
-defeat co-hosting, this backend must exist separately from the system offering
-those resources. To account for user apathy, the frontend client must
-automatically compute a (non-authoritative) checksum identifying the resource,
-query the backend using that checksum, and mitigate the threat to the user in
-the case where that resource is compromised. Hence, \SYSTEM{} consists of both
-the implementation of these parts and the protocol by which these parts
-communicate.
+\emph{providers} and a frontend for resource \emph{consumers}---i.e. end users.
+Providers use a high availability backend to advertise which resources they
+provide for download. To defeat co-hosting, this backend must exist separately
+from the system offering those resources. To account for user apathy, the
+frontend client must automatically compute a (non-authoritative) checksum
+identifying the resource, query the backend using that checksum, and mitigate
+the threat to the user in the case where the download is deemed compromised.
+Hence, \SYSTEM{} consists of both the implementation of these parts and the
+protocol by which these parts communicate.
 
 We approach the problem with four key concerns in mind. (1) \SYSTEM{} frontends
 must provide security guarantees transparently without adding any extra burden
@@ -148,45 +149,42 @@ protocol is not tightly coupled with any particular high availability system.
 (4) No application or website source code changes or user-facing server or web
 infrastructure modifications are necessary.
 
-To demonstrate the generality of our protocol, we implement a proof-of-concept
-frontend as a Google Chrome extension: one that relies on DNS as a high
-availability backend and another that relies on the Ring OpenDHT network as a
-high availability backend.
+To demonstrate the generality of our protocol, we implement a frontend Google
+Chrome extension capable of using two different high availability backends: (1)
+the public Domain Name System (DNS) through Google DNS or (2) the Ring OpenDHT
+network through a local Representational State Transfer (REST) API. Of course,
+these \SYSTEM{} component implementations should be considered proof-of-concept.
 
-We then evaluate the security, deployability, scalability, and performance of
-our implementations. Specifically, we find no practical obstacles to efficient
-deployment at scale outside of those imposed by the Chrome developer API.
-Additionally, we provide a publicly accessible empirical demonstration of
-\SYSTEM{}'s utility via a patched HotCRP instance. We also make available our
-\DNSSYS{} and \DHTSYS{} implementations to the community as open source software
-to promote exploration of the \SYSTEM{} approach (cf. \secref{availability}).
+We evaluate the security, performance, scalability, and deployment overhead
+of our implementation. Specifically, we find no practical obstacles to efficient
+deployment at scale or to security outside of those imposed by the Chrome
+developer API.
 
 In summary, our primary contributions are: \\
 
-1. A practical automated approach to transparently mitigating the accidental
-consumption of compromised resources over the internet. Our protocol requires no
-modifications to web standards, web infrastructure, or source code, does not
-employ unreliable heuristics, does not expect checksums to be co-hosted on the
-same page as do other automated approaches, and can be transparently implemented
-and immediately deployed. \SYSTEM{}-aware clients will have their downloads
-secured while the user experience of clients unaware of \SYSTEM{} remain
-completely unaffected. Further, our protocol can be implemented in more than
-just browsers; \SYSTEM{} can be implemented to protect downloads in FTP clients,
-SSH (like rsync) clients, etc. \\
+1. We propose a practical automated approach to transparently mitigating the
+accidental consumption of compromised resources over the internet. Our protocol
+requires no modifications to web standards, web infrastructure, or source code,
+does not employ unreliable heuristics, does not expect checksums to be co-hosted
+on the same page as do other automated approaches, and can be transparently
+implemented and immediately deployed. \SYSTEM{}-aware clients will have their
+downloads secured while the user experience of clients unaware of \SYSTEM{}
+remain completely unaffected. Further, our protocol can be implemented in more
+than just browsers; \SYSTEM{} can be implemented to protect downloads in FTP
+clients, SSH (like rsync) clients, etc. \\
 
-2. We present our proof-of-concept \SYSTEM{} implementations (Google Chrome
-extensions): \DNSSYS{} and \DHTSYS{}. We demonstrate our implementations'
-effectiveness empirically using a publicly available (patched) HotCRP instance.
-We show that our \DNSSYS{} implementation is capable of detecting real-world
-resource compromises in a patched HotCRP instance, even when the entire server
-is compromised and/or the user is redirected to a hostile server, significantly
-raising the bar for an attacker. \\
+2. We present our proof-of-concept implementation, a Google Chrome extension,
+and demonstrate our protocol's effectiveness empirically using a publicly
+available patched HotCRP instance. We show that our implementation is capable of
+detecting real-world resource compromises in this instance, even when the entire
+server is compromised, significantly raising the bar for an attacker. We
+additionally make available our frontend implementation and OpenDHT backend open
+source (see \secref{availability}). \\
 
-3. We evaluate the security, performance, scalability, and deployment overhead
-of \DNSSYS{} and \DHTSYS{}. We find that our approach is more effective than
-manual checksum verification or prior automated verification schemes at
-detecting resource integrity attacks. To the best of our knowledge, this is the
-first approach that is not susceptible to the pitfalls of co-hosting or the lack
-of standard practices for making authoritative checksums available to end users
-unlike a manual verification approach or other automated solutions. Further, we
-provide these capabilities with marginal deployment overhead for developers.
+3. We evaluate our implementation and find no practical obstacles to efficient
+deployment outside of those imposed by the Chrome developer API. To the best of
+our knowledge, this is the first approach that is not susceptible to the
+pitfalls of co-hosting. We find that \SYSTEM{} is more effective at detecting
+resource integrity attacks than manual checksum verification and prior automated
+verification schemes. Further, we provide this capability with marginal
+deployment overhead for providers.
