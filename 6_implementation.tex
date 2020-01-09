@@ -1,14 +1,14 @@
 \section{Implementations} \label{sec:implementation}
 
-We implement \SYSTEM{} as two Google Chrome extensions: \DNSSYS{} and \DHTSYS{}.
-They work with DNS and Ring OpenDHT as their high availability backends,
-respectively. Our Chrome extensions do not make any modifications to the Chrome
-user interface or viewport other than the extension icon in the toolbar.
-Further, downloads work exactly the same whether or not \DNSSYS{} or \DHTSYS{}
-are installed; the extensions are transparent to end users. However, if a
-failure is experienced during NAC Validation (\ie a ``non-average'' case), the
-extensions will alert the user to the dangerous download via toolbar icon and
-popup interface.
+We implement \SYSTEM{} as two proof-of-concept Google Chrome extensions:
+\DNSSYS{} and \DHTSYS{}. They work with DNS and Ring OpenDHT as their high
+availability backends, respectively. Our Chrome extensions do not make any
+modifications to the Chrome user interface or viewport other than the extension
+icon in the toolbar. Further, downloads work exactly the same whether or not
+\DNSSYS{} or \DHTSYS{} are installed; the extensions are transparent to end
+users. However, if a failure is experienced during NAC Validation (\ie a
+``non-average'' case), the extensions will alert the user to the dangerous
+download via toolbar icon and popup interface.
 
 Immediately after a resource download is first detected, the extensions compute
 an RI from the full URL path of the resource. For the purposes of our
@@ -142,6 +142,6 @@ triggers a download after some amount of time when also 2) the user does not
 interact with the page at all before the download begins. We argue such cases
 are non-average and the tradeoff here is worthy.
 
-\subsection{Privileging Security over Choice when Issuing Security Warnings}
+\subsection{Issuing Security Warnings: Privileging Security over Choice}
 
 \TODO{Argue “override” using Chrome danger download warning UI is effective using Chrome dev data}

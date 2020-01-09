@@ -1,8 +1,10 @@
 \section{The \SYSTEM{} Approach} \label{sec:approach}
 
-In this section we detail the \SYSTEM{} approach: a practical defense against
-receiving corrupted or compromised resources over the internet. We further
-present our Google Chrome extension implementations, \DNSSYS{} and \DHTSYS{}.
+In this section we detail the \SYSTEM{} approach, a practical defense against
+receiving corrupted or compromised resources over the internet that 1) is
+automated to account for user apathy and 2) does not require co-hosting the
+checksum, which creates a single point of failure and renders checksum
+verification (even automated checksum verification) irrelevant.
 
 The \SYSTEM{} approach is not limited to browsers. It can also be incorporated
 into, for instance, FTP and SSH clients (\eg{rsync}), mobile apps, etc.
