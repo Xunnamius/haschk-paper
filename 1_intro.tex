@@ -109,8 +109,8 @@ rely instead on approaches like digital signature validation, code signing, and
 Binary Transparency~\cite{PKI, BinaryTransparency}. These roll-your-own
 solutions, often proprietary, have been deployed successfully to mitigate
 resource integrity attacks in mature software package ecosystems like Debian/apt
-and Red Hat/yum, browsers like Mozilla Firefox, and walled-garden app stores
-like Google Play, Apple App Store, and the Microsoft Store.
+and Red Hat/yum and walled-garden app stores like Google Play, Apple App Store,
+and the Microsoft Store.
 
 Unfortunately, not all resources available on the internet are acquired through
 mature software package ecosystems with built-in PKI support, nor are all
@@ -127,7 +127,7 @@ for the attacker.
 
 We view the problem with four key concerns in mind. 1) \SYSTEM{} implementations
 must provide security guarantees transparently without adding any extra burden
-on the end user in the average case. Here, an optimal implementation avoids
+on the user in the common case. Here, an optimal implementation avoids
 relying on the user to overcome apathy in the interest of security while
 accounting for users' tendency to click through security warnings. 2) \SYSTEM{}
 must be low effort for developers to integrate and deploy in concert with the

@@ -170,7 +170,7 @@ utility and flexibility of the \SYSTEM{} approach.
 
 Our current JavaScript implementations, as Chrome extensions, are not allowed to
 touch the resource files downloaded by Chrome and so cannot prevent a
-potentially-malicious resource from being executed by the end user---a feature
+potentially-malicious resource from being executed by the user---a feature
 Chrome/Chromium reserves for its own internal use. The Chrome \textit{app}
 API~\cite{AppAPI} might have been of assistance as it allowed for some limited
 filesystem traversal via a now deprecated native app API; there is also a
@@ -185,7 +185,7 @@ executable, \ie had its \texttt{.crdownload} or \texttt{.download} extension
 removed. The hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that
 kept the download in its non-complete state until said \texttt{Promise}
 completed. This would allow the extensions' background pages to do something
-like alter a download's \texttt{DangerType} property and alert the end user to a
+like alter a download's \texttt{DangerType} property and alert the user to a
 dangerous download naturally. These modifications would have the advantage of
 communicating intent through the browser's familiar UI and preventing the
 potentially-malicious download from becoming immediately executable.
