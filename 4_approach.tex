@@ -24,7 +24,8 @@ system that distributes the corresponding resources---like a web or FTP
 server---\SYSTEM{} retains the ability to protect users from dangerous downloads
 \emph{even when the system distributing the download has been completely
 compromised}. This is not true of prior approaches to automated checksum
-verification of arbitrary resources. \TODO{This is a strong statement. Maybe add more citations to back it up?}
+verification of arbitrary resources. \TODO{This is a strong statement. Maybe add
+more citations to back it up?}
 
 \subsection{Overview}
 
@@ -55,19 +56,21 @@ Schemes that are otherwise reasonably cryptographically solid can fail
 catastrophically due to human error, confusion, aversion to inconvenience, or
 simple lack of interest. Some users are likely to avoid using a security measure
 altogether if it presents even a minor obstacle to immediate
-gratification~\cite{Clickthrough, PGPBad, Egelman1, Egelman2, Jenkins, Modic,
-Reeder, Silic, Sunshine, Bianchi, Akhawe, Cherubini}.
+gratification~\cite{PGPBad, Egelman1, Egelman2, Modic, Reeder, Silic, Sunshine,
+Bianchi, Akhawe, Cherubini}.
 
 With this in mind, the primary goal of \SYSTEM{} is to side-step the human
 factor by providing a completely transparent and unobtrusive, fully-automated
 method of checksum calculation and verification in the common case. In the
 uncommon case, when a download is determined ``unsafe'', we 1) clearly, visibly,
 and simply assert the danger of the download and 2) value user security over
-choice as suggested by Cherubini et al~\cite{Cherubini}. This means deleting,
-renaming, or otherwise making the unsafe resource inaccessible by default and
-forcing the user to confront the problem with no easy avenue to click-through
-the warning. In the more common case where a ``safe'' determination is made,
-\SYSTEM{} should remain unobtrusive to the user.
+choice as suggested by Cherubini et al~\cite{Cherubini} and appeal to authority
+as suggested by Modic et al~\cite{Modic}. This means deleting, renaming, or
+otherwise making the unsafe resource inaccessible by default, forcing the user
+to confront the problem with no easy avenue to click-through the warning, and
+ensuring the warning appeals to authority. In the more common case where a
+``safe'' determination is made, \SYSTEM{} should remain unobtrusive or even
+invisible to the user.
 
 \subsection{Mitigating the Co-Hosting Problem}
 

@@ -2,7 +2,21 @@
 
 \TODO{Can handle multiple downloads at once.}
 
-\TODO{There is a problem here as I still do not understand what the system is.  The approach section (section 4, prior to this one) does not read like an approach to me, but more the sort of philosophical guidelines behind the work.  That approach section has a few redundancies with the earlier motivation and challenges listed in other sections.  More importantly, it doesn't provide a whole lot of technical information about what is done.  That lack of technical information becomes a problem once I get to this section and you start telling me how threats are mitigated by various steps in the proposed solution: I still don't understand the solution. So, I think the paper needs some reorganization.  One thing that has to happen is make section 4 much more concrete.  (Hopefully that is where you are plannign to add the diagrams, which will help).  I also believe that the implementation needs to be hoisted up to section 4.  It is possible that once that is done, you won't really need to add much to section 4.  Then I believe the parts that describe how the approach mitigates threats will make more sense.}
+\TODO{There is a problem here as I still do not understand what the system is.
+The approach section (section 4, prior to this one) does not read like an
+approach to me, but more the sort of philosophical guidelines behind the work.
+That approach section has a few redundancies with the earlier motivation and
+challenges listed in other sections.  More importantly, it doesn't provide a
+whole lot of technical information about what is done.  That lack of technical
+information becomes a problem once I get to this section and you start telling
+me how threats are mitigated by various steps in the proposed solution: I still
+don't understand the solution. So, I think the paper needs some reorganization.
+One thing that has to happen is make section 4 much more concrete.  (Hopefully
+that is where you are plannign to add the diagrams, which will help).  I also
+believe that the implementation needs to be hoisted up to section 4.  It is
+possible that once that is done, you won't really need to add much to section 4.
+Then I believe the parts that describe how the approach mitigates threats will
+make more sense.}
 
 \subsection{Compromised Resource}
 
@@ -29,7 +43,11 @@ In the first case, there are two further possibilities: a) NAC validation fails
 and \SYSTEM{} \emph{is not} in strict mode, so a ``neutral'' judgment is
 rendered; b) NAC validation fails and \SYSTEM{} \emph{is} in strict mode, so an
 ``unsafe'' judgement is rendered, warning users that the resource is likely
-compromised. \TODO{This seems to contradict the earlier claims of compromising convenience and favoring security.  Shouldn't it fail if there is any possibility of compromise?  Also, even if you don't want to do that, I would suggest that you rename strict to default and not strict to something else, like unsafe mode.}
+compromised. \TODO{This seems to contradict the earlier claims of compromising
+convenience and favoring security.  Shouldn't it fail if there is any
+possibility of compromise?  Also, even if you don't want to do that, I would
+suggest that you rename strict to default and not strict to something else, like
+unsafe mode.}
 
 In the second case, unless the attacker's goal is to swap one or more resources
 protected by \SYSTEM{} and a particular backend with another resource also
@@ -37,7 +55,8 @@ protected by \SYSTEM{} and the same backend, the NAC Validation step will fail.
 For such a ``swap'' to work, the attacker would be required to both change the
 RI and also offer to the victim the \SYSTEM{}-protected resource the
 ``compromised'' RI corresponds to, which shrinks the attack surface here
-significantly. \TODO{This deserves one or two more sentences of explanation: what exactly does the attacker have to do to succeed in this scenario?}
+significantly. \TODO{This deserves one or two more sentences of explanation:
+what exactly does the attacker have to do to succeed in this scenario?}
 
 \subsection{Compromised Authoritative Checksum}
 
@@ -61,6 +80,7 @@ downloaded resources. \TODO{Get rid of this?}.
 We consider the case where an attacker can influence or even completely control
 the victim's resource distribution mechanism (web page, file server, CDN, etc)
 in any way. Additionally, the attacker can completely control the victim high
-availability backend that allows \SYSTEM{} to function. Therefore, the attacker can
-make the user download a compromised resource and also return a (compromised) AC
-that legally corresponds to said compromised resource. \TODO{Feels incomplete.}
+availability backend that allows \SYSTEM{} to function. Therefore, the attacker
+can make the user download a compromised resource and also return a
+(compromised) AC that legally corresponds to said compromised resource.
+\TODO{Feels incomplete.}
