@@ -1,11 +1,11 @@
 \section{Related Work} \label{sec:related}
 
 \TODO{It is not clear to me why you distinguish between prior approaches and
-related work.  I would think they were synonyms, but here they occupy separate
-subsections and after reading, I still cannot tell what the difference is.  This
-section also has a fundamental issue.  While I get a clear description of some
+related work. I would think they were synonyms, but here they occupy separate
+subsections and after reading, I still cannot tell what the difference is. This
+section also has a fundamental issue. While I get a clear description of some
 prior work, there is not enough discussion of what is novel about the new stuff
-in this paper.  After reading this section, I could not easily articulate an
+in this paper. After reading this section, I could not easily articulate an
 argument about what is different about \SYSTEM{} compared to any of the things
 discussed here. I might be able to construct that argument by going back to the
 intro and trying to pull apart the differences for myself, but that is not
@@ -37,8 +37,8 @@ the internet. In the cases where problems \emph{are} detected, users are known
 to ignore the resulting security warnings depending on an implementation's
 UI~\cite{Modic, Akhawe, ChromeClickThrough}. In this case, Cherubini et al, Tan
 et al, and others conclude taking an opt-out approach similar to that of
-anti-malware and spam filters is sufficient~\cite{Cherubini, Tan}. That is: 1)
-clearly, visibly, and simply assert the danger of the download and 2) privilege
+anti-malware and spam filters is sufficient~\cite{Cherubini, Tan}. That is: (1)
+clearly, visibly, and simply assert the danger of the download and (2) privilege
 security over choice by rejecting the download by default while making it
 inconvenient to ignore or click through the security warning. Our \SYSTEM{}
 implementations were designed with this guidance in mind, with an ideal
@@ -95,8 +95,8 @@ inject corrupted checksums.
 
 Similarly, the automated checksum verification approach by Cherubini et
 al.~\cite{Cherubini}---also based on Subresource Integrity---is vulnerable to
-co-hosting. Cherubini's browser extension works by 1) looking for embedded
-checksums in download links and 2) extracting hexadecimal strings that look like
+co-hosting. Cherubini's browser extension works by looking for embedded
+checksums in download links and extracting hexadecimal strings that look like
 checksums directly from the page. An attacker, after compromising the resource
 file, need only modify the page's HTML file to inject a corrupted checksum
 matching that resource, causing Cherubini's extension to misreport the

@@ -120,39 +120,38 @@ downloaded over the internet software binaries. Moreover, such schemes are not
 compatible with one another and cannot scale to secure arbitrary resources on
 the internet without significant cost and implementation/deployment effort.
 
+In this paper we confront the shortcomings described above by proposing
+\SYSTEM{}, a novel approach to verifying the integrity of arbitrary resources
+downloaded over the internet that is a complete replacement for typical
+checksum-based schemes, significantly raises the bar for the attacker, and can
+be implemented in more than just browser software. \SYSTEM{} addresses the
+challenges posed by user apathy and co-hosting with two components: a frontend
+one for content providers and one for content users. The first part is to be
+used by content providers to generate authoritative resource identifiers and
+store them separately from the content itself to defeat co-hosting. The second
+part is a client front-end that on content download automatically retrieves and
+verifies the authoritative id against the content itself to defeat user apathy.
+Thus \SYSTEM{} consists of both the protocol by which these pieces communicate
+and the implementation of these pieces themselves.
 
-\TODO{Transition here is a little abrupt.  You cover a lot of ground in the
-previous paragraphs, so you need a tranisition clause that brings it all
-together.  Something like this paper addresses the challenges that user apathy
-and co-hosting present to the problem of resource integrity protection by
-proposing \SYSTEM{}, a novel...} In this paper, we propose \SYSTEM{}, a novel
-approach for verifying the integrity of resources downloaded over the internet
-that is a complete replacement for typical checksum-based schemes and
-significantly raises the bar for the attacker.
+We view the problem with four key concerns in mind. (1) \SYSTEM{}
+implementations must provide security guarantees transparently without adding
+any extra burden on the user in the common case. Here, an optimal implementation
+avoids relying on the user to overcome apathy in the interest of security while
+accounting for users' tendency to click through security warnings. (2) \SYSTEM{}
+must be low effort for developers to integrate and deploy in concert with the
+resource(s) it is meant to protect. There must be no requirement to configure a
+secondary system solely dedicated to hosting checksums. (3) The verification
+method is not tightly coupled with any particular high availability system. (4)
+No application or website source code changes or user-facing server or web
+infrastructure modifications are necessary.
 
-We view the problem with four key concerns in mind. 1) \SYSTEM{} implementations
-must provide security guarantees transparently without adding any extra burden
-on the user in the common case. Here, an optimal implementation avoids relying
-on the user to overcome apathy in the interest of security while accounting for
-users' tendency to click through security warnings. 2) \SYSTEM{} must be low
-effort for developers to integrate and deploy in concert with the resource(s) it
-is meant to protect. There must be no requirement to configure a secondary
-system solely dedicated to hosting checksums. 3) The verification method is not
-tightly coupled with any particular high availability system. 4) No application
-or website source code changes or user-facing server or web infrastructure
-modifications are necessary.
-
-\TODO{Added 9:18 PM 1/9/2020: I realized as I was thinking over this paper, that it never explicitly says what \SYSTEM{} is.  Is it a framework? A protocol? A software system?  I believe it is both a protocol and two implementations of that protocol, but the introduction needs a paragraph that explicitly describes what the proposed thing actually is and what is novel about it.  I realize that the paragraph immediately above sort of does that, but it is too oblique, the paper needs to explicitly state what the proposal is.} 
-
-\TODO{NEed another transition here.  Why two implementations? That needs to be
+\TODO{NEed another transition here. Why two implementations? That needs to be
 spun positively by saying that the idea generalizes in some respect, so it is
 not tied to some other technology.} We implement \SYSTEM{} as two
 proof-of-concept Google Chrome extensions: one relying on DNS as a high
 availability backend and the other based on an OpenDHT-based high availability
 Ring backend.
-
-
-
 
 We then evaluate the security, deployability, scalability, and performance of
 our implementations. Specifically, we find no practical obstacles to efficient
@@ -165,7 +164,7 @@ source software to promote exploration of the \SYSTEM{} approach (cf.
 
 In summary, our primary contributions are: \\
 
-1) A practical automated approach to transparently mitigating the accidental
+1. A practical automated approach to transparently mitigating the accidental
 consumption of compromised resources over the internet. Our approach requires no
 modifications to web standards, web infrastructure, or source code, does not
 employ unreliable heuristics, does not expect checksums to be co-hosted on the
@@ -176,7 +175,7 @@ completely unaffected. Further, our approach can be applied to more than just
 browsers; \SYSTEM{} can be implemented to protect downloads in FTP clients, SSH
 (like rsync) clients, etc. \\
 
-2) We present our proof-of-concept \SYSTEM{} implementations (Google Chrome
+2. We present our proof-of-concept \SYSTEM{} implementations (Google Chrome
 extensions): \DNSSYS{} and \DHTSYS{}. We demonstrate our implementations'
 effectiveness empirically using a publicly available (patched) HotCRP instance.
 We show that our \DNSSYS{} implementation is capable of detecting real-world
@@ -184,12 +183,12 @@ resource compromises in a patched HotCRP instance, even when the entire server
 is compromised and/or the user is redirected to a hostile server, significantly
 raising the bar for an attacker. \\
 
-3) We evaluate the security, performance, scalability, and deployment overhead
+3. We evaluate the security, performance, scalability, and deployment overhead
 of \DNSSYS{} and \DHTSYS{}. We find that our approach is more effective than
 manual checksum verification or prior automated verification schemes at
 detecting resource integrity attacks. To the best of our knowledge, this is the
-first approach that 1) is not susceptible to the pitfalls of co-hosting or the
-lack of standard practices for making authoritative checksums available to end
-users, unlike a manual verification approach or other automated solutions and 2)
-provides such capabilities with marginal deployment overhead for developers.
+first approach that is not susceptible to the pitfalls of co-hosting or the lack
+of standard practices for making authoritative checksums available to end users
+unlike a manual verification approach or other automated solutions. Further, we
+provide these capabilities with marginal deployment overhead for developers.
 

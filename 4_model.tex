@@ -6,14 +6,14 @@
 The approach section (section 4, prior to this one) does not read like an
 approach to me, but more the sort of philosophical guidelines behind the work.
 That approach section has a few redundancies with the earlier motivation and
-challenges listed in other sections.  More importantly, it doesn't provide a
-whole lot of technical information about what is done.  That lack of technical
+challenges listed in other sections. More importantly, it doesn't provide a
+whole lot of technical information about what is done. That lack of technical
 information becomes a problem once I get to this section and you start telling
 me how threats are mitigated by various steps in the proposed solution: I still
 don't understand the solution. So, I think the paper needs some reorganization.
-One thing that has to happen is make section 4 much more concrete.  (Hopefully
-that is where you are plannign to add the diagrams, which will help).  I also
-believe that the implementation needs to be hoisted up to section 4.  It is
+One thing that has to happen is make section 4 much more concrete. (Hopefully
+that is where you are plannign to add the diagrams, which will help). I also
+believe that the implementation needs to be hoisted up to section 4. It is
 possible that once that is done, you won't really need to add much to section 4.
 Then I believe the parts that describe how the approach mitigates threats will
 make more sense.}
@@ -33,19 +33,19 @@ responsible for mapping RIs to ACs relevant to the function of \SYSTEM{}.
 If the attacker does not alter the RI, the compromised resource will fail
 integrity validation during the NAC Validation step.
 
-If the attacker does alter the RI, there are two possibilities: 1) the new RI
+If the attacker does alter the RI, there are two possibilities: (1) the new RI
 \textit{does not} exist in the backend, in which case \SYSTEM{} will fail to
-resolve the NAC, hence the NAC Validation step will fail; 2) the ``compromised''
-RI \textit{does} exist in the backend, therefore the RI must be pointing to a
-different resource's checksum.
+resolve the NAC, hence the NAC Validation step will fail or (2) the
+``compromised'' RI \textit{does} exist in the backend, therefore the RI must be
+pointing to a different resource's checksum.
 
 In the first case, there are two further possibilities: a) NAC validation fails
 and \SYSTEM{} \emph{is not} in strict mode, so a ``neutral'' judgment is
 rendered; b) NAC validation fails and \SYSTEM{} \emph{is} in strict mode, so an
 ``unsafe'' judgement is rendered, warning users that the resource is likely
 compromised. \TODO{This seems to contradict the earlier claims of compromising
-convenience and favoring security.  Shouldn't it fail if there is any
-possibility of compromise?  Also, even if you don't want to do that, I would
+convenience and favoring security. Shouldn't it fail if there is any
+possibility of compromise? Also, even if you don't want to do that, I would
 suggest that you rename strict to default and not strict to something else, like
 unsafe mode.}
 

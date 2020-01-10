@@ -1,10 +1,6 @@
 \section{The \SYSTEM{} Approach} \label{sec:approach}
 
-In this section we detail the \SYSTEM{} approach, a practical defense against
-receiving corrupted or compromised resources over the internet that 1) is
-automated to account for user apathy and 2) does not require co-hosting the
-checksum, which creates a single point of failure and renders checksum
-verification (even automated checksum verification) irrelevant.
+In this section we detail the \SYSTEM{} approach.
 
 To achieve these goals, we first require some method to uniquely identify
 individual resources. This can be addressed with checksums themselves, as they
@@ -42,9 +38,9 @@ colons (``:'') in the URN with dashes and removes all padding characters so that
 URNs form valid URLs.
 
 Next, \SYSTEM{} uses the URN and the origin domain to query the high
-availability system. At this point, the system will respond with either 1) a
+availability system. At this point, the system will respond with either (1) a
 confirmation that the URN exists, in which case \SYSTEM{} determines the
-download to be safe or 2) a rejection when the URN is not found, in which case
+download to be safe or (2) a rejection when the URN is not found, in which case
 \SYSTEM{} determines the download to be unsafe. In the case where an ``unsafe''
 determination is made, some implementation-specific action should be taken that
 accounts for user apathy to mitigate risk.
@@ -58,6 +54,8 @@ simple lack of interest. Some users are likely to avoid using a security measure
 altogether if it presents even a minor obstacle to immediate
 gratification~\cite{PGPBad, Egelman1, Egelman2, Modic, Reeder, Silic, Sunshine,
 Bianchi, Akhawe, Cherubini}.
+
+\TODO{Remove all this redundancy.}
 
 With this in mind, the primary goal of \SYSTEM{} is to side-step the human
 factor by providing a completely transparent and unobtrusive, fully-automated
