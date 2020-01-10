@@ -99,8 +99,8 @@ distribution system (\eg{a web page from a server}). While cost-effective for
 the developer and less confusing for the user, an attacker that compromises a
 system hosting both a resource and its checksum together can mutate both,
 rendering the checksum irrelevant~\cite{Stickler}. This is true for automated
-checksum verification solutions as well~\cite{Cherubini}. Thhis co-hosting
-problem was demonstrated by the 2016 hack of Linux Mint's distribution
+checksum verification solutions as well~\cite{Cherubini}. The co-hosting problem
+was demonstrated by the 2016 hack of Linux Mint's distribution
 server~\cite{SCA-MINT1, SCA-MINT2}.
 
 For these reasons, checksums as they are typically deployed are not very
@@ -155,10 +155,10 @@ the public Domain Name System (DNS) through Google DNS or (2) the Ring OpenDHT
 network through a local Representational State Transfer (REST) API. Of course,
 these \SYSTEM{} component implementations should be considered proof-of-concept.
 
-We evaluate the security, performance, scalability, and deployment overhead
-of our implementation. Specifically, we find no practical obstacles to efficient
-deployment at scale or to security outside of those imposed by the Chrome
-developer API.
+We evaluate the security, performance, scalability, and deployment overhead of
+our implementation. While not a panacea, we find no practical obstacles to
+efficient deployment at scale or to security outside of those imposed by the
+Chrome developer API.
 
 In summary, our primary contributions are: \\
 
@@ -184,7 +184,7 @@ source (see \secref{availability}). \\
 3. We evaluate our implementation and find no practical obstacles to efficient
 deployment outside of those imposed by the Chrome developer API. To the best of
 our knowledge, this is the first approach that is not susceptible to the
-pitfalls of co-hosting. We find that \SYSTEM{} is more effective at detecting
-resource integrity attacks than manual checksum verification and prior automated
-verification schemes. Further, we provide this capability with marginal
-deployment overhead for providers.
+pitfalls of co-hosting. We conclude that \SYSTEM{} is more effective at
+detecting resource integrity attacks than manual checksum verification and prior
+automated verification schemes. Further, we provide this capability with
+marginal deployment overhead for providers.
