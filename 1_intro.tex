@@ -149,11 +149,12 @@ protocol is not tightly coupled with any particular high availability system.
 (4) No application or website source code changes or user-facing server or web
 infrastructure modifications are necessary.
 
-To demonstrate the generality of our protocol, we implement a frontend Google
-Chrome extension capable of using two different high availability backends: (1)
-the public Domain Name System (DNS) through Google DNS or (2) the Ring OpenDHT
-network through a local Representational State Transfer (REST) API. Of course,
-these \SYSTEM{} component implementations should be considered proof-of-concept.
+To demonstrate the general applicability of our protocol, we implement a
+frontend Google Chrome extension and two different high availability backends:
+one based on the public Domain Name System (DNS) via Google DNS and another
+based on the Ring OpenDHT network via a local Representational State Transfer
+(REST) API. Of course, these \SYSTEM{} component implementations should be
+considered proof-of-concept.
 
 We evaluate the security, performance, scalability, and deployment overhead of
 our implementation. While not a panacea, we find no practical obstacles to
