@@ -120,19 +120,21 @@ downloaded over the internet software binaries. Moreover, such schemes are not
 compatible with one another and cannot scale to secure arbitrary resources on
 the internet without significant cost and implementation/deployment effort.
 
-In this paper we confront the shortcomings described above by proposing
-\SYSTEM{}, a novel approach to verifying the integrity of arbitrary resources
-downloaded over the internet that is a complete replacement for typical
-checksum-based schemes, significantly raises the bar for the attacker, and can
-be implemented in more than just browser software. \SYSTEM{} addresses the
-challenges posed by user apathy and co-hosting with two components: a frontend
-one for content providers and one for content users. The first part is to be
-used by content providers to generate authoritative resource identifiers and
-store them separately from the content itself to defeat co-hosting. The second
-part is a client front-end that on content download automatically retrieves and
-verifies the authoritative id against the content itself to defeat user apathy.
-Thus \SYSTEM{} consists of both the protocol by which these pieces communicate
-and the implementation of these pieces themselves.
+In this paper we address these shortcomings by proposing \SYSTEM{}, a novel
+protocol for verifying the integrity of arbitrary resources downloaded over the
+internet that is a complete replacement for typical checksum-based schemes,
+significantly raises the bar for the attacker, and can be implemented in more
+than just browser software. To overcome the challenges posed by user apathy and
+co-hosting, \SYSTEM{} is implemented in two parts: a backend for resource
+providers and a frontend for resource consumers. Entities use a high
+availability backend to advertise which resources are available for download. To
+defeat co-hosting, this backend must exist separately from the system offering
+those resources. To account for user apathy, the frontend client must
+automatically compute a (non-authoritative) checksum identifying the resource,
+query the backend using that checksum, and mitigate the threat to the user in
+the case where that resource is compromised. Hence, \SYSTEM{} consists of both
+the implementation of these parts and the protocol by which these parts
+communicate.
 
 We view the problem with four key concerns in mind. (1) \SYSTEM{}
 implementations must provide security guarantees transparently without adding
@@ -165,15 +167,15 @@ source software to promote exploration of the \SYSTEM{} approach (cf.
 In summary, our primary contributions are: \\
 
 1. A practical automated approach to transparently mitigating the accidental
-consumption of compromised resources over the internet. Our approach requires no
+consumption of compromised resources over the internet. Our protocol requires no
 modifications to web standards, web infrastructure, or source code, does not
 employ unreliable heuristics, does not expect checksums to be co-hosted on the
 same page as do other automated approaches, and can be transparently implemented
 and immediately deployed. \SYSTEM{}-aware clients will have their downloads
 secured while the user experience of clients unaware of \SYSTEM{} remain
-completely unaffected. Further, our approach can be applied to more than just
-browsers; \SYSTEM{} can be implemented to protect downloads in FTP clients, SSH
-(like rsync) clients, etc. \\
+completely unaffected. Further, our protocol can be implemented in more than
+just browsers; \SYSTEM{} can be implemented to protect downloads in FTP clients,
+SSH (like rsync) clients, etc. \\
 
 2. We present our proof-of-concept \SYSTEM{} implementations (Google Chrome
 extensions): \DNSSYS{} and \DHTSYS{}. We demonstrate our implementations'
@@ -191,4 +193,3 @@ first approach that is not susceptible to the pitfalls of co-hosting or the lack
 of standard practices for making authoritative checksums available to end users
 unlike a manual verification approach or other automated solutions. Further, we
 provide these capabilities with marginal deployment overhead for developers.
-
