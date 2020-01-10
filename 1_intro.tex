@@ -142,12 +142,16 @@ tightly coupled with any particular high availability system. 4) No application
 or website source code changes or user-facing server or web infrastructure
 modifications are necessary.
 
+\TODO{Added 9:18 PM 1/9/2020: I realized as I was thinking over this paper, that it never explicitly says what \SYSTEM{} is.  Is it a framework? A protocol? A software system?  I believe it is both a protocol and two implementations of that protocol, but the introduction needs a paragraph that explicitly describes what the proposed thing actually is and what is novel about it.  I realize that the paragraph immediately above sort of does that, but it is too oblique, the paper needs to explicitly state what the proposal is.} 
+
 \TODO{NEed another transition here.  Why two implementations? That needs to be
 spun positively by saying that the idea generalizes in some respect, so it is
 not tied to some other technology.} We implement \SYSTEM{} as two
 proof-of-concept Google Chrome extensions: one relying on DNS as a high
 availability backend and the other based on an OpenDHT-based high availability
 Ring backend.
+
+
 
 
 We then evaluate the security, deployability, scalability, and performance of
