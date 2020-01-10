@@ -1,25 +1,10 @@
 \section{The \SYSTEM{} Protocol} \label{sec:approach}
 
-\TODO{Rewrite this section}
+\TODO{Add Visio graphic here.}
 
-\TODO{Can handle multiple downloads at once.}
-
-\TODO{There is a problem here as I still do not understand what the system is.
-The approach section does not read like an approach to me, but more the sort of
-philosophical guidelines behind the work. That approach section has a few
-redundancies with the earlier motivation and challenges listed in other
-sections. More importantly, it doesn't provide a whole lot of technical
-information about what is done. That lack of technical information becomes a
-problem once I get to this section and you start telling me how threats are
-mitigated by various steps in the proposed solution: I still don't understand
-the solution. So, I think the paper needs some reorganization. One thing that
-has to happen is make section 4 much more concrete. (Hopefully that is where you
-are plannign to add the diagrams, which will help). I also believe that the
-implementation needs to be hoisted up to section 4. It is possible that once
-that is done, you won't really need to add much to section 4. Then I believe the
-parts that describe how the approach mitigates threats will make more sense.}
-
-In this section we detail the \SYSTEM{} approach.
+In this section, we describe the components of the \SYSTEM{} protocol, step
+through each in detail, and then introduce our proof-of-concept implementations
+of these components.
 
 To achieve these goals, we first require some method to uniquely identify
 individual resources. This can be addressed with checksums themselves, as they
@@ -135,6 +120,8 @@ implementations able to rely on Google Chrome's dangerous download
 UI~\cite{ChromeClickThrough}. \TODO{talk about how the dangerous download UI is
 "from an authority," is harder to click through, and that this is verified by
 the Chrome dev team}.
+
+\TODO{Add metrics about solution LoC}
 
 \subsection{Overview XXXX}
 
