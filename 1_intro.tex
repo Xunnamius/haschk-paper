@@ -136,33 +136,30 @@ the case where that resource is compromised. Hence, \SYSTEM{} consists of both
 the implementation of these parts and the protocol by which these parts
 communicate.
 
-We view the problem with four key concerns in mind. (1) \SYSTEM{}
-implementations must provide security guarantees transparently without adding
-any extra burden on the user in the common case. Here, an optimal implementation
-avoids relying on the user to overcome apathy in the interest of security while
-accounting for users' tendency to click through security warnings. (2) \SYSTEM{}
-must be low effort for developers to integrate and deploy in concert with the
-resource(s) it is meant to protect. There must be no requirement to configure a
-secondary system solely dedicated to hosting checksums. (3) The verification
-method is not tightly coupled with any particular high availability system. (4)
-No application or website source code changes or user-facing server or web
+We approach the problem with four key concerns in mind. (1) \SYSTEM{} frontends
+must provide security guarantees transparently without adding any extra burden
+on the user in the common case. Here, an optimal implementation avoids relying
+on the user to overcome apathy in the interest of security while accounting for
+users' tendency to click through security warnings to avoid inconvenience. (2)
+\SYSTEM{} must be low effort for developers to integrate and deploy in concert
+with the resource(s) they are meant to protect. There must be no requirement to
+configure a secondary system solely dedicated to hosting checksums. (3) The
+protocol is not tightly coupled with any particular high availability system.
+(4) No application or website source code changes or user-facing server or web
 infrastructure modifications are necessary.
 
-\TODO{NEed another transition here. Why two implementations? That needs to be
-spun positively by saying that the idea generalizes in some respect, so it is
-not tied to some other technology.} We implement \SYSTEM{} as two
-proof-of-concept Google Chrome extensions: one relying on DNS as a high
-availability backend and the other based on an OpenDHT-based high availability
-Ring backend.
+To demonstrate the generality of our protocol, we implement a proof-of-concept
+frontend as a Google Chrome extension: one that relies on DNS as a high
+availability backend and another that relies on the Ring OpenDHT network as a
+high availability backend.
 
 We then evaluate the security, deployability, scalability, and performance of
 our implementations. Specifically, we find no practical obstacles to efficient
-deployment at scale outside of those imposed by the client and the chosen high
-availability system. Additionally, we provide a publicly accessible empirical
-demonstration of \SYSTEM{}'s utility via a patched HotCRP instance. We also make
-available our \DNSSYS{} and \DHTSYS{} implementations to the community as open
-source software to promote exploration of the \SYSTEM{} approach (cf.
-\secref{availability}).
+deployment at scale outside of those imposed by the Chrome developer API.
+Additionally, we provide a publicly accessible empirical demonstration of
+\SYSTEM{}'s utility via a patched HotCRP instance. We also make available our
+\DNSSYS{} and \DHTSYS{} implementations to the community as open source software
+to promote exploration of the \SYSTEM{} approach (cf. \secref{availability}).
 
 In summary, our primary contributions are: \\
 
