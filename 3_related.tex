@@ -35,19 +35,21 @@ integrity verification scheme that ``provides a backward-compatible technique
 for resource providers to ensure that the resource originally referenced is the
 same as the resource retrieved by an end user.''~\cite{LF}. The World Wide Web
 Consortium's (W3C) Subresource Integrity (SRI) describes a similar HTML-based
-scheme designed with CDNs and web assets in mind.
+scheme designed exclusively with CDNs and web assets in mind.
 
 Like \SYSTEM{}, both LF and SRI employ cryptographic digests to ensure no
 changes of any kind have been made to a resource~\cite{SRI}. Unlike \SYSTEM{},
-LF and SRI apply only to resources referenced by script and link HTML elements;
-\SYSTEM{} can ensure the integrity of any arbitrary resource downloaded over the
-internet. Further, the checksums contained in the HTML source must be accurate
-for SRI to work. If the system behind the CDN is compromised, rather than the
-CDN itself, the attacker can alter the HTML and inject a malicious checksum to
-match a compromised resource, both of which would be dutifully distributed by
-the CDN. With \SYSTEM{}, however, an attacker would additionally have to
-compromise the distinct backend that advertises the provider's resources, thus
-raising the bar. \\
+LF and SRI apply \emph{only to resources referenced by script and link HTML
+elements}; \SYSTEM{}, on the other hand, can ensure the integrity of \emph{any
+arbitrary resource downloaded over the internet}, even outside of HTML web pages
+and browser software. Further, the checksums contained in the HTML source must
+be accurate for SRI to work. Contingent on how the CDN is being used: if the
+provider system \emph{behind} the CDN is itself compromised, the attacker can
+alter the HTML and inject a malicious checksum to match a compromised resource,
+both of which would be dutifully distributed by the CDN without further effort.
+With \SYSTEM{}, however, an attacker would additionally have to compromise the
+separate backend system that advertises the provider's resources, thus raising
+the bar. \\
 
 \noindent\textbf{Content-MD5 Header.} The Content-MD5 header field is a
 deprecated email and HTTP header that delivers a checksum similar to those used
@@ -71,31 +73,35 @@ Mozilla refer to the latter as ``Binary Transparency.''
 
 Like \SYSTEM{}, binary transparency establishes a public verification scheme
 that allows third party consumers access to a listing of source updates
-advertised by a provider~\cite{BinaryTransparency}. Consumers can take advantage
-of deterministic build systems and Binary Transparency together to ensure their
+advertised by a provider~\cite{BinaryTransparency}. Consumers can leverage
+deterministic build systems and Binary Transparency together to ensure their
 software is the same software deployed to every other system. Unlike \SYSTEM{},
-binary transparency only allows a user to verify the integrity of source updates
-to \emph{binaries}; our protocol allows a user to verify the integrity of
+binary transparency only allows a user to verify the integrity of \emph{source
+updates to binaries}; our protocol allows a user to verify the integrity of
 \emph{any arbitrary internet resource} while specifically addressing co-hosting.
 \\
 
 \noindent\textbf{Stickler and Cherubini et al.} Stickler~\cite{Stickler} by Levy
-et al. is a JavaScript-based stand-in for Subresource Integrity for protecting
-the integrity of web application files hosted on CDNs. Unlike \SYSTEM{},
-Stickler does not require any modifications to the client to protect resources.
-However, as it was designed for CDNs, concerns like co-hosting are outside of
-Stickler's threat model. If the content server behind the CDN is compromised, as
-was the case with Linux Mint, it would be trivial to modify the manifest file to
-inject corrupted checksums.
+et al. is an automated JavaScript-based stand-in for SRI for protecting the
+integrity of web application files hosted on CDNs. Stickler does not require any
+modifications to the client (\ie{a frontend}), instead delivering a bootloader
+to load and verify resources before the fact. However, as it was designed to
+stand-in for SRI, Stickler inherits SRI's shortcomings. Specifically: Stickler
+was not designed to protect arbitrary resources and, if the content server
+behind the distribution system is compromised, it is trivial to modify the
+manifest file to inject corrupted checksums matching corrupted resources or to
+even strip the Stickler bootloader out of the HTTP response altogether. This is
+not possible with \SYSTEM{}.
 
-Similarly, the automated checksum verification approach by Cherubini et
-al.~\cite{Cherubini}---also based on Subresource Integrity---is vulnerable to
-co-hosting. Cherubini's browser extension works by looking for embedded
-checksums in download links and extracting hexadecimal strings that look like
-checksums directly from the page. An attacker, after compromising the resource
-file, need only modify the page's HTML file to inject a corrupted checksum
-matching that resource, causing Cherubini's extension to misreport the
-compromised download as safe~\cite{Cherubini}.
-
-Unlike prior work, \SYSTEM{} is both automated and capable of mitigating the
-co-hosting threat, significantly raising the bar for the attacker.
+The automated checksum verification approach described by Cherubini et
+al.~\cite{Cherubini}, also based on SRI, is similarly vulnerable to co-hosting.
+Cherubini's browser extension works by both looking for embedded checksums in
+download links (SRI) and extracting hexadecimal strings that look like checksums
+directly from the HTML source. An attacker, after compromising the resource
+file, need only modify the provider's HTML file to inject a corrupted
+``integrity'' attribute containing a checksum matching that corrupted resource,
+causing Cherubini's extension to misreport the dangerous download as
+safe~\cite{Cherubini}. Additionally, Cherubini's extension does not alert users
+when authoritative checksums are not found, which means an attacker can simply
+strip the checksums from the server response to pass off compromised resources
+to users. This, too, is not possible with \SYSTEM{}.
