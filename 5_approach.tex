@@ -52,8 +52,8 @@ Schemes that are otherwise reasonably cryptographically solid can fail
 catastrophically due to human error, confusion, aversion to inconvenience, or
 simple lack of interest. Some users are likely to avoid using a security measure
 altogether if it presents even a minor obstacle to immediate
-gratification~\cite{PGPBad, Egelman1, Egelman2, Modic, Reeder, Silic, Sunshine,
-Bianchi, Akhawe, Cherubini}.
+gratification~\cite{PGPBad, Egelman1, Egelman2, Modic, Reeder, Silic, Bianchi,
+Akhawe, Cherubini}.
 
 \TODO{Remove all this redundancy.}
 
@@ -257,3 +257,19 @@ are uncommon and the tradeoff here is worthy.
 
 \TODO{Argue “override” using Chrome danger download warning UI is effective
 using Chrome dev data}
+
+In the cases where problems \emph{are} detected, a consistent minority of users
+are known to ignore security warnings depending factors like an implementation's
+user experience (UX), warning fatigue, user attention, et cetera~\cite{Modic,
+Akhawe, ChromeClickThrough}.
+
+Our Google Chrome implementation was designed in light of the suggestions of
+Cherubini et al~\cite{Cherubini}, Tan et al~\cite{Tan}, Akhawe et
+al~\cite{Akhawe}, and others: (1) we clearly, visibly, and simply assert the
+danger of the download if it is dangerous, otherwise the extension should be
+invisible to users and (2) we privilege security over choice by rejecting the
+download by default while making it inconvenient to ignore or click through the
+security warning.
+
+An ideal implementation able to rely on Google Chrome's dangerous download
+UI~\cite{ChromeClickThrough}.

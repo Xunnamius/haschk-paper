@@ -74,13 +74,10 @@ work~\cite{Cherubini, Tan, Hsiao}. While detailing how they gained unauthorized
 access to the servers, one of the hackers behind the 2016 breach of Linux Mint's
 distribution system went so far as to comment (in respect to checksums): ``Who
 the [expletive] checks those anyway?''~\cite{SCA-MINT3}. Hardly unique to
-checksums, designers of security schemes from HTTPS to PGP have found user
-apathy a difficult problem space to navigate~\cite{PGPBad, Cherubini}. When it
-comes to user apathy versus security warnings (\eg{malicious download alerts,
-warnings about compromised websites, expired certificate notifications}),
-application developers and user interface (UI) designers face similar
-difficulties~\cite{Egelman1, Egelman2, Modic, Reeder, Silic, Sunshine, Bianchi,
-Akhawe}.
+checksums, designers of security schemes from HTTPS to PGP to Google Chrome
+dangerous download warnings have found user apathy a difficult problem space to
+navigate~\cite{PGPBad, Cherubini, Akhawe, ChromeClickThrough, Egelman1,
+Egelman2, Modic, Reeder, Silic, Bianchi}.
 
 Even if a user feels the urge to manually calculate and verify a resource's
 checksum, they must search for a corresponding ``authoritative checksum'' to
@@ -141,12 +138,12 @@ We approach the problem with four key concerns in mind. (1) \SYSTEM{} frontends
 must provide security guarantees transparently without adding any extra burden
 on the user in the common case. Here, an optimal implementation avoids relying
 on the user to overcome apathy in the interest of security while accounting for
-users' tendency to click through security warnings to avoid inconvenience. (2)
-\SYSTEM{} must be low effort for developers to integrate and deploy in concert
-with the resource(s) they are meant to protect. There must be no requirement to
-configure a secondary system solely dedicated to hosting checksums. (3) The
-protocol is not tightly coupled with any particular high availability system.
-(4) No application or website source code changes or user-facing server or web
+the tendency of some users to click through security warnings. (2) \SYSTEM{}
+must be low effort for developers to integrate and deploy in concert with the
+resource(s) they are meant to protect. There must be no requirement to configure
+a secondary system solely dedicated to hosting checksums. (3) The protocol is
+not tightly coupled with any particular high availability system. (4) No
+application or website source code changes or user-facing server or web
 infrastructure modifications are necessary.
 
 To demonstrate the general applicability of our protocol, we implement a
