@@ -30,12 +30,12 @@ receiving the expected resource a provider is advertising---not that the
 expected resource is not malware. \\
 
 \noindent\textbf{Link Fingerprints and Subresource Integrity.} The Link
-Fingerprints (LF) draft describes an early HTML anchor and URL based resource
-integrity verification scheme that ``provides a backward-compatible technique
-for resource providers to ensure that the resource originally referenced is the
-same as the resource retrieved by an end user.''~\cite{LF}. The World Wide Web
-Consortium's (W3C) Subresource Integrity (SRI) describes a similar HTML-based
-scheme designed exclusively with CDNs and web assets in mind.
+Fingerprints (LF) draft describes an early HTML hyperlinks and URL based
+resource integrity verification scheme that ``provides a backward-compatible
+technique for resource providers to ensure that the resource originally
+referenced is the same as the resource retrieved by an end user.''~\cite{LF}.
+The World Wide Web Consortium's (W3C) Subresource Integrity (SRI) describes a
+similar HTML-based scheme designed exclusively with CDNs and web assets in mind.
 
 Like \SYSTEM{}, both LF and SRI employ cryptographic digests to ensure no
 changes of any kind have been made to a resource~\cite{SRI}. Unlike \SYSTEM{},
@@ -101,7 +101,13 @@ directly from the HTML source. An attacker, after compromising the resource
 file, need only modify the provider's HTML file to inject a corrupted
 ``integrity'' attribute containing a checksum matching that corrupted resource,
 causing Cherubini's extension to misreport the dangerous download as
-safe~\cite{Cherubini}. Additionally, Cherubini's extension does not alert users
-when authoritative checksums are not found, which means an attacker can simply
-strip the checksums from the server response to pass off compromised resources
-to users. This, too, is not possible with \SYSTEM{}.
+safe~\cite{Cherubini}. Additionally, Cherubini's extension (1) does not alert
+users when corresponding authoritative checksums are not found, which means an
+attacker can simply strip all checksums from the server response to pass off
+compromised resources to users and (2) considers a download ``safe'' so long as
+\emph{any checksum found on the page matches it}, which means an attacker can
+just inject the compromised checksum somewhere in the HTML source alongside the
+legitimate checksum to similarly pass off compromised resources to users. None
+of this is possible with \SYSTEM{}.
+
+Clearly, a more comprehensive protocol is required, hence \SYSTEM{}.

@@ -209,9 +209,9 @@ as no current resource record type meets the requirements of \DNSSYS{}.
 To execute a resource integrity attack on a web server, an attacker generally
 has two paths. They can mutate the resource in place, which would cause NAC
 Validation to fail. They could also mutate the web page hosting the resource,
-replacing the resource anchor with a malicious one that points to a compromised
-resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{} will catch
-this due to how we calculate the Origin Domain (OD).
+replacing the resource's hyperlink with a malicious hyperlink pointing to a
+compromised resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{}
+will catch this due to how we calculate the Origin Domain (OD).
 
 To prevent such implementation-specific attacks, we make a distinction between
 the domain a resource's hyperlink might be pointing to (which might belong to
