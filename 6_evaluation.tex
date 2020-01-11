@@ -1,7 +1,5 @@
 \section{Evaluation} \label{sec:evaluation}
 
-\TODO{Rewrite this section}
-
 In this section, we evaluate our Google Chrome \SYSTEM{} implementation by first
 assessing how \SYSTEM{} addresses its threat model followed by an examination of
 performance, deployment overhead, and scalability. We then empitically test our
@@ -9,9 +7,11 @@ implementation using a patched HotCRP instance and random sampling of papers
 published in previous \CONFERENCE{} proceedings. We show that the \SYSTEM{}
 approach is more effective than existing approaches at detecting integrity
 violations in arbitrary resources on the internet; this is especially evident
-when \SYSTEM{} is compared to the standard checksums.
+when \SYSTEM{} is compared to checksums as they are typically employed.
 
 \subsection{Security and Performance}
+
+\TODO{Rewrite this subsection!}
 
 To empirically evaluate our implementation, we launch a heavily modified version
 of the popular open source research submission and peer review software,
@@ -89,7 +89,7 @@ overhead compared to downloads without \SYSTEM{}.}
 
 \subsection{Deployment and Scalability}
 
-\TODO{Argue why \SYSTEM{} is scalable and rewrite all of this mess}
+\TODO{Argue why \SYSTEM{} is scalable and rewrite all of this mess.}
 
 Clearly, the DNS backend relies on DNS. However, DNS~\cite{DNS1} was not
 originally designed to transport or store relatively large amounts of data,
@@ -171,6 +171,8 @@ leveraging existing systems.
 
 \subsection{Limitations}
 
+\TODO{Rewrite and finish me.}
+
 Our current JavaScript implementations, as Chrome extensions, are not allowed to
 touch the resource files downloaded by Chrome and so cannot prevent a
 potentially-malicious resource from being executed by the user---a feature
@@ -201,8 +203,12 @@ While nice to have, we stress that none of the aforesaid functionality is
 critical to the ability of our implementations to more effectively mitigate SCA
 risk than checksums and other solutions (cf. \secref{evaluation}).
 
-\TODO{Limitation: denial of service}
+\TODO{Limitation: denial of service?!}
+
+\TODO{Not all servers/backends use DNS. Direct IP not supported.}
+
+\TODO{Other list of limitations}
 
 \subsection{Implications of Backend Compromise}
 
-\TODO{go over the implications of a compromised backend}
+\TODO{Go over the implications of a compromised backend.}
