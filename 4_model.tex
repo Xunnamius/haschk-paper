@@ -1,5 +1,13 @@
 \section{Threat Model and Security Goals} \label{sec:model}
 
+The goal of \SYSTEM{} is to ensure the integrity of arbitrary resources
+downloaded over the internet, even in the case where the system hosting those
+resources is completely compromised. Given a \SYSTEM{}-aware client and a
+provider with a conforming backend, a user will be warned if their download is
+potentially compromised whenever the checksum uniquely identifying the resource
+does not match a checksum advertised by the provider. In this way, false
+negatives, \ie{a compromised resource not generating a warning}, 
+
 \subsection{Compromised Resource}
 
 We consider the case where an attacker can influence or even completely control

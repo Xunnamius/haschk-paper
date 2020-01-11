@@ -124,27 +124,27 @@ that is a complete replacement for typical checksum-based schemes, significantly
 raises the bar for the attacker, and can be implemented in more than just
 browser software. To overcome the challenges posed by user apathy and
 co-hosting, \SYSTEM{} is implemented in two parts: a backend for resource
-\emph{providers} and a frontend for resource \emph{consumers}---i.e. end users.
-Providers use a high availability backend to advertise which resources they
-provide for download. To defeat co-hosting, this backend must exist separately
-from the system offering those resources. To account for user apathy, the
-frontend client must automatically compute a (non-authoritative) checksum
+\emph{providers} and a frontend for resource \emph{consumers}---\ie{(end)
+users}. Providers use a high availability backend to advertise which resources
+they provide for download. To defeat co-hosting, this backend must exist
+separately from the system offering those resources. To account for user apathy,
+the frontend client must automatically compute a (non-authoritative) checksum
 identifying the resource, query the backend using that checksum, and mitigate
 the threat to the user in the case where the download is deemed compromised.
 Hence, \SYSTEM{} consists of both the implementation of these parts and the
 protocol by which these parts communicate.
 
-We approach the problem with four key concerns in mind. (1) \SYSTEM{} frontends
-must provide security guarantees transparently without adding any extra burden
-on the user in the common case. Here, an optimal implementation avoids relying
-on the user to overcome apathy in the interest of security while accounting for
-the tendency of some users to click through security warnings. (2) \SYSTEM{}
-must be low effort for developers to integrate and deploy in concert with the
-resource(s) they are meant to protect. There must be no requirement to configure
-a secondary system solely dedicated to hosting checksums. (3) The protocol is
-not tightly coupled with any particular high availability system. (4) No
-application or website source code changes or user-facing server or web
-infrastructure modifications are necessary.
+We approach these problems with four key concerns in mind. (1) \SYSTEM{}
+frontends must provide security guarantees transparently without adding any
+extra burden on the user in the common case. Here, an optimal implementation
+avoids relying on the user to overcome apathy in the interest of security while
+accounting for the tendency of some users to click through security warnings.
+(2) \SYSTEM{} must be low effort for developers to integrate and deploy in
+concert with the resource(s) they are meant to protect. There must be no
+requirement to configure a secondary system solely dedicated to hosting
+checksums. (3) The protocol is not tightly coupled with any particular high
+availability system. (4) No application or website source code changes or
+user-facing server or web infrastructure modifications are necessary.
 
 To demonstrate the general applicability of our protocol, we implement a
 frontend Google Chrome extension and two different high availability backends:
