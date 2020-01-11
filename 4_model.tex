@@ -1,76 +1,39 @@
-\section{Threat Model and Security Goals} \label{sec:model}
+\section{Security Goals and Threat Model} \label{sec:model}
 
 The goal of \SYSTEM{} is to ensure the integrity of arbitrary resources
 downloaded over the internet, even in the case where the system hosting those
 resources is completely compromised. Given a \SYSTEM{}-aware client and a
-provider with a conforming backend, a user will be warned if their download is
-potentially compromised whenever the checksum uniquely identifying the resource
-does not match a checksum advertised by the provider. In this way, false
-negatives, \ie{a compromised resource not generating a warning}, 
+resource provider with a conforming backend, the user must be automatically
+warned whenever what they are downloading does not match a corresponding
+authoritative checksum. Given \SYSTEM{} is properly deployed, this must function
+without false negatives, \ie{compromised resources that do not trigger a
+warning}, or false positives, \ie{benign resources that do trigger a warning}.
 
-\subsection{Compromised Resource}
+Our model considers (1) a \SYSTEM{}-aware client as the \emph{frontend}, (2) a
+\emph{server} or servers as the distribution system co-hosting a specific
+\emph{resource} and an HTML file (\emph{web page}) with a hyperlink pointing to
+that resource, and (3) a separate high availability system implementing
+\SYSTEM{} as the \emph{backend}. Specifically, we consider a \emph{generic
+frontend} that might be any web-facing software, such as FileZilla, and a
+\emph{browser frontend} such as Google Chrome or Mozilla Firefox.
 
-We consider the case where an attacker can influence or even completely control
-the victim's resource distribution mechanism (web page, file server, CDN, etc)
-in any way. In this context, the attacker can trick the user into downloading a
-compromised resource of the attacker's choice. This attack can be accomplished
-by compromising the resource on a victim system or tricking the user into
-downloading a compromised resource on the attacker's remote system.
+When considering a generic frontend, we assume the adversary can make the server
+respond to a resource request from the frontend with any resource, including a
+compromised version of a resource. We also assume the adversary can tamper with
+any other server response, including adding, removing, or manipulating one or
+more checksums.
 
-In either case, the attacker does not have control over the backend system
-responsible for mapping RIs to ACs relevant to the function of \SYSTEM{}.
+When considering a browser frontend and web server, we assume the user first
+navigates to a web page on the server and then clicks a hyperlink to download a
+resource hosted either on the same server or externally on a third party server
+such as a CDN. We also assume the adversary can manipulate the resource wherever
+it is stored, and can further manipulate the web page co-hosting the resource's
+hyperlink alongside the resource's authoritative checksum. The adversary might
+compromise the resource; modify the hyperlink to point to a compromised resource
+anywhere on the internet; and/or add, remove, or manipulate any checksums on the
+web page corresponding to the resource.
 
-If the attacker does not alter the RI, the compromised resource will fail
-integrity validation during the NAC Validation step.
-
-If the attacker does alter the RI, there are two possibilities: (1) the new RI
-\textit{does not} exist in the backend, in which case \SYSTEM{} will fail to
-resolve the NAC, hence the NAC Validation step will fail or (2) the
-``compromised'' RI \textit{does} exist in the backend, therefore the RI must be
-pointing to a different resource's checksum.
-
-In the first case, there are two further possibilities: a) NAC validation fails
-and \SYSTEM{} \emph{is not} in strict mode, so a ``neutral'' judgment is
-rendered; b) NAC validation fails and \SYSTEM{} \emph{is} in strict mode, so an
-``unsafe'' judgement is rendered, warning users that the resource is likely
-compromised. \TODO{This seems to contradict the earlier claims of compromising
-convenience and favoring security. Shouldn't it fail if there is any
-possibility of compromise? Also, even if you don't want to do that, I would
-suggest that you rename strict to default and not strict to something else, like
-unsafe mode.}
-
-In the second case, unless the attacker's goal is to swap one or more resources
-protected by \SYSTEM{} and a particular backend with another resource also
-protected by \SYSTEM{} and the same backend, the NAC Validation step will fail.
-For such a ``swap'' to work, the attacker would be required to both change the
-RI and also offer to the victim the \SYSTEM{}-protected resource the
-``compromised'' RI corresponds to, which shrinks the attack surface here
-significantly. \TODO{This deserves one or two more sentences of explanation:
-what exactly does the attacker have to do to succeed in this scenario?}
-
-\subsection{Compromised Authoritative Checksum}
-
-We consider the case where an attacker can completely control the high
-availability backend that allows \SYSTEM{} to function. In this context, the
-attacker can return an authoritative response of their choice to any query.
-
-In this case, the attacker does not have control over the victim's resource
-distribution mechanism (web page, file server, CDN, etc).
-
-Even if the attacker achieved this egregious level of compromise, they do not
-have the ability to deliver a malicious payload in this case. However, the
-attacker could use control over the relevant backends to cause denial-of-service
-style attacks against those attempting to download the resource by causing all
-NAC Validation checks to fail. This is mitigated by \SYSTEM{} allowing the user
-to ``override'' its error states; \ie \SYSTEM{} does not mutate or quarantine
-downloaded resources. \TODO{Get rid of this?}.
-
-\subsection{Compromised Resource and Authoritative Checksum}
-
-We consider the case where an attacker can influence or even completely control
-the victim's resource distribution mechanism (web page, file server, CDN, etc)
-in any way. Additionally, the attacker can completely control the victim high
-availability backend that allows \SYSTEM{} to function. Therefore, the attacker
-can make the user download a compromised resource and also return a
-(compromised) AC that legally corresponds to said compromised resource.
-\TODO{Feels incomplete.}
+Hence, we do not trust the integrity of the server's responses in any scenario.
+We do, however, trust the integrity of the backend's responses. Further, we
+expect the backend to be highly available. In the next section, we go over the
+implications of a compromised backend.
