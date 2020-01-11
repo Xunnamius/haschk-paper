@@ -5,12 +5,13 @@ downloaded over the internet, even in the case where the system hosting those
 resources is completely compromised. Given a \SYSTEM{}-aware client and a
 resource provider with a conforming backend, the user must be automatically
 warned whenever what they are downloading does not match a corresponding
-authoritative checksum. Given \SYSTEM{} is properly deployed, this must function
-without false negatives, \ie{compromised resources that do not trigger a
-warning}, or false positives, \ie{benign resources that do trigger a warning}.
+authoritative checksum. Given proper deployment, \SYSTEM{} should, to whatever
+extent possible, operate without issuing false negatives, \ie{compromised
+resources that do not trigger a warning}, or false positives, \ie{benign
+resources that do trigger a warning}.
 
-Our model considers the following participants: (1) a \SYSTEM{}-aware client as
-the \emph{frontend}, (2) a \emph{server} or servers as the distribution system
+We consider the following participants: (1) a \SYSTEM{}-aware client as the
+\emph{frontend}, (2) a \emph{server} (or servers) as the distribution system
 hosting the \emph{resource}, and (3) a separate high availability system
 implementing \SYSTEM{} as the \emph{backend}. Specifically, we consider a
 \emph{generic frontend} that might be any web-facing software, such as
@@ -20,19 +21,21 @@ Firefox.
 When considering a generic frontend, we assume the adversary can make the server
 respond to a resource request with any resource, including a compromised version
 of a resource. We also assume the adversary can tamper with any other server
-response, including adding, removing, or manipulating one or more checksums.
+response, including adding, removing, or manipulating one or more checksums if
+they appear.
 
-When considering a browser frontend and web server, we assume the user first
-navigates to an HTML file (\emph{web page}) on the server. This web page
-contains a hyperlink pointing to the resource. The user clicks this hyperlink to
-download the resource. This resource is hosted either on the same server as the
-web page or externally on a third party server such as a CDN. Both are valid
-deployments in the context of \SYSTEM{}. We also assume the adversary can
-manipulate the resource and web page wherever they are stored. The adversary
-may: (1) compromise the resource, (2) modify the hyperlink to point to a
-compromised resource anywhere on the internet, and/or (3) add, remove, or
-manipulate any checksums that appear on the web page or elsewhere (excluding the
-backend) corresponding to the resource.
+When considering a browser frontend and web server, we contemplate two
+scenarios. The user either (1) directly enters the resource URI into the
+browser, initiating a direct download or (2) navigates to an HTML file
+(\emph{web page}) on the server. This web page contains a hyperlink pointing to
+the resource. The user clicks this hyperlink to download the resource. This
+resource is hosted either on the same server as the web page or externally on a
+third party server such as a CDN. Both are valid deployments in the context of
+\SYSTEM{}. We also assume the adversary can manipulate the resource and web page
+wherever they are stored. The adversary may: (1) compromise the resource, (2)
+modify the hyperlink to point to a compromised resource anywhere on the
+internet, and/or (3) add, remove, or manipulate any checksums that appear on the
+web page or elsewhere (excluding the backend) corresponding to the resource.
 
 Hence, we do not trust the integrity of the server's responses in any scenario.
 We do, however, trust the integrity of the backend's responses. Further, we
