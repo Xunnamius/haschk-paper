@@ -9,13 +9,13 @@ authoritative checksum. Given \SYSTEM{} is properly deployed, this must function
 without false negatives, \ie{compromised resources that do not trigger a
 warning}, or false positives, \ie{benign resources that do trigger a warning}.
 
-Our model considers (1) a \SYSTEM{}-aware client as the \emph{frontend}, (2) a
-\emph{server} or servers as the distribution system co-hosting a specific
-\emph{resource} and an HTML file (\emph{web page}) with a hyperlink pointing to
-that resource, and (3) a separate high availability system implementing
-\SYSTEM{} as the \emph{backend}. Specifically, we consider a \emph{generic
-frontend} that might be any web-facing software, such as FileZilla, and a
-\emph{browser frontend} such as Google Chrome or Mozilla Firefox.
+Our model considers the following participants: (1) a \SYSTEM{}-aware client as
+the \emph{frontend}, (2) a \emph{server} or servers as the distribution system
+hosting the \emph{resource}, and (3) a separate high availability system
+implementing \SYSTEM{} as the \emph{backend}. Specifically, we consider a
+\emph{generic frontend} that might be any web-facing software, such as
+FileZilla, and a \emph{browser frontend} such as Google Chrome or Mozilla
+Firefox.
 
 When considering a generic frontend, we assume the adversary can make the server
 respond to a resource request from the frontend with any resource, including a
@@ -24,16 +24,25 @@ any other server response, including adding, removing, or manipulating one or
 more checksums.
 
 When considering a browser frontend and web server, we assume the user first
-navigates to a web page on the server and then clicks a hyperlink to download a
-resource hosted either on the same server or externally on a third party server
-such as a CDN. We also assume the adversary can manipulate the resource wherever
-it is stored, and can further manipulate the web page co-hosting the resource's
-hyperlink alongside the resource's authoritative checksum. The adversary might
-compromise the resource; modify the hyperlink to point to a compromised resource
-anywhere on the internet; and/or add, remove, or manipulate any checksums on the
-web page corresponding to the resource.
+navigates to an HTML file (\emph{web page}) on the server. This web page
+contains a hyperlink pointing to the resource. The user clicks this hyperlink to
+download the resource. This resource is hosted either on the same server as the
+web page or externally on a third party server such as a CDN. Both are valid
+deployments in the context of \SYSTEM{}. We also assume the adversary can
+manipulate the resource and web page wherever they are stored. The adversary
+may: (1) compromise the resource, (2) modify the hyperlink to point to a
+compromised resource anywhere on the internet, and/or (3) add, remove, or
+manipulate any checksums on the web page or elsewhere (excluding the backend)
+corresponding to the resource.
 
 Hence, we do not trust the integrity of the server's responses in any scenario.
 We do, however, trust the integrity of the backend's responses. Further, we
 expect the backend to be highly available. In \secref{evaluation}, we go over
 the implications of a compromised backend.
+
+We additionally consider the standard non-\SYSTEM{} case where the resource is
+co-hosted alongside a web page containing both a hyperlink pointing to the
+resource \emph{and an authoritative checksum corresponding to the resource}. As
+demonstrated throughout the paper, when the server co-hosting resources and
+checksums is compromised, it is trivial to manipulate both checksum and
+resource, rendering all forms of checksum verification irrelevant.
