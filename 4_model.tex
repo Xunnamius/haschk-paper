@@ -10,7 +10,7 @@ extent possible, operate without issuing false negatives, \ie{compromised
 resources that do not trigger a warning}, or false positives, \ie{benign
 resources that do trigger a warning}.
 
-We consider the following participants: (1) a \SYSTEM{}-aware client as the
+We consider the following entities: (1) a \SYSTEM{}-aware client as the
 \emph{frontend}, (2) a \emph{server} (or servers) as the distribution system
 hosting the \emph{resource}, and (3) a separate high availability system
 implementing \SYSTEM{} as the \emph{backend}. Specifically, we consider a
@@ -18,29 +18,29 @@ implementing \SYSTEM{} as the \emph{backend}. Specifically, we consider a
 FileZilla, and a \emph{browser frontend} such as Google Chrome or Mozilla
 Firefox.
 
-When considering a generic frontend, we assume the adversary can make the server
-respond to a resource request with any resource, including a compromised version
-of a resource. We also assume the adversary can tamper with any other server
+For a generic frontend, we assume the adversary can make the server respond to a
+resource request with any resource, including a compromised version of a
+resource. We also assume the adversary can tamper with any other server
 response, including adding, removing, or manipulating one or more checksums if
 they appear.
 
-When considering a browser frontend and web server, we contemplate two
-scenarios. The user either (1) directly enters the resource URI into the
-browser, initiating a direct download or (2) navigates to an HTML file
-(\emph{web page}) on the server. This web page contains a hyperlink pointing to
-the resource. The user clicks this hyperlink to download the resource. This
-resource is hosted either on the same server as the web page or externally on a
-third party server such as a CDN. Both are valid deployments in the context of
-\SYSTEM{}. We also assume the adversary can manipulate the resource and web page
-wherever they are stored. The adversary may: (1) compromise the resource, (2)
-modify the hyperlink to point to a compromised resource anywhere on the
-internet, and/or (3) add, remove, or manipulate any checksums that appear on the
-web page or elsewhere (excluding the backend) corresponding to the resource.
+For a browser frontend and web server, we contemplate two scenarios. From either
+an existing tab/window or a new one, the user (1) directly enters the resource
+URI into the browser, initiating a direct download or (2) navigates to an HTML
+file (\emph{web page}) on the server containing a hyperlink pointing to the
+resource. The user clicks this hyperlink to download the resource. This resource
+is hosted on the same server as the web page or externally on a third party
+server such as a CDN. Both are valid deployments in the context of \SYSTEM{}. We
+assume the adversary can manipulate the resource and web page wherever they are
+stored. The adversary may: (1) compromise the resource, (2) modify the hyperlink
+to point to a compromised resource anywhere on the internet, and/or (3) add,
+remove, or manipulate any checksums that appear on the web page or elsewhere
+(excluding the backend).
 
 Hence, we do not trust the integrity of the server's responses in any scenario.
-We do, however, trust the integrity of the backend's responses. Further, we
-expect the backend to be highly available. In \secref{evaluation}, we go over
-the implications of a compromised backend.
+We do, however, trust the integrity and authenticity of the backend's responses.
+Further, we expect the backend to be highly available. In \secref{evaluation},
+we go over the implications of a compromised backend.
 
 As an aside, we consider here the standard non-\SYSTEM{} case where the resource
 is co-hosted alongside a web page containing both a hyperlink pointing to the
