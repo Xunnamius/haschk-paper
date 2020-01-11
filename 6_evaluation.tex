@@ -1,34 +1,36 @@
 \section{Evaluation} \label{sec:evaluation}
 
+\TODO{Rewrite this section}
+
 The primary goal of any \SYSTEM{} implementation is to alert end-users when the
 resource they have downloaded is something other than what they were expecting.
 In this section, we evaluate our approach by first assessing the threat model
-\SYSTEM{} addresses, followed by an examination of our Google Chrome extensions,
-\DNSSYS{} and \DHTSYS{}. We then test our implementations versus a real-world
-deployment of HotCRP and/or a random sampling of papers published in previous
-\CONFERENCE{} proceedings. Finally, we evaluate the obstacles to scalability and
-potential performance overhead of our extensions.
+\SYSTEM{} addresses, followed by an examination of our Google Chrome extension.
+We then test our implementations versus a real-world deployment of HotCRP and/or
+a random sampling of papers published in previous \CONFERENCE{} proceedings.
+Finally, we evaluate the obstacles to scalability and potential performance
+overhead of our extensions.
 
 \TODO{Add metrics about solution LoC}
 
-To evaluate the effectiveness of our mitigation, we test \DNSSYS{} and
-\DHTSYS{}---our \SYSTEM{} Chrome extension implementations---against a series of
-common real-world resource integrity violations. The impetus behind any such
-resource integrity SCA is to have the resource pass through undetected by
-abusing the trust between client and provider with the hope that an unsuspecting
-user will interact with it.
+To evaluate the effectiveness of our mitigation, we test our \SYSTEM{} Chrome
+extension implementation against a series of common real-world resource
+integrity violations. The impetus behind any such resource integrity SCA is to
+have the resource pass through undetected by abusing the trust between client
+and provider with the hope that an unsuspecting user will interact with it.
 
 We show that the \SYSTEM{} approach is more effective than existing approaches
 at detecting integrity violations in arbitrary resources on the internet; this
-is especially evident when \DNSSYS{} and \DHTSYS{} are compared to the de facto
-standard: checksums.
+is especially evident when \SYSTEM{} is compared to the de facto standard:
+checksums.
 
-\subsection{\DNSSYS{}}
+\subsection{(delete me: DNSCHK)}
 
-To empirically evaluate \DNSSYS{}, we launch a heavily modified version of the
-popular open source research submission and peer review software, \emph{HotCRP}
-(version 2.102). Our modifications allow anyone visiting the site to
-interactively corrupt submissions and manipulate relevant DNS entries at will.
+To empirically evaluate our implementation, we launch a heavily modified version
+of the popular open source research submission and peer review software,
+\emph{HotCRP} (version 2.102). Our modifications allow anyone visiting the site
+to interactively corrupt submissions and manipulate relevant DNS entries at
+will.
 
 For our evaluation, we upload 10 different \CONFERENCE{} PDFs to our HotCRP
 instance. Upon their upload, HotCRP calculated and displayed the unique checksum
@@ -40,18 +42,18 @@ each file's current ``original'' checksum. Each checksum is considered an
 Authoritative Checksum (AC) mapped to a Resource Identifier (RI) corresponding
 to the uploaded PDF item.
 
-After installing \DNSSYS{} into our Google Chrome browser, we again download
-each file. For each observed download, \DNSSYS{} reported a ``safe'' judgement
-as expected. We then utilize the custom functionality we added to our HotCRP
-instance to add junk data onto the end of each of the uploaded PDFs, corrupting
-them. We also modified HotCRP so that it updated the displayed checksums to
-match their now-corrupted counterparts.
+After installing the frontend into our Google Chrome browser, we again download
+each file. For each observed download, our implementation reported a ``safe''
+judgement as expected. We then utilize the custom functionality we added to our
+HotCRP instance to add junk data onto the end of each of the uploaded PDFs,
+corrupting them. We also modified HotCRP so that it updated the displayed
+checksums to match their now-corrupted counterparts.
 
-Once again, we download each file and calculate a local checksum. \DNSSYS{}
-reported an ``unsafe'' judgement (a true positive) for each corrupted PDF file,
-as expected. Calculating the local checksum and checking it against the value
-reported by our HotCRP instance leads to a match (a false negative; \ie the
-result of co-location) as expected.
+Once again, we download each file and calculate a local checksum. Our
+implementation reported an ``unsafe'' judgement (a true positive) for each
+corrupted PDF file, as expected. Calculating the local checksum and checking it
+against the value reported by our HotCRP instance leads to a match (a false
+negative; \ie the result of co-location) as expected.
 
 We ran this experiment three times and observed consistent results.
 
@@ -64,19 +66,20 @@ download as suspicious once the download began, successfully warning the user.
 
 While evaluating our implementation, we observe no additional onerous network
 load or CPU usage with the extension loaded into Chrome. Measurements were taken
-using the Chrome developer tools. Intuitively, this makes sense since \DNSSYS{}
-makes at most two queries to the backend before rendering a judgement.
+using the Chrome developer tools. Intuitively, this makes sense since we makes
+at most two queries to the backend before rendering a judgement.
 
-\subsection{\DHTSYS{}}
+\subsection{(delete me: DHTCHK)}
 
-To evaluate \DHTSYS{}, we connect to the global Ring OpenDHT network. Since the
-OpenDHT software is implemented in C++, it could not be included directly in a
-JavaScript plugin. Therefore, for our implementation, we set up a local HTTP
-REST server wrapping the C++ implementation of OpenDHT. Our OpenDHT REST server
-provides an interface consistent with the one expected by \DNSSYS{} (\ie Google
-DNS's REST API), allowing for code reuse (\eg redirection protection) between
-our two implementations. See \secref{availability}, where we make these
-implementations available open source for community consideration.
+To evaluate our implementation, we connect to the global Ring OpenDHT network.
+Since the OpenDHT software is implemented in C++, it could not be included
+directly in a JavaScript plugin. Therefore, for our implementation, we set up a
+local HTTP REST server wrapping the C++ implementation of OpenDHT. Our OpenDHT
+REST server provides an interface consistent with the one expected by our
+implementation (\ie Google DNS's REST API), allowing for code reuse (\eg
+redirection protection) between our two implementations. See
+\secref{availability}, where we make these implementations available open source
+for community consideration.
 
 For our evaluation, we manually calculate a local checksum (\ie an AC) and an RI
 for 10 different \CONFERENCE{} PDFs. For the OD here we use a static locally
@@ -84,15 +87,16 @@ resolved domain name corresponding to a location on a local server. We manually
 store these RI-to-AC mappings as key-value pairs on the Kademlia-based OpenDHT
 network.
 
-After installing \DHTSYS{} into our Google Chrome browser, we download each file
-from our local server. For each observed download, \DHTSYS{} reported a ``safe''
+After installing the frontend into our Google Chrome browser, we download each
+file from our local server. For each observed download, we reported a ``safe''
 judgement as expected. We then store randomly generated checksums as replacement
 RI-to-AC mappings in the Ring OpenDHT network corresponding to these 10 PDFs
-such that the ACs purposely would not match the NACs generated by \DHTSYS{},
-simulating file corruption by an attacker.
+such that the ACs purposely would not match the NACs generated by our
+implementation, simulating file corruption by an attacker.
 
-Once again, we download each file and calculate a local checksum. \DHTSYS{}
-reported an ``unsafe'' judgement for each corrupted PDF file, as expected.
+Once again, we download each file and calculate a local checksum. Our
+implementation reported an ``unsafe'' judgement for each corrupted PDF file, as
+expected.
 
 \subsection{Obstacles to Scalability, Deployment}
 
@@ -129,12 +133,12 @@ resource by a different name/path.
 
 \subsection{DNS-Specific Protocol Limitations}
 
-Clearly, \DNSSYS{} relies on DNS. However, DNS~\cite{DNS1} was not originally
-designed to transport or store relatively large amounts of data, though this has
-been addressed with EDNS0~\cite{EDNS}. The checksums stored in DNS should not be
-much longer than 128 bytes or the output of the SHA512 function. Regardless, DNS
-resource record extensions exist that store much more than 128 bytes of
-data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
+Clearly, the DNS backend relies on DNS. However, DNS~\cite{DNS1} was not
+originally designed to transport or store relatively large amounts of data,
+though this has been addressed with EDNS0~\cite{EDNS}. The checksums stored in
+DNS should not be much longer than 128 bytes or the output of the SHA512
+function. Regardless, DNS resource record extensions exist that store much more
+than 128 bytes of data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
 
 Several working groups are considering DNS as a storage medium for
 checksums/hash output as well, such as securitytxt~\cite{draft-sectxt}. A widely
@@ -144,9 +148,9 @@ resource records a DNS zone file can support~\cite{DNS1}, hence any
 considerations regarding zone file size and/or ceilings on the number of TXT
 records in a single zone are at the sole discretion of the implementing entity.
 
-Additionally, \DNSSYS{} does not add to the danger of amplification and other
-reflection attacks on DNS; these are generic DNS issues addressable at other
-layers of the protocol.
+Additionally, the DNS-based backend does not add to the danger of amplification
+and other reflection attacks on DNS; these are generic DNS issues addressable at
+other layers of the protocol.
 
 \TODO{Talk a bit about how DNS is not authenticated but no one cares because of
 key pinning/CAs and about how DNSSEC sucks (but we initially considered it)}
@@ -159,12 +163,11 @@ backend that is already established, is well-tested, and exists
 globally like DNS. Such an entity would have to either maintain their own
 network of DHT nodes, which can incur significant cost if such a network was not
 already deployed, or piggy back off an open authenticated network, as was done
-with the case with our \DHTSYS{} implementation.
+with our implementation.
 
 These reasons make DNS more appealing for general download protection using our
 approach, though software that already relies on DHTs can deploy our approach
-leveraging existing systems. Regardless, we provide \DHTSYS{} to demonstrate the
-utility and flexibility of the \SYSTEM{} approach.
+leveraging existing systems.
 
 \subsection{Limitations of Any Chrome Extension}
 
@@ -177,7 +180,7 @@ filesystem traversal via a now deprecated native app API; there is also a
 non-standard HTML5/WebExtensions FileSystem API that would provide similar
 functionality were it to be widely considered~\cite{deadSpec}.
 
-While still effective, \DNSSYS{} and \DHTSYS{} would be even more effective as
+While still effective, our implementation would be even more effective as
 browser extensions if Chrome/Chromium or the WebExtensions API allowed for an
 explicit \texttt{onComplete} event hook in the downloads API. This hook would
 fire immediately before a file download completed and the file became
@@ -191,8 +194,8 @@ communicating intent through the browser's familiar UI and preventing the
 potentially-malicious download from becoming immediately executable.
 Unfortunately, the closest the Chrome/WebExtensions API comes to allowing
 \texttt{DangerType} mutations is the \texttt{acceptDanger} method on the
-downloads API, but it is not suitable for use with \DNSSYS{} as a background
-page based extension.
+downloads API, but it is not suitable for use with a background page based
+extension.
 
 While nice to have, we stress that none of the aforesaid functionality is
 critical to the ability of our implementations to more effectively mitigate SCA
@@ -200,6 +203,6 @@ risk than checksums and other solutions (cf. \secref{evaluation}).
 
 \TODO{integrate this in here somehow: Finally, given the lightweight nature of
 the cryptographic operations involved, we observed no download performance
-overhead compared to downloads without \DNSSYS{}.}
+overhead compared to downloads without HASCHK.}
 
 \TODO{Limitation: denial of service}

@@ -1,5 +1,24 @@
 \section{The \SYSTEM{} Approach} \label{sec:approach}
 
+\TODO{Rewrite this section}
+
+\TODO{Can handle multiple downloads at once.}
+
+\TODO{There is a problem here as I still do not understand what the system is.
+The approach section does not read like an approach to me, but more the sort of
+philosophical guidelines behind the work. That approach section has a few
+redundancies with the earlier motivation and challenges listed in other
+sections. More importantly, it doesn't provide a whole lot of technical
+information about what is done. That lack of technical information becomes a
+problem once I get to this section and you start telling me how threats are
+mitigated by various steps in the proposed solution: I still don't understand
+the solution. So, I think the paper needs some reorganization. One thing that
+has to happen is make section 4 much more concrete. (Hopefully that is where you
+are plannign to add the diagrams, which will help). I also believe that the
+implementation needs to be hoisted up to section 4. It is possible that once
+that is done, you won't really need to add much to section 4. Then I believe the
+parts that describe how the approach mitigates threats will make more sense.}
+
 In this section we detail the \SYSTEM{} approach.
 
 To achieve these goals, we first require some method to uniquely identify
@@ -33,9 +52,8 @@ download link is clicked---a ``non-authoritative'' cryptographic digest
 contents of the resource file. This checksum is used to construct the URN that
 uniquely fingerprints that resource in accordance with the draft
 spec~\cite{draft-URN}. The URN can be further encoded as individual
-implementations demand. For instance, our \DNSSYS{} implementation replaces all
-colons (``:'') in the URN with dashes and removes all padding characters so that
-URNs form valid URLs.
+implementations demand. Our implementation replaces all colons (``:'') in the
+URN with dashes and removes all padding characters so that URNs form valid URLs.
 
 Next, \SYSTEM{} uses the URN and the origin domain to query the high
 availability system. At this point, the system will respond with either (1) a
@@ -101,23 +119,22 @@ capable of guaranteeing the authenticity of its responses.
 
 \subsection{Implementations}
 
-We implement \SYSTEM{} as two proof-of-concept Google Chrome extensions:
-\DNSSYS{} and \DHTSYS{}. They work with DNS and Ring OpenDHT as their high
-availability backends, respectively. Our Chrome extensions do not make any
-modifications to the Chrome user interface or viewport other than the extension
-icon in the toolbar. Further, downloads work exactly the same whether or not
-\DNSSYS{} or \DHTSYS{} are installed; the extensions are transparent to end
-users. However, if a failure is experienced during NAC Validation (\ie a
-uncommon case), the extensions will alert the user to the dangerous download via
-toolbar icon and popup interface. We additionally note the \SYSTEM{} approach is
-not limited to browsers. It can also be incorporated into, for instance, FTP and
-SSH clients (\eg{rsync}), mobile apps, etc.
+We implement \SYSTEM{} as two proof-of-concept Google Chrome extensions. They
+work with DNS and Ring OpenDHT as their high availability backends,
+respectively. Our Chrome extensions do not make any modifications to the Chrome
+user interface or viewport other than the extension icon in the toolbar.
+Further, the extensions are transparent to end users when downloads are matched
+to the backend. However, if a failure is experienced during NAC Validation (\ie
+a uncommon case), the extensions will alert the user to the dangerous download
+via toolbar icon and popup interface. We additionally note the \SYSTEM{}
+approach is not limited to browsers. It can also be incorporated into, for
+instance, FTP and SSH clients (\eg{rsync}), mobile apps, etc.
 
-Our \DNSSYS{} and \DHTSYS{} implementations were designed with this guidance in
-mind, with ideal implementations able to rely on Google Chrome's dangerous
-download UI~\cite{ChromeClickThrough}. \TODO{talk about how the dangerous
-download UI is "from an authority," is harder to click through, and that this is
-verified by the Chrome dev team}.
+Our implementation was designed with this guidance in mind, with ideal
+implementations able to rely on Google Chrome's dangerous download
+UI~\cite{ChromeClickThrough}. \TODO{talk about how the dangerous download UI is
+"from an authority," is harder to click through, and that this is verified by
+the Chrome dev team}.
 
 \subsection{Overview XXXX}
 
@@ -150,7 +167,6 @@ responds with the AC or an indication that the RI-to-AC mapping was not found.
 
 To remain in compliance with DNS protocol label limits, we chose to split the
 RI---a 64 character alphanumeric string---into two labels separated by a period.
-We do this for both implementations, though it is only relevant with \DNSSYS{}.
 
 The ultimate query sent to the backend consists of an OD (\eg
 \texttt{fakesite.io}), a PL (static; \ie \texttt{\_dnschk}), an SL (static; \ie
@@ -168,41 +184,22 @@ judgement if they are not operating under strict mode conditions, otherwise an
 ``unsafe'' judgement is rendered (as if NAC Validation had taken place and
 failed).
 
-``Strict mode'' status, if active, prevents \DNSSYS{} and \DHTSYS{} from
-rendering ``neutral'' judgements for a particular OD. The point of neutral
-judgements is to allow the \SYSTEM{} approach to be incrementally adopted and
-deployed on the open internet without ``breaking the internet'' or pestering the
-user with false positives when downloading resources that are not explicitly
-protected by our approach. For resources that are protected by our approach,
-strict mode ensures there are only two possible judgements rendered by \DNSSYS{}
-and \DHTSYS{} for a given OD: either ``safe'' if NAC Validation succeeds or
-``unsafe'' in all other circumstances. For this reason, it is recommended that
-any adopter of our approach ensure their resources are protected under strict
-mode by default.
-
-To determine if strict mode status applies to an OD, an additional backend query
-is made of the form \texttt{SML.PL.OD}, where SML is the Strict Mode Sub-Label
-consisting of the standard string ``\_smode''. Continuing with our previous
-example, our query would take the form \texttt{\_smode.\_dnschk.fakesite.io}. If
-and only if the subject of this additional query exists in the backend, strict
-mode status is assumed.
-
 \subsection{Deployment and Scalability}
 
-\TODO{Explain how DNSCHK and DHTCHK would be deployed}
+\TODO{Explain how HASCHK would be deployed}
 
-In respect to \DNSSYS{} specifically, storing cryptographic data in DNS resource
+In respect to our implementation, storing cryptographic data in DNS resource
 records is not unprecedented. The DNS-Based Authentication of Named Entities
 (DANE) specification~\cite{DANE1, DANE2, DANE3} defines the ``TLSA'' and
 ``OPENPGPKEY'' DNS resource records to store cryptographic data. These resource
 record types, along with ``CERT''~\cite{CERT}, ``IPSECKEY''~\cite{IPSECKEY},
 those defined by DNS Security Extensions (DNSSEC)~\cite{DNSSEC}, and others
 demonstrate that storing useful cryptographic data retrievable through the DNS
-network is feasible at scale. Due the unique requirements of \DNSSYS{}, however,
-we use ``TXT'' records to map Resource Identifiers to Authoritative Checksums.
-In accordance with RFC 5507~\cite{RFC5507}, a production \DNSSYS{}
+network is feasible at scale. Due the unique requirements of DNS, however, we
+use ``TXT'' records to map Resource Identifiers to Authoritative Checksums. In
+accordance with RFC 5507~\cite{RFC5507}, a production implementation
 implementation would necessitate the creation of a new DNS resource record type
-as no current resource record type meets the requirements of \DNSSYS{}.
+as no current resource record type meets our requirements.
 
 \subsection{Resolving Origin Domain in the Browser}
 
@@ -210,8 +207,8 @@ To execute a resource integrity attack on a web server, an attacker generally
 has two paths. They can mutate the resource in place, which would cause NAC
 Validation to fail. They could also mutate the web page hosting the resource,
 replacing the resource's hyperlink with a malicious hyperlink pointing to a
-compromised resource on the attacker's remote system. \DNSSYS{} and \DHTSYS{}
-will catch this due to how we calculate the Origin Domain (OD).
+compromised resource on the attacker's remote system. Implementations will catch
+this due to how we calculate the Origin Domain (OD).
 
 To prevent such implementation-specific attacks, we make a distinction between
 the domain a resource's hyperlink might be pointing to (which might belong to
