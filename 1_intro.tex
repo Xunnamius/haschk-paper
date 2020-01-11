@@ -158,9 +158,9 @@ our implementation. While not a panacea, we find no practical obstacles to
 efficient deployment at scale or to security outside of those imposed by the
 Chrome developer API.
 
-In summary, our primary contributions are: \\
+Our primary contributions can be summarized as:
 
-1. We propose a practical automated approach to transparently mitigating the
+First: we propose a practical automated approach to transparently mitigating the
 accidental consumption of compromised resources over the internet. Our protocol
 requires no modifications to web standards, web infrastructure, or source code,
 does not employ unreliable heuristics, does not expect checksums to be co-hosted
@@ -169,17 +169,17 @@ implemented and immediately deployed. \SYSTEM{}-aware clients will have their
 downloads secured while the user experience of clients unaware of \SYSTEM{}
 remain completely unaffected. Further, our protocol can be implemented in more
 than just browsers; \SYSTEM{} can be implemented to protect downloads in FTP
-clients, SSH (like rsync) clients, etc. \\
+clients, SSH (like rsync) clients, etc.
 
-2. We present our proof-of-concept implementation, a Google Chrome extension,
+Second: we present our proof-of-concept implementation, a Google Chrome extension,
 and demonstrate our protocol's effectiveness empirically using a publicly
 available patched HotCRP instance. We show that our implementation is capable of
 detecting real-world resource compromises in this instance, even when the entire
 server is compromised, significantly raising the bar for an attacker. We
 additionally make available our frontend implementation and OpenDHT backend open
-source (see \secref{availability}). \\
+source (see \secref{availability}).
 
-3. We evaluate our implementation and find no practical obstacles to efficient
+Third, we evaluate our implementation and find no practical obstacles to efficient
 deployment outside of those imposed by the Chrome developer API. To the best of
 our knowledge, this is the first approach that is not susceptible to the
 pitfalls of co-hosting. We conclude that \SYSTEM{} is more effective at
