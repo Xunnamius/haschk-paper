@@ -18,10 +18,9 @@ FileZilla, and a \emph{browser frontend} such as Google Chrome or Mozilla
 Firefox.
 
 When considering a generic frontend, we assume the adversary can make the server
-respond to a resource request from the frontend with any resource, including a
-compromised version of a resource. We also assume the adversary can tamper with
-any other server response, including adding, removing, or manipulating one or
-more checksums.
+respond to a resource request with any resource, including a compromised version
+of a resource. We also assume the adversary can tamper with any other server
+response, including adding, removing, or manipulating one or more checksums.
 
 When considering a browser frontend and web server, we assume the user first
 navigates to an HTML file (\emph{web page}) on the server. This web page
@@ -32,17 +31,19 @@ deployments in the context of \SYSTEM{}. We also assume the adversary can
 manipulate the resource and web page wherever they are stored. The adversary
 may: (1) compromise the resource, (2) modify the hyperlink to point to a
 compromised resource anywhere on the internet, and/or (3) add, remove, or
-manipulate any checksums on the web page or elsewhere (excluding the backend)
-corresponding to the resource.
+manipulate any checksums that appear on the web page or elsewhere (excluding the
+backend) corresponding to the resource.
 
 Hence, we do not trust the integrity of the server's responses in any scenario.
 We do, however, trust the integrity of the backend's responses. Further, we
 expect the backend to be highly available. In \secref{evaluation}, we go over
 the implications of a compromised backend.
 
-We additionally consider the standard non-\SYSTEM{} case where the resource is
-co-hosted alongside a web page containing both a hyperlink pointing to the
-resource \emph{and an authoritative checksum corresponding to the resource}. As
-demonstrated throughout the paper, when the server co-hosting resources and
-checksums is compromised, it is trivial to manipulate both checksum and
-resource, rendering all forms of checksum verification irrelevant.
+Here, we additionally consider the standard non-\SYSTEM{} case where the
+resource is co-hosted alongside a web page containing both a hyperlink pointing
+to the resource \emph{and an authoritative checksum corresponding to the
+resource}. As demonstrated throughout the paper, when the server co-hosting
+resources and checksums is compromised, it is trivial to manipulate both
+checksum and resource, rendering all forms of checksum verification irrelevant.
+Assuming proper deployment, it is the goal of \SYSTEM{} to ensure this is never
+the case.
