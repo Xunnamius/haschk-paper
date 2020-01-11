@@ -5,7 +5,7 @@ GHOSTSCRIPT=\gs
 TEX-FILES = *.tex
 BIB-FILES = *.bib
 TOP-LEVEL-ROOT = _paper
-CRNAME = dickens-dnschk
+CRNAME = dickens-haschk
 
 all: generate-pdf save-temporary $(CRNAME)
 
