@@ -2,28 +2,16 @@
 
 \TODO{Rewrite this section}
 
-In this section, we evaluate \SYSTEM{} by first assessing how \SYSTEM{}
-addresses its threat model followed by an examination of performance, deployment
-overhead, and scalability our Google Chrome extension. We then test our
-implementations using a patched HotCRP instance and a random sampling of papers
-published in previous \CONFERENCE{} proceedings.
+In this section, we evaluate our Google Chrome \SYSTEM{} implementation by first
+assessing how \SYSTEM{} addresses its threat model followed by an examination of
+performance, deployment overhead, and scalability. We then empitically test our
+implementation using a patched HotCRP instance and random sampling of papers
+published in previous \CONFERENCE{} proceedings. We show that the \SYSTEM{}
+approach is more effective than existing approaches at detecting integrity
+violations in arbitrary resources on the internet; this is especially evident
+when \SYSTEM{} is compared to the standard checksums.
 
-To evaluate the effectiveness of our mitigation, we test our \SYSTEM{} Chrome
-extension implementation against a series of common real-world resource
-integrity violations. The impetus behind any such resource integrity SCA is to
-have the resource pass through undetected by abusing the trust between client
-and provider with the hope that an unsuspecting user will interact with it.
-
-We show that the \SYSTEM{} approach is more effective than existing approaches
-at detecting integrity violations in arbitrary resources on the internet; this
-is especially evident when \SYSTEM{} is compared to the de facto standard:
-checksums.
-
-\subsection{Scalability}
-
-\TODO{Explain how \SYSTEM{} is scalable}
-
-\subsection{(delete me: DNSCHK)}
+\subsection{Security and Performance}
 
 To empirically evaluate our implementation, we launch a heavily modified version
 of the popular open source research submission and peer review software,
@@ -68,8 +56,6 @@ load or CPU usage with the extension loaded into Chrome. Measurements were taken
 using the Chrome developer tools. Intuitively, this makes sense since we makes
 at most two queries to the backend before rendering a judgement.
 
-\subsection{(delete me: DHTCHK)}
-
 To evaluate our implementation, we connect to the global Ring OpenDHT network.
 Since the OpenDHT software is implemented in C++, it could not be included
 directly in a JavaScript plugin. Therefore, for our implementation, we set up a
@@ -97,7 +83,48 @@ Once again, we download each file and calculate a local checksum. Our
 implementation reported an ``unsafe'' judgement for each corrupted PDF file, as
 expected.
 
-\subsection{Obstacles to Scalability, Deployment}
+\TODO{integrate this in here somehow: Finally, given the lightweight nature of
+the cryptographic operations involved, we observed no download performance
+overhead compared to downloads without \SYSTEM{}.}
+
+\subsection{Deployment and Scalability}
+
+\TODO{Argue why \SYSTEM{} is scalable and rewrite all of this mess}
+
+Clearly, the DNS backend relies on DNS. However, DNS~\cite{DNS1} was not
+originally designed to transport or store relatively large amounts of data,
+though this has been addressed with EDNS0~\cite{EDNS}. The checksums stored in
+DNS should not be much longer than 128 bytes or the output of the SHA512
+function. Regardless, DNS resource record extensions exist that store much more
+than 128 bytes of data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
+
+Several working groups are considering DNS as a storage medium for
+checksums/hash output as well, such as securitytxt~\cite{draft-sectxt}. A widely
+deployed example of DNS ``TXT'' resource records being used this way is SPF and
+DKIM~\cite{DKIM}. We are unaware of any practical limitation on the number of
+resource records a DNS zone file can support~\cite{DNS1}, hence any
+considerations regarding zone file size and/or ceilings on the number of TXT
+records in a single zone are at the sole discretion of the implementing entity.
+
+Additionally, the DNS-based backend does not add to the danger of amplification
+and other reflection attacks on DNS; these are generic DNS issues addressable at
+other layers of the protocol.
+
+\TODO{Talk a bit about how DNS is not authenticated but no one cares because of
+key pinning/CAs and about how DNSSEC sucks (but we initially considered it)}
+
+In respect to the DNS network, storing cryptographic data in DNS resource
+records is not unprecedented. The DNS-Based Authentication of Named Entities
+(DANE) specification~\cite{DANE1, DANE2, DANE3} defines the ``TLSA'' and
+``OPENPGPKEY'' DNS resource records to store cryptographic data. These resource
+record types, along with ``CERT''~\cite{CERT}, ``IPSECKEY''~\cite{IPSECKEY},
+those defined by DNS Security Extensions (DNSSEC)~\cite{DNSSEC}, and others
+demonstrate that storing useful cryptographic data retrievable through the DNS
+network is feasible at scale. Due the unique requirements of DNS, however, we
+use ``TXT'' records to map Resource Identifiers to Authoritative Checksums. In
+accordance with RFC 5507~\cite{RFC5507}, a production implementation
+implementation would necessitate the creation of a new DNS resource record type
+as no current resource record type meets our requirements.
 
 As \SYSTEM{} is predicated on a distributed high availability backend and
 requires no application/frontend source code changes to function, we conclude
@@ -130,32 +157,6 @@ implementations currently require each ``mangled'' RI permutation representing a
 resource to be added to the backend, even if they all represent the same
 resource by a different name/path.
 
-\subsection{DNS-Specific Protocol Limitations}
-
-Clearly, the DNS backend relies on DNS. However, DNS~\cite{DNS1} was not
-originally designed to transport or store relatively large amounts of data,
-though this has been addressed with EDNS0~\cite{EDNS}. The checksums stored in
-DNS should not be much longer than 128 bytes or the output of the SHA512
-function. Regardless, DNS resource record extensions exist that store much more
-than 128 bytes of data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
-
-Several working groups are considering DNS as a storage medium for
-checksums/hash output as well, such as securitytxt~\cite{draft-sectxt}. A widely
-deployed example of DNS ``TXT'' resource records being used this way is SPF and
-DKIM~\cite{DKIM}. We are unaware of any practical limitation on the number of
-resource records a DNS zone file can support~\cite{DNS1}, hence any
-considerations regarding zone file size and/or ceilings on the number of TXT
-records in a single zone are at the sole discretion of the implementing entity.
-
-Additionally, the DNS-based backend does not add to the danger of amplification
-and other reflection attacks on DNS; these are generic DNS issues addressable at
-other layers of the protocol.
-
-\TODO{Talk a bit about how DNS is not authenticated but no one cares because of
-key pinning/CAs and about how DNSSEC sucks (but we initially considered it)}
-
-\subsection{DHT-Specific Limitations}
-
 Unlike DNS, an entity seeking to leverage a Distributed Hash Table (DHT) may not
 have the benefit of being able to rely on a high availability distributed
 backend that is already established, is well-tested, and exists
@@ -168,7 +169,7 @@ These reasons make DNS more appealing for general download protection using our
 approach, though software that already relies on DHTs can deploy our approach
 leveraging existing systems.
 
-\subsection{Limitations of Any Chrome Extension}
+\subsection{Limitations}
 
 Our current JavaScript implementations, as Chrome extensions, are not allowed to
 touch the resource files downloaded by Chrome and so cannot prevent a
@@ -200,12 +201,8 @@ While nice to have, we stress that none of the aforesaid functionality is
 critical to the ability of our implementations to more effectively mitigate SCA
 risk than checksums and other solutions (cf. \secref{evaluation}).
 
-\TODO{integrate this in here somehow: Finally, given the lightweight nature of
-the cryptographic operations involved, we observed no download performance
-overhead compared to downloads without \SYSTEM{}.}
-
 \TODO{Limitation: denial of service}
 
-\TODO{go over the implications of a compromised backend}
+\subsection{Compromising the Backend}
 
-\subsection{Limitations of Implementation}
+\TODO{go over the implications of a compromised backend}
