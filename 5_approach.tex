@@ -8,32 +8,33 @@ of these components.
 
 \subsection{Participants}
 
-\textbf{User.} The end \emph{user} is the entity, human or otherwise, with the
-goal of verifying the integrity of the resource they just downloaded.
+\noindent\textbf{User.} The end \emph{user} is the entity, human or otherwise,
+with the goal of verifying the integrity of the resource they just downloaded.
+\\
 
-\textbf{Resource.} A \emph{resource} is any data provided by the server to the
-user. A resource may or may not be protected by \SYSTEM{}, depending on the
-server and backend. In the case where the resource is not protected by
-\SYSTEM{}, false positives must not occur.
+\noindent\textbf{Resource.} A \emph{resource} is any data provided by the server
+to the user. A resource may or may not be protected by \SYSTEM{}, depending on
+the server and backend. In the case where the resource is not protected by
+\SYSTEM{}, false positives must not occur. \\
 
-\textbf{Provider.} The \emph{provider} is the entity in control of both the
-server and backend with the goal of ensuring the integrity of resources
-downloaded from their system.
+\noindent\textbf{Provider.} The \emph{provider} is the entity in control of both
+the server and backend with the goal of ensuring the integrity of resources
+downloaded from their system. \\
 
-\textbf{\SYSTEM{} Frontend.} The \emph{frontend} is responsible for calculating
-the Uniform Resource Name (URN) and Backend Domain (BD) of the resource
-downloaded from the server. Afterwards, the frontend queries the backend using
-this URN and, if an integrity violation is detected, quarantines the resource
-and warns the user.
+\noindent\textbf{\SYSTEM{} Frontend.} The \emph{frontend} is responsible for
+calculating the Uniform Resource Name (URN) and Backend Domain (BD) of the
+resource downloaded from the server. Afterwards, the frontend queries the
+backend using this URN and, if an integrity violation is detected, quarantines
+the resource and warns the user. \\
 
-\textbf{Server.} The \emph{server} is a distribution system (hopefully)
+\noindent\textbf{Server.} The \emph{server} is a distribution system (hopefully)
 controlled by the provider that hosts resources for download. It can be internal
-or external, a single server or many, first-party or third-party.
+or external, a single server or many, first-party or third-party. \\
 
-\textbf{\SYSTEM{} Backend.} The \emph{backend} is responsible for advertising a
-queryable listing of URNs that \SYSTEM{} frontends can use to judge the
-legitimacy of downloads. It is a high availability system that is wholly
-separate from the server and (hopefully) controlled by the provider.
+\noindent\textbf{\SYSTEM{} Backend.} The \emph{backend} is responsible for
+advertising a queryable listing of URNs that \SYSTEM{} frontends can use to
+judge the legitimacy of downloads. It is a high availability system that is
+wholly separate from the server and (hopefully) controlled by the provider.
 
 \subsection{Overview}
 
@@ -59,7 +60,8 @@ made inaccessible/quarantined by default; and (3) the user is still allowed to
 though this should be less convenient than the default~\cite{Cherubini}. Google
 Chrome has implemented something similar as part of its redesigned dangerous
 download warning UX, empirically demonstrating it to be an effective
-countermeasure to click through~\cite{ChromeClickThrough}.
+countermeasure to click through in the context of
+downloads~\cite{ChromeClickThrough}.
 
 If the query returns a negative result, the frontend should indicate this as
 inconspicuously as possible to avoid warning/popup fatigue~\cite{Akhawe,
