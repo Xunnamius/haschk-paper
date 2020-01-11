@@ -158,9 +158,9 @@ our implementation. While not a panacea, we find no practical obstacles to
 efficient deployment at scale or to security outside of those imposed by the
 Chrome developer API.
 
-Our primary contributions can be summarized as:
+In summary, our primary contributions are:
 
-First: we propose a practical automated approach to transparently mitigating the
+First, we propose a practical automated approach to transparently mitigating the
 accidental consumption of compromised resources over the internet. Our protocol
 requires no modifications to web standards, web infrastructure, or source code,
 does not employ unreliable heuristics, does not expect checksums to be co-hosted
@@ -171,7 +171,7 @@ remain completely unaffected. Further, our protocol can be implemented in more
 than just browsers; \SYSTEM{} can be implemented to protect downloads in FTP
 clients, SSH (like rsync) clients, etc.
 
-Second: we present our proof-of-concept implementation, a Google Chrome extension,
+Second, we present our proof-of-concept implementation, a Google Chrome extension,
 and demonstrate our protocol's effectiveness empirically using a publicly
 available patched HotCRP instance. We show that our implementation is capable of
 detecting real-world resource compromises in this instance, even when the entire
