@@ -9,82 +9,60 @@ downloads over the internet.
 
 \subsection{Security and Performance}
 
-\TODO{Rewrite this subsection!}
-
 To empirically evaluate our implementation, we launch a lightly modified version
-of the popular open source research submission and peer review software,
-\emph{HotCRP} (version 2.102). Our modifications allow anyone visiting the site
-to interactively corrupt submissions and manipulate relevant DNS entries at
-will.
+of the popular open source research submission and peer review software, HotCRP
+(version 2.102; see \secref{sec:availability}). Our modifications allow anyone
+visiting the site to interactively corrupt submissions and manipulate relevant
+DNS entries at will.
 
 For our evaluation, we upload 10 different \CONFERENCE{} PDFs to our HotCRP
 instance. Upon their upload, HotCRP calculated and displayed the unique checksum
 (a SHA-256 digest) of each PDF. After each PDF is uploaded, we immediately
-download it and manually calculate a local checksum, matching each to the
+download it and manually calculate a checksum locally, matching each to the
 checksum displayed by the HotCRP software. Next, we utilize the custom
-functionality we added to our HotCRP instance to populate our DNS backend with
-each file's current ``original'' checksum. Each checksum is considered an
-Authoritative Checksum (AC) mapped to a Resource Identifier (RI) corresponding
-to the uploaded PDF item.
+functionality we patched into HotCRP to populate our DNS backend with each
+file's expected URN.
 
 After installing the frontend into our Google Chrome browser, we again download
-each file. For each observed download, our implementation reported a ``safe''
-judgement as expected. We then utilize the custom functionality we added to our
-HotCRP instance to add junk data onto the end of each of the uploaded PDFs,
-corrupting them. We also modified HotCRP so that it updated the displayed
-checksums to match their now-corrupted counterparts.
+each file. For each observed download, our extension indicated a ``safe''
+judgement. We then utilize our patched functionality to add junk data onto the
+end of each of the uploaded PDFs, thus corrupting them. We also modified HotCRP
+so that it updated the displayed checksums to match their now-corrupted
+counterparts.
 
-Once again, we download each file and calculate a local checksum. Our
-implementation reported an ``unsafe'' judgement (a true positive) for each
-corrupted PDF file, as expected. Calculating the local checksum and checking it
-against the value reported by our HotCRP instance leads to a match (a false
-negative; \ie{, the result of co-location}) as expected.
+Once again, we download each file. Our extension reported an ``unsafe''
+judgement (a true positive) for each corrupted PDF file. Calculating the local
+checksum and checking it against the value reported by our HotCRP instance leads
+to a match (a false negative; \ie{, the result of co-hosting}), defeating prior
+approaches to both manual and automated checksum verification.
 
-We ran this experiment three times and observed consistent results.
+We ran this experiment three times, each with different sets of PDFs and using
+both the DNS and DHT based backends. We observed consistent results.
 
-Finally, we implement a ``redirection'' attack where, when clicking the link to
-download the PDF document from HotCRP, users were forced to navigate to a
-``compromised'' PHP script on an adjacent server that very quickly redirected
-clients several times before triggering the download of a corrupted version of
-the original HotCRP-hosted resource. Our implementation correctly flagged this
-download as suspicious once the download began, successfully warning the user.
+Finally, we utilize our patched functionality to test a ``redirection'' attack
+where the hyperlink pointing to the correct PDF is replaced with a hyperlink to
+a dummy malware file hosted in a distinct malicious DNS zone with conforming
+\SYSTEM{} deployment. When an unsuspecting user clicks such a link, they expect
+to download the PDF document from HotCRP but are instead navigated to a PHP
+script that redirects the request one or more times before landing on the dummy
+malware file. This process corrupts Chrome's \texttt{DownloadItem.referrer}
+property. Even in this case, our implementation correctly flagged this download
+as suspicious once the download began, successfully warning the user.
 
-While evaluating our implementation, we observe no additional onerous network
-load or CPU usage with the extension loaded into Chrome. Measurements were taken
-using the Chrome developer tools. Intuitively, this makes sense since we makes
-at most two queries to the backend before rendering a judgement.
+While evaluating our implementation, we observe no additional network load or
+CPU usage with the extension loaded into Chrome. Measurements were taken using
+the Chrome developer tools. Intuitively, this makes sense given the lightweight
+nature of the cryptographic operations involved.
 
-To evaluate our implementation, we connect to the global Ring OpenDHT network.
-Since the OpenDHT software is implemented in C++, it could not be included
-directly in a JavaScript plugin. Therefore, for our implementation, we set up a
-local HTTP REST server wrapping the C++ implementation of OpenDHT. Our OpenDHT
-REST server provides an interface consistent with the one expected by our
-implementation. See \secref{availability}, where we make these implementations
-available open source for community consideration.
-
-For our evaluation, we manually calculate a local checksum for 10 different
-\CONFERENCE{} PDFs. For the OD here we use a static locally resolved domain name
-corresponding to a location on a local server. We manually store these RI-to-AC
-mappings as key-value pairs on the Kademlia-based OpenDHT network.
-
-After installing the frontend into our Google Chrome browser, we download each
-file from our local server. For each observed download, we reported a ``safe''
-judgement as expected. We then store randomly generated checksums as replacement
-RI-to-AC mappings in the Ring OpenDHT network corresponding to these 10 PDFs
-such that the ACs purposely would not match the NACs generated by our
-implementation, simulating file corruption by an attacker.
-
-Once again, we download each file and calculate a local checksum. Our
-implementation reported an ``unsafe'' judgement for each corrupted PDF file, as
-expected.
-
-\TODO{integrate this in here somehow: Finally, given the lightweight nature of
-the cryptographic operations involved, we observed no download performance
-impact compared to downloads without \SYSTEM{}.}
-
-\TODO{One para blurb about the implications of a compromised backend, i.e.
-potential denial of service. Much bigger problems if DNS is compromised,
-though.}
+We also consider the implications of a compromised backend, such as if an
+attacker tampers with the provider's DNS server or its response. Since we trust
+the integrity and authenticity of responses from the backend, this is ultimately
+outside our threat model. However, in the case of a compromised DNS zone by
+itself, at worst the attacker can perpetuate a denial of service attack by
+triggering false positives. Without compromising both the backend and the
+distribution server, the attacker still cannot deliver compromised resources to
+users. Further, we argue a provider has much bigger problems if their DNS zone
+or other backend is compromised.
 
 \subsection{Deployment and Scalability}
 
