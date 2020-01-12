@@ -64,71 +64,40 @@ distribution server, the attacker still cannot deliver compromised resources to
 users. Further, we argue a provider has much bigger problems if their DNS zone
 or other backend is compromised.
 
-\subsection{Deployment and Scalability}
+\subsection{Scalability and Deployment}
 
-\TODO{Argue why \SYSTEM{} is scalable and rewrite all of this mess.}
-
-Clearly, the DNS backend relies on DNS. However, DNS~\cite{DNS1} was not
-originally designed to transport or store relatively large amounts of data,
-though this has been addressed with EDNS0~\cite{EDNS}. The checksums stored in
-DNS should not be much longer than 128 bytes or the output of the SHA512
-function. Regardless, DNS resource record extensions exist that store much more
-than 128 bytes of data~\cite{CERT, IPSECKEY, DANE3, DANE1}.
-
-Several working groups are considering DNS as a storage medium for
-checksums/hash output as well, such as securitytxt~\cite{draft-sectxt}. A widely
-deployed example of DNS ``TXT'' resource records being used this way is SPF and
-DKIM~\cite{DKIM}. We are unaware of any practical limitation on the number of
-resource records a DNS zone file can support~\cite{DNS1}, hence any
-considerations regarding zone file size and/or ceilings on the number of TXT
-records in a single zone are at the sole discretion of the implementing entity.
-
-Additionally, the DNS-based backend does not add to the danger of amplification
-and other reflection attacks on DNS; these are generic DNS issues addressable at
-other layers of the protocol.
-
-In respect to the DNS network, storing cryptographic data in DNS resource
-records is not unprecedented. The DNS-Based Authentication of Named Entities
-(DANE) specification~\cite{DANE1, DANE2, DANE3} defines the ``TLSA'' and
-``OPENPGPKEY'' DNS resource records to store cryptographic data. These resource
-record types, along with ``CERT''~\cite{CERT}, ``IPSECKEY''~\cite{IPSECKEY},
-those defined by DNS Security Extensions (DNSSEC)~\cite{DNSSEC}, and others
-demonstrate that storing useful cryptographic data retrievable through the DNS
-network is feasible at scale. Due the unique requirements of DNS, however, we
-use ``TXT'' records to map Resource Identifiers to Authoritative Checksums. In
-accordance with RFC 5507~\cite{RFC5507}, a production implementation
-implementation would necessitate the creation of a new DNS resource record type.
-
-As \SYSTEM{} is predicated on a high availability backend and requires no
-application/frontend source code changes to function, we conclude that the
+As \SYSTEM{} assumes a high availability backend, we conclude that the
 scalability of \SYSTEM{} can be reduced to the scalability of its backend. We
 are aware of no other obstacles to scalability beyond those inherited from the
 underlying backend system.
 
-In respect to DNS specifically, we are aware of no practical limits or
-protocol-based restrictions on the scalability of a backend file itself or its
-sub-zones. A service can host tens of thousands of resource records in their
-backend file~\cite{DNS1, DNS2}.
+Obviously, our DNS backend relies on DNS~\cite{DNS1}. DNS was not originally
+designed to transport or store relatively large amounts of data, but the content
+of our DNS TXT records are very small (usually two bytes or less). Further, the
+URNs queryable via DNS request are exactly 112 characters, \ie{the length of a
+BASE32 encoded URN}, and are divided into two 53 character labels, conforming to
+DNS label length limits~\cite{DNS2}.
 
-With the HotCRP demo, the totality of our resource deployment scheme consisted
-of the addition of a new TXT entry to our backend file---accomplished via API
-call to Google DNS---during HotCRP's paper submission process. This new TXT
-entry consisted of a mapping between a RI and its corresponding AC.
+We are also unaware of any practical limitation on the number of resource
+records a DNS zone file can support. A DNS server can host tens of thousands of
+resource records in their backend file~\cite{DNS1, DNS2}. Moreover, several
+working groups have considered using DNS as a storage medium for checksums/hash
+output, so the concept is not novel. Examples include
+securitytxt~\cite{draft-sectxt} and DKIM~\cite{DKIM}.
 
-We find a DNS record addition or update during the resource deployment process
-to be simple enough for service administrators to implement and presents no
-significant burden to deployment outside of DNS API integration into a
-development team or other entity's software deployment toolchain. For reference,
-we implemented the functionality that automatically adds (and updates) the DNS
-records mapping the ACs and RIs of papers uploaded to our HotCRP instance in
-under 10 lines of JavaScript.
+Additionally, using DNS as a backend does not add to the danger of amplification
+and other reflection attacks on DNS; these are generic DNS issues addressable at
+other layers of the protocol.
 
-We note that, in the case where an entity's content distribution mechanism
-relies on, for instance, a mirroring service, third-party CDN, et cetera
-\emph{that randomly or disparately mangles resource URI paths}, our
-implementations currently require each ``mangled'' RI permutation representing a
-resource to be added to the backend, even if they all represent the same
-resource by a different name/path.
+With the HotCRP demo, our entire resource deployment scheme consisted of (1) the
+addition of a new TXT entry to our DNS backend and (2) a new value published to
+our DHT backend during the paper (resource) submission process. We argue
+updating DNS record (or DHT value) during the resource deployment process is
+simple enough for developers and providers to implement and presents no
+significant burden to deployment. For reference, we implemented the
+functionality that automatically adds (and updates) the DNS TXT records
+advertising URNs of papers uploaded to our HotCRP instance in under 10 lines of
+JavaScript.
 
 \subsection{Limitations}
 
