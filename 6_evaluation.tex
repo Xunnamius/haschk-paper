@@ -1,19 +1,17 @@
 \section{Evaluation} \label{sec:evaluation}
 
-In this section, we evaluate our Google Chrome \SYSTEM{} implementation by first
-assessing how \SYSTEM{} addresses its threat model followed by an examination of
-performance, deployment overhead, and scalability. We then empitically test our
-implementation using a patched HotCRP instance and random sampling of papers
-published in previous \CONFERENCE{} proceedings. We show that the \SYSTEM{}
-approach is more effective than existing approaches at detecting integrity
-violations in arbitrary resources on the internet; this is especially evident
-when \SYSTEM{} is compared to checksums as they are typically employed.
+In this section, we evaluate the performance impact, deployment overhead, and
+scalability of our Google Chrome \SYSTEM{} implementation. We then test our
+implementation empirically using a patched HotCRP instance and random sampling
+of papers published in previous \CONFERENCE{} proceedings. We show that
+\SYSTEM{} is more effective than existing approaches at detecting integrity
+problems in arbitrary downloads over the internet.
 
 \subsection{Security and Performance}
 
 \TODO{Rewrite this subsection!}
 
-To empirically evaluate our implementation, we launch a heavily modified version
+To empirically evaluate our implementation, we launch a lightly modified version
 of the popular open source research submission and peer review software,
 \emph{HotCRP} (version 2.102). Our modifications allow anyone visiting the site
 to interactively corrupt submissions and manipulate relevant DNS entries at
@@ -82,7 +80,7 @@ expected.
 
 \TODO{integrate this in here somehow: Finally, given the lightweight nature of
 the cryptographic operations involved, we observed no download performance
-overhead compared to downloads without \SYSTEM{}.}
+impact compared to downloads without \SYSTEM{}.}
 
 \subsection{Deployment and Scalability}
 

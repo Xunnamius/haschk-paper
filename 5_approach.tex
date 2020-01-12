@@ -174,9 +174,10 @@ again. This inconvenience, favoring users' security over choice, is in keeping
 with the security community's recommendations regarding security warning UX (see
 \secref{introduction}).
 
-As no JavaScript OpenDHT client implementation exists, we created a REST API to
-facilitate communication between JavaScript and OpenDHT via HTTP and JSON. In a
-production implementation, the OpenDHT client would be baked into the extension.
+As no JavaScript OpenDHT client implementation exists, we developed a REST API
+to facilitate communication between our extension and the Ring OpenDHT network
+via HTTP and JSON. In a production implementation, a JavaScript OpenDHT client
+would be baked directly into the extension.
 
 Deploying the DNS backend is as simple as adding certain TXT records to our DNS
 zone. This is a straightforward operation. Similarly, deploying the DHT backend
@@ -185,19 +186,20 @@ OpenDHT network, which is trivial. Moreover, both DNS and DHT backends are
 performant and highly available. The Ring OpenDHT network is also free to use.
 In the case of DNS, the vast majority of web-facing providers and IT teams are
 already using it, already pay for their own DNS zones, and are already quite
-familiar with configuring and managing them. No expensive secondary system is
-necessary in either case. Additionally, we argue updating these backends
+familiar with configuring and managing them. No expensive exotic secondary
+system is required. Additionally, we argue updating these backends
 automatically---by integrating a URN calculation and record insertion/update
 step into a modern development toolchain or resource deployment pipeline---is
 relatively low-effort and straightforward for providers.
 
 No application or website source code changes, costly user-facing server or web
 infrastructure customizations, or modifications to web standards are needed to
-enable our extension to protect a provider's resources. Given a production
-implementation of our frontend and the current prevalence of DNS, \SYSTEM{} with
-a DNS backend could be deployed by interested providers immediately.
+enable our extension to protect a provider's resources. Given a production-ready
+implementation of our frontend---coupled with the near ubiquitous adoption of
+DNS---\SYSTEM{} (with a DNS backend) could be deployed immediately by interested
+providers.
 
-\subsubsection{URNs and BDs in Google Chrome}
+\subsubsection{URNs, BDs, and Fallthrough in Google Chrome}
 
 BD derivation in the browser is non-trivial. Users can initiate downloads
 through clicking links inside \emph{and outside} the browser (\eg{ in an email
