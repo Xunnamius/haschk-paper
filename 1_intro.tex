@@ -94,7 +94,7 @@ A major contributor to this confusion is the tradeoff made by
 \textbf{co-hosting} a resource and its authoritative checksum on the same
 distribution system, \eg{a web page hosting both a hyperlink pointing to a
 resource and that resource's authoritative checksum together}. While
-cost-effective for the developer and less confusing for the user, an attacker
+cost-effective for the provider and less confusing for the user, an attacker
 that compromises a system hosting both a resource and its checksum together can
 mutate both, rendering the checksum irrelevant~\cite{Stickler}. This is true for
 automated checksum verification solutions as well~\cite{Cherubini}. The
@@ -139,13 +139,14 @@ We approach these problems with four key concerns in mind. (1) \SYSTEM{}
 frontends must provide security guarantees transparently without adding any
 extra burden on the user in the common case. Here, an optimal implementation
 avoids relying on the user to overcome apathy in the interest of security while
-accounting for the tendency of some users to click through security warnings.
-(2) \SYSTEM{} must be low effort for developers to integrate and deploy in
-concert with the resource(s) they are meant to protect. There must be no
-requirement to configure a secondary system solely dedicated to hosting
-checksums. (3) The protocol is not tightly coupled with any particular high
-availability system. (4) No application or website source code changes or
-user-facing server or web infrastructure modifications are necessary.
+accounting for the tendency of some users to click through security warnings so
+as to not be inconvenienced. The former is achieved through automation and the
+latter through careful design. (2) \SYSTEM{} must be low effort for providers
+to integrate and deploy in concert with the resource(s) they are meant to
+protect. There must be no requirement to configure a secondary system solely
+dedicated to hosting checksums. (3) The protocol is not tightly coupled with any
+particular high availability system. (4) No application or website source code
+changes or user-facing server or web infrastructure modifications are necessary.
 
 To demonstrate the general applicability of our protocol, we implement a
 frontend Google Chrome extension and two different high availability backends:
@@ -157,7 +158,7 @@ considered proof-of-concept.
 We evaluate the security, performance, scalability, and deployment overhead of
 our implementation. While not a panacea, we find no practical obstacles to
 efficient deployment at scale or to security outside of those imposed by the
-Chrome developer API.
+Chrome V2 API.
 
 In summary, our primary contributions are:
 
@@ -180,9 +181,9 @@ server is compromised, significantly raising the bar for an attacker. We
 additionally make available our frontend implementation and OpenDHT backend open
 source (see \secref{availability}).
 
-Third, we evaluate our implementation and find no practical obstacles to efficient
-deployment outside of those imposed by the Chrome developer API. To the best of
-our knowledge, this is the first approach that is not susceptible to the
+Third, we evaluate our implementation and find no practical obstacles to
+efficient deployment outside of those imposed by the Chrome V2 API. To the best
+of our knowledge, this is the first approach that is not susceptible to the
 pitfalls of co-hosting. We conclude that \SYSTEM{} is more effective at
 detecting resource integrity attacks than manual checksum verification and prior
 automated verification schemes. Further, we provide this capability with

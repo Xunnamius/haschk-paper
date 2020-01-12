@@ -132,7 +132,40 @@ verification of arbitrary resources~\cite{Cherubini}.
 
 \TODO{Add Visio graphic 2 here.}
 
-Our \SYSTEM{} implementation consist of two parts:
+We implement a \SYSTEM{} frontend as a proof-of-concept Google Chrome extension.
+To demonstrate the general applicability of our protocol, our frontend currently
+works with two high availability backends: (1) directly with DNS via Google's
+JSON API for DNS over HTTPS and (2) indirectly with DHT (Ring OpenDHT) via a
+local Representational State Transfer (REST) API of our own design. Other
+candidate backends include storage clusters, relational and non-relational
+databases, and any high availability key-value store reasonably capable of
+guaranteeing the authenticity of its responses.
+
+To reduce warning fatigue, the extension is virtually transparent to end users
+in the common case that a download is successfully verified by a provider's
+backend or when \SYSTEM{} has not been properly deployed by a provider. However,
+in the relatively uncommon case that a resource has been compromised, the
+extension will delete the file and alert the user to the dangerous download,
+mimicking Chrome's own dangerous download warning~\cite{ChromeClickThrough}. The
+user has the option of clicking through the warning, causing the extension to
+ignore the compromised nature of the resource \emph{the next time it's
+downloaded}. This inconvenience, favoring security over choice, is in keeping
+with our UX goals apropos security warnings.
+
+Deployment to DNS, DHT is easy. Both of these systems are high performance and
+high availability. Ring OpenDHT is free to use. In the case of DNS, the vast
+majority of web-facing providers and IT teams are already using it, pay for
+their own zones, and are quite familiar with configuring resource records.
+
+Adding a DNS updating phase to a modern development pipeline would be relatively
+straightforward.
+
+As long as the correct DNS records exist, no application or website source code
+changes or user-facing server or web infrastructure modifications are necessary.
+Given a production implementation of our frontend, \SYSTEM{} could be deployed
+by providers and their resources protected immediately.
+
+\subsubsection{BD Derivation in Google Chrome}
 
 For Domain Name System (DNS)-based backends, this might be the Second-Level
 Domain (2LD) or Third-Level Subdomain (3LD) based on the server URI's host
@@ -150,38 +183,4 @@ should respond in a predetermined way to indicate the presence of \SYSTEM{} to
 the frontend. For example, a DNS-based backend might respond with a specially
 crafted TXT record to queries against the 3LD.
 
-We chose to include both 3LD and 2LD in the derivation and resolution process
-for added flexibility to providers who may want to host a backend on a subdomain
-rather than their root domain.
-
-Hence, proper deployment of the \SYSTEM{} approach necessitates the existence of
-a separate distribution mechanism for advertising ``safe'' URNs. The idea of
-using some distributed storage service to query a global mapping of such values
-is not new and may seem straightforward, but there are some deceptively complex
-implementation challenges.
-
-Foremost is determining which backend should be queried for a
-given resource. We refer \emph{backend domain} for a download. \TODO{Explain.}
-
-An additional challenge is the choice of backend to host an provider's URN
-mappings. There has been a lot of effort put into researching, designing, and
-standardizing several high availability high performance storage technologies,
-some of which web-facing providers and IT teams are already quite familiar with
-and pay for, \eg{the Domain Name System (DNS)}. Other candidate backends include
-DHTs, storage clusters, relational and non-relational databases, and any high
-availability key-value store reasonably capable of guaranteeing the authenticity
-of its responses.
-
-We implement \SYSTEM{} as a proof-of-concept Google Chrome extension. It works
-with DNS and Ring OpenDHT as high availability backends. Our Chrome extension
-does not make any modifications to the Chrome user interface or viewport other
-than the extension icon in the toolbar. Further, the extension is virtually
-transparent to end users when downloads are matched to the backend or \SYSTEM{}
-has not been deployed to a domain. However, if a failure is experienced (\ie{a
-uncommon case}), the extension will alert the user to the dangerous download via
-toolbar icon and popup interface.
-
-\TODO{Talk a bit about deployment.}
-
-An ideal implementation is able to rely on Google Chrome's dangerous download
-UI~\cite{ChromeClickThrough}.
+\subsubsection{Handling Redirection in Chrome}

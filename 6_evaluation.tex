@@ -200,12 +200,29 @@ While nice to have, we stress that none of the aforesaid functionality is
 critical to the ability of our implementations to more effectively mitigate SCA
 risk than checksums and other solutions (cf. \secref{evaluation}).
 
-\TODO{Limitation: denial of service?!}
+\TODO{Redirection, like with url shortening services, might still break things
+even with fallthrough functionality if a domain on the redirect chain has DNS
+entries \SYSTEM{} recognizes}
 
-\TODO{Not all servers/backends use DNS. Direct IP not supported.}
+\TODO{Does not work for PDFs and other downloads handled directly by the
+browser}
 
-\TODO{Other list of limitations}
+\TODO{Given the topology of the webrequest API, iframes and the like may require
+special consideration. May need to compare documenturi with origin uri.}
+
+\TODO{Not all servers/backends on the internet use DNS. Direct IP not
+supported.}
+
+\TODO{Right now our PoC extension keeps 1000 requests in memory so that they can
+be mapped to download items. This might be vulnerable to attacks involving
+excessive redirection.}
+
+\TODO{An ideal implementation is able to rely on Google Chrome's effective
+dangerous download UI~\cite{ChromeClickThrough}. AcceptDanger doesn't work for
+downloads that have already finished, however. Suggestion to the Chrome dev team
+to implement something nicer.}
 
 \subsection{Implications of Backend Compromise}
 
-\TODO{Go over the implications of a compromised backend.}
+\TODO{Go over the implications of a compromised backend, i.e. potential denial
+of service. Much bigger problems if DNS is compromised, though.}
