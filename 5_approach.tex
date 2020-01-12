@@ -50,31 +50,31 @@ secure default action), Modic et al~\cite{Modic} (issue warnings from a position
 of authority), and others; (2) the download should be deleted, renamed, or
 otherwise made inaccessible/quarantined by default; and (3) the user should
 still be allowed to ``click through'' and override the warning and the default
-quarantine behavior, though this should be less convenient than the default
-action~\cite{Cherubini}.
+quarantine behavior, though ideally this should be less convenient than the
+default action~\cite{Cherubini}.
 
 If the query returns a negative response, the frontend should indicate this as
-inconspicuously as possible to avoid warning/popup fatigue~\cite{Akhawe,
-Cherubini} and habituation~\cite{Sunshine}. For example, our frontend
-implementation simply changes its icon when downloads are successfully verified
-and only issues popup warnings when compromised downloads are positively
-identified.
+inconspicuously as they can manage to mitigate the threat of warning/popup
+fatigue~\cite{Akhawe, Cherubini} and habituation~\cite{Sunshine}. For example,
+our frontend implementation simply changes its icon when downloads are
+successfully verified and only issues popup warnings when compromised downloads
+are positively identified.
 
 To prevent false positives, integrity checking is skipped if the backend's
 location is unresolvable or \SYSTEM{} is not properly deployed. Determining when
 this is the case is implementation-dependent. To prevent false-negatives, when
 \SYSTEM{} is properly deployed and a URN is not found during lookup, the backend
 response will always be interpreted as positive. As a result, it is not possible
-to only secure ``some'' resources on a server. When a provider adopts \SYSTEM{},
-it is an all or nothing endeavor.
+to only secure ``some'' resources on a server.
 
 \subsubsection{Deriving the Backend Domain (BD)}
 
 Before we can communicate with a provider's backend, we require some scheme to
 locate it. We refer to this scheme as deriving the \emph{Backend Domain} (BD).
 The BD is some identifier that allows the frontend to locate the backend. For
-Domain Name System (DNS) based backends, this might be the second or third level
-domain taken from the server URI's host subcomponent~\cite{RFC3986}. \\
+our Domain Name System (DNS) based implementation (below), the BD is the
+Third-Level Subdomain (3LD) or Second-Level Domain (2LD) based on the server
+URI's host subcomponent~\cite{RFC3986} and are queried in that order. \\
 
 Example 1: an FTP frontend (\eg{ Filezilla, Transmit, et cetera}) downloading a
 resource from an FTP server at
@@ -181,16 +181,16 @@ would be baked directly into the extension.
 
 Deploying the DNS backend is as simple as adding certain TXT records to our DNS
 zone. This is a straightforward operation. Similarly, deploying the DHT backend
-requires adding certain key-value (perhaps cryptographically signed) to the
-OpenDHT network, which is trivial. Moreover, both DNS and DHT backends are
-performant and highly available. The Ring OpenDHT network is also free to use.
-In the case of DNS, the vast majority of web-facing providers and IT teams are
-already using it, already pay for their own DNS zones, and are already quite
-familiar with configuring and managing them. No expensive exotic secondary
-system is required. Additionally, we argue updating these backends
-automatically---by integrating a URN calculation and record insertion/update
-step into a modern development toolchain or resource deployment pipeline---is
-relatively low-effort and straightforward for providers.
+requires adding certain key-value to the OpenDHT network, which is trivial.
+Moreover, both DNS and DHT backends are performant and highly available. The
+Ring OpenDHT network is also free to use. In the case of DNS, the vast majority
+of web-facing providers and IT teams are already using it, already pay for their
+own DNS zones, and are already quite familiar with configuring and managing
+them. No expensive exotic secondary system is required. Additionally, we argue
+updating these backends automatically---by integrating a URN calculation and
+record insertion/update step into a modern development toolchain or resource
+deployment pipeline---is relatively low-effort and straightforward for
+providers.
 
 No application or website source code changes, costly user-facing server or web
 infrastructure customizations, or modifications to web standards are needed to
@@ -206,25 +206,37 @@ through clicking links inside \emph{and outside} the browser (\eg{ in an email
 application}), through asynchronous JavaScript, and by entering URIs into the
 browser manually. To catch these and other edge cases, we implement our
 extension using the WebRequest API~\cite{ExtensionAPI}, which allows us to
-monitor all navigation events and associate new download items with the URI
-where they were initiated.
+monitor all navigation events, collate redirects into an interrogable chain of
+requests, and associate new download items with the URI where they were
+originally initiated.
 
-The entire URN is then BASE32 encoded. The last 63 characters form the 
+To query the backend, we: (1) BASE32 encode the resource's URN, (2) divide the
+112-character result into two 56-character strings \texttt{C1} and \texttt{C2},
+(3) in order, append C1, C2, and the Application Label (AL) to the BD. The AL is
+the constant string \texttt{\_haschk} and is used to identify backends that have
+implemented \SYSTEM{} by responding with the constant string \texttt{OK}. The
+resulting URI has the form \texttt{C1.C2.AL.BD}. (4) Next, we choose between the
+3LD and 2LD by issuing a query of the form \texttt{AL.BD}---first to the 3LD and
+then, if not found there, to the 2LD---to determine if \SYSTEM{} is properly
+deployed. ``Properly deployed'' here means the backend responded with a
+specially crafted TXT record. (5) Finally, if the \SYSTEM{} backend exists and
+is properly deployed, we issue a query using the URI.
 
-For Domain Name System (DNS)-based backends, this might be the Second-Level
-Domain (2LD) or Third-Level Subdomain (3LD) based on the server URI's host
-subcomponent~\cite{RFC3986}. What follows is a generic BD derivation and
-resolution algorithm for DNS-based backends:
+To handle redirection, we use Chrome's Web Request API to associate redirected
+requests with one another. The originating request's \texttt{origin} at the top
+of this chain is used to derive the BD using the \texttt{details.originUrl} and
+\texttt{details.documentUrl} properties (also avoiding iframe issues). This
+prevents an adversary from trivially fooling \SYSTEM{} by replacing a legitimate
+hyperlink with a malicious one. A naive implementation might use the
+\texttt{DownloadItem.referrer} property to derive the BD, since it should be
+populated with the originating URL. Unfortunately, this property can be
+manipulated with one or more redirections that make
+\texttt{DownloadItem.referrer} point into the attacker's DNS zone. If the
+attacker properly deploys a \SYSTEM{} backend, they can trivially force false
+negatives.
 
-\begin{enumerate}
-    \item Derive 
-\end{enumerate}
-
-Finally, we choose between the 3LD and 2LD by issuing a query---first to the 3LD
-and then, if not found there, to the 2LD---to determine if \SYSTEM{} is properly
-deployed. ``Proper deployment'' here is implementation-specific: the backend
-should respond in a predetermined way to indicate the presence of \SYSTEM{} to
-the frontend. Our frontend expects the backend to respond with a specially
-crafted TXT record to queries against the 2LD/3LD.
-
-And in the case of redirection, our extension...
+Keeping a chain of associated requests also allows us to implement
+``fallthrough'' functionality, where if the original request at the head of the
+chain has not deployed \SYSTEM{}, the extension can walk the chain, checking
+each point of redirection for a proper \SYSTEM{} deployment. This would ensure
+URL shorteners and other redirection services do not trigger false positives.
