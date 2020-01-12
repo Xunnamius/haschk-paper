@@ -94,10 +94,10 @@ protocol. This concern is implementation-dependent. Specifically, in the case of
 the browser frontend in example 2 (above), the BD is not derived from the
 resource's URI directly but from the URI of the HTML page containing the
 hyperlink pointing to that resource. This prevents an adversary from trivially
-fooling \SYSTEM{} by replacing \texttt{https://s4.l.cdn.example2.com} with a
-hyperlink pointing to \texttt{https://attacker.com} and hosting a conforming
-\SYSTEM{} backend that would cause the frontend to respond with a false
-negative.
+fooling \SYSTEM{} by, for instance, replacing
+\texttt{https://s4.l.cdn.example2.com} with a hyperlink pointing to
+\texttt{https://attacker.com} and hosting a conforming \SYSTEM{} backend that
+would cause the frontend to respond with a false negative.
 
 Further, depending on the implementation, a frontend or backend may not be using
 URIs and DNS to transact information over the internet at all. An example of
@@ -147,32 +147,29 @@ manually}) or by following a hyperlink. Our extension, having observed the web
 request earlier, associates that request with the new download item. The
 original request may have directly triggered the download or the download may
 have been triggered after one or more redirections. Our extension derives the
-correct BD in both cases (see below). Next, a query to the backend is made using
-the BD to determine if the backend exists and conforms to the \SYSTEM{}
-protocol. Specifically: a TXT query is issued via the Google DoH API or a key
-lookup is issued through our local Ring OpenDHT REST API. If the backend does
-not exist or does not conform to the protocol, the extension does not continue.
-Otherwise, after the download completes, a URN is calculated and combined with
-the BD to yield a new URI; another query to the backend is made using that URI.
-In effect, this query asks: \emph{is this resource compromised?} If the response
-to the query is negative (\ie{ a TXT record (DNS) or data value (DHT)}), the
-extension considers the resource validated. On the other hand, if the response
-to the query is positive (\ie{ no record found}), the extension considers the
-resource compromised, deletes the resource file, and warns the user.
+correct BD in both cases (see below). At this point, if the backend does not
+exist or does not conform to the protocol, the protocol terminates. Otherwise,
+after the download completes, a URN is calculated and combined with the BD to
+make a final query to the backend. In effect, this query asks: \emph{is this
+resource compromised?} If the response to the query is negative (\ie{ a TXT
+record (DNS) or data value (DHT)}), the extension considers the resource
+validated. On the other hand, if the response to the query is positive (\ie{ no
+record found or bad value returned}), the extension considers the resource
+compromised, deletes the resource file, and warns the user.
 
-To reduce warning fatigue, our extension is virtually transparent to end users
-in the common case that a download is successfully verified by a provider's
-backend or when \SYSTEM{} has not been properly deployed by a provider. However,
-in the relatively uncommon case that a resource is deemed compromised, the
-extension will delete the file and alert the user with the primary option to
-``dismiss'' the alert, mimicking Chrome's own highly effective dangerous
-download warning~\cite{ChromeClickThrough}. Specifically: the user has the
-option of clicking through the warning via a low-key secondary interface where
-they can force the extension to ignore the compromised nature of the resource
-\emph{the next time it is downloaded}, forcing the user to trigger the download
-again. This inconvenience, favoring users' security over choice, is in keeping
-with the security community's recommendations regarding security warning UX (see
-\secref{introduction}).
+In keeping with UX suggestions of prior work, our extension is virtually
+transparent to end users in the common case that a download is successfully
+verified by a provider's backend or when \SYSTEM{} has not been properly
+deployed by a provider. However, in the relatively uncommon case that a resource
+is deemed compromised, the extension will delete the file and alert the user
+with the primary option to ``dismiss'' the alert, mimicking Chrome's own highly
+effective dangerous download warning~\cite{ChromeClickThrough}. Specifically:
+the user has the option of clicking through the warning via a low-key secondary
+interface where they can force the extension to ignore the compromised nature of
+the resource \emph{the next time it is downloaded}, forcing the user to trigger
+the download again. This inconvenience, favoring users' security over choice, is
+in keeping with the recommendations of prior work regarding security warning UX
+(see \secref{introduction}).
 
 As no JavaScript OpenDHT client implementation exists, we developed a REST API
 to facilitate communication between our extension and the Ring OpenDHT network
@@ -210,17 +207,17 @@ monitor all navigation events, collate redirects into an interrogable chain of
 requests, and associate new download items with the URI where they were
 originally initiated.
 
-To query the backend, we: (1) BASE32 encode the resource's URN, (2) divide the
-112-character result into two 56-character strings \texttt{C1} and \texttt{C2},
-(3) in order, append C1, C2, and the Application Label (AL) to the BD. The AL is
-the constant string \texttt{\_haschk} and is used to identify backends that have
-implemented \SYSTEM{} by responding with the constant string \texttt{OK}. The
-resulting URI has the form \texttt{C1.C2.AL.BD}. (4) Next, we choose between the
-3LD and 2LD by issuing a query of the form \texttt{AL.BD}---first to the 3LD and
-then, if not found there, to the 2LD---to determine if \SYSTEM{} is properly
-deployed. ``Properly deployed'' here means the backend responded with a
-specially crafted TXT record. (5) Finally, if the \SYSTEM{} backend exists and
-is properly deployed, we issue a query using the URI.
+To query the backend, we: (1) BASE32 encode the resource's URN. (2) Divide the
+112-character result into two 56-character strings \texttt{C1} and \texttt{C2}.
+(3) We calculate the BD, which is either the 3LD and 2LD from
+\texttt{details.originUrl}. We choose by issuing up to two queries of the form
+\texttt{AL.BD}, looking for a response containing the value \texttt{OK}. We
+first query the 3LD as BD and, if we don't receive the proper response there,
+query the 2LD as BD. If the proper response is not received from either query,
+the extension assumes \SYSTEM{} has not been properly deployed and terminates.
+(4) Otherwise, concatenating C1, C2, AL, and BD, we issue a query of the form
+\texttt{C1.C2.AL.BD}, again looking for a response containing \texttt{OK}
+(negative) or that the query was not found (positive).
 
 To handle redirection, we use Chrome's Web Request API to associate redirected
 requests with one another. The originating request's \texttt{origin} at the top
@@ -230,13 +227,12 @@ prevents an adversary from trivially fooling \SYSTEM{} by replacing a legitimate
 hyperlink with a malicious one. A naive implementation might use the
 \texttt{DownloadItem.referrer} property to derive the BD, since it should be
 populated with the originating URL. Unfortunately, this property can be
-manipulated with one or more redirections that make
-\texttt{DownloadItem.referrer} point into the attacker's DNS zone. If the
-attacker properly deploys a \SYSTEM{} backend, they can trivially force false
-negatives.
+manipulated with one or more redirections causing the BD to point into the
+attacker's DNS zone. If the attacker properly deploys a \SYSTEM{} backend, they
+could then trivially force false negatives.
 
 Keeping a chain of associated requests also allows us to implement
-``fallthrough'' functionality, where if the original request at the head of the
+``fallthrough'' functionality where, if the original request at the head of the
 chain has not deployed \SYSTEM{}, the extension can walk the chain, checking
 each point of redirection for a proper \SYSTEM{} deployment. This would ensure
 URL shorteners and other redirection services do not trigger false positives.
