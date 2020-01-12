@@ -107,9 +107,6 @@ Additionally, the DNS-based backend does not add to the danger of amplification
 and other reflection attacks on DNS; these are generic DNS issues addressable at
 other layers of the protocol.
 
-\TODO{Talk a bit about how DNS is not authenticated but no one cares because of
-key pinning/CAs and about how DNSSEC sucks (but we initially considered it)}
-
 In respect to the DNS network, storing cryptographic data in DNS resource
 records is not unprecedented. The DNS-Based Authentication of Named Entities
 (DANE) specification~\cite{DANE1, DANE2, DANE3} defines the ``TLSA'' and
@@ -120,10 +117,9 @@ demonstrate that storing useful cryptographic data retrievable through the DNS
 network is feasible at scale. Due the unique requirements of DNS, however, we
 use ``TXT'' records to map Resource Identifiers to Authoritative Checksums. In
 accordance with RFC 5507~\cite{RFC5507}, a production implementation
-implementation would necessitate the creation of a new DNS resource record type
-as no current resource record type meets our requirements.
+implementation would necessitate the creation of a new DNS resource record type.
 
-As \SYSTEM{} is predicated on a distributed high availability backend and
+As \SYSTEM{} is predicated on a high availability backend and
 requires no application/frontend source code changes to function, we conclude
 that the scalability of \SYSTEM{} can be reduced to the scalability of its
 backend. We are aware of no other obstacles to scalability beyond those
@@ -153,18 +149,6 @@ relies on, for instance, a mirroring service, third-party CDN, et cetera
 implementations currently require each ``mangled'' RI permutation representing a
 resource to be added to the backend, even if they all represent the same
 resource by a different name/path.
-
-Unlike DNS, an entity seeking to leverage a Distributed Hash Table (DHT) may not
-have the benefit of being able to rely on a high availability distributed
-backend that is already established, is well-tested, and exists
-globally like DNS. Such an entity would have to either maintain their own
-network of DHT nodes, which can incur significant cost if such a network was not
-already deployed, or piggy back off an open authenticated network, as was done
-with our implementation.
-
-These reasons make DNS more appealing for general download protection using our
-approach, though software that already relies on DHTs can deploy our approach
-leveraging existing systems.
 
 \subsection{Limitations}
 

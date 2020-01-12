@@ -4,18 +4,7 @@ In this section, we describe the components of the \SYSTEM{} protocol, step
 through each in detail, and then introduce our proof-of-concept implementations
 of these components.
 
-\TODO{Add Visio graphic 1 here.}
-
 \subsection{Participants}
-
-\noindent\textbf{User.} The end \emph{user} is the entity, human or otherwise,
-with the goal of verifying the integrity of the resource they just downloaded.
-\\
-
-\noindent\textbf{Resource.} A \emph{resource} is any data provided by the server
-to the user. A resource may or may not be protected by \SYSTEM{}, depending on
-the server and backend. In the case where the resource is not protected by
-\SYSTEM{}, false positives must not occur. \\
 
 \noindent\textbf{Provider.} The \emph{provider} is the entity in control of both
 the server and backend with the goal of ensuring the integrity of resources
@@ -38,16 +27,19 @@ wholly separate from the server (not co-hosted) and controlled by the provider.
 
 \subsection{Protocol Overview}
 
-When a user finishes downloading a resource from the provider's server, the
-frontend runs the resource's contents through a SHA-256 hashing function,
-yielding a 256-bit digest. Any hashing function can be used so long as it is
-pre-image and collision resistant~\cite{Rogaway}. This digest is used to
+\TODO{Add Visio fig (implementation) 1 here.}
+
+\figref{protocol} gives a high level overview of the \SYSTEM{} protocol.
+Initially, when a user finishes downloading a resource from the provider's
+server, the frontend runs the resource's contents through a SHA-256 hashing
+function, yielding a 256-bit digest. Any hashing function can be used so long as
+it is pre-image and collision resistant~\cite{Rogaway}. This digest is used to
 construct a hash-based Uniform Resource Name (URN) uniquely identifying the
 resource. Additionally, a Backend Domain (BD) is derived from the domain name of
 the server. The frontend uses the BD in an implementation-dependent manner to
 locate and query the backend, checking for the existence of the constructed URN
-and essentially asking: \emph{``is this a compromised resource?''} If the URN
-is found, a negative response is returned indicating a verified resource. If the
+and essentially asking: \emph{``is this a compromised resource?''} If the URN is
+found, a negative response is returned indicating a verified resource. If the
 URN is not found, a positive response is returned indicating a compromised
 resource.
 
@@ -59,10 +51,7 @@ of authority), and others; (2) the download should be deleted, renamed, or
 otherwise made inaccessible/quarantined by default; and (3) the user should
 still be allowed to ``click through'' and override the warning and the default
 quarantine behavior, though this should be less convenient than the default
-action~\cite{Cherubini}. Google Chrome has implemented something similar as part
-of its redesigned dangerous download warning UX, empirically demonstrating it to
-be an effective countermeasure to click through in the context of
-downloads~\cite{ChromeClickThrough}.
+action~\cite{Cherubini}.
 
 If the query returns a negative response, the frontend should indicate this as
 inconspicuously as possible to avoid warning/popup fatigue~\cite{Akhawe,
@@ -141,7 +130,7 @@ verification of arbitrary resources~\cite{Cherubini}.
 
 \subsection{Protocol Implementation}
 
-\TODO{Add Visio graphic 2 here.}
+\TODO{Add Visio fig 2 (implementation) here.}
 
 We implement a proof-of-concept \SYSTEM{} frontend as a Google Chrome extension.
 To demonstrate the general applicability of our approach, our frontend currently
@@ -150,46 +139,75 @@ over HTTPS (DoH) and (2) indirectly with DHT (Ring OpenDHT) via a local
 Representational State Transfer (REST) API we designed to mimic the response
 syntax of Google's DoH JSON API. Other candidate backends include storage
 clusters, relational and non-relational databases, and any high availability
-key-value store reasonably capable of guaranteeing the authenticity of its
-responses.
+key-value store.
+
+\figref{implementation} gives a high level overview of how our implementation
+works. First, the user initiates a download either directly (\eg{ typing a URI
+manually}) or by following a hyperlink. Our extension, having observed the web
+request earlier, associates that request with the new download item. The
+original request may have directly triggered the download or the download may
+have been triggered after one or more redirections. Our extension derives the
+correct BD in both cases (see below). Next, a query to the backend is made using
+the BD to determine if the backend exists and conforms to the \SYSTEM{}
+protocol. Specifically: a TXT query is issued via the Google DoH API or a key
+lookup is issued through our local Ring OpenDHT REST API. If the backend does
+not exist or does not conform to the protocol, the extension does not continue.
+Otherwise, after the download completes, a URN is calculated and combined with
+the BD to yield a new URI; another query to the backend is made using that URI.
+In effect, this query asks: \emph{is this resource compromised?} If the response
+to the query is negative (\ie{ a TXT record (DNS) or data value (DHT)}), the
+extension considers the resource validated. On the other hand, if the response
+to the query is positive (\ie{ no record found}), the extension considers the
+resource compromised, deletes the resource file, and warns the user.
 
 To reduce warning fatigue, our extension is virtually transparent to end users
 in the common case that a download is successfully verified by a provider's
 backend or when \SYSTEM{} has not been properly deployed by a provider. However,
-in the relatively uncommon case that a resource has been compromised, the
+in the relatively uncommon case that a resource is deemed compromised, the
 extension will delete the file and alert the user with the primary option to
-``dismiss'' the alert, mimicking Chrome's own dangerous download
-warning~\cite{ChromeClickThrough}. Specifically: the user has the option of
-clicking through the warning via a low-key secondary interface where they can
-force the extension to ignore the compromised nature of the resource \emph{the
-next time it is downloaded}, forcing the user to trigger the download again.
-This inconvenience, favoring users' security over choice, is in keeping with the
-security community's recommendations regarding security warning UX (see
+``dismiss'' the alert, mimicking Chrome's own highly effective dangerous
+download warning~\cite{ChromeClickThrough}. Specifically: the user has the
+option of clicking through the warning via a low-key secondary interface where
+they can force the extension to ignore the compromised nature of the resource
+\emph{the next time it is downloaded}, forcing the user to trigger the download
+again. This inconvenience, favoring users' security over choice, is in keeping
+with the security community's recommendations regarding security warning UX (see
 \secref{introduction}).
 
-Deployment to DNS, DHT is easy. Both of these systems are high performance and
-high availability. Ring OpenDHT is free to use. In the case of DNS, the vast
-majority of web-facing providers and IT teams are already using it, pay for
-their own zones, and are quite familiar with configuring resource records.
+As no JavaScript OpenDHT client implementation exists, we created a REST API to
+facilitate communication between JavaScript and OpenDHT via HTTP and JSON. In a
+production implementation, the OpenDHT client would be baked into the extension.
 
-Adding a DNS updating phase to a modern development pipeline would be relatively
-straightforward.
+Deploying the DNS backend is as simple as adding certain TXT records to our DNS
+zone. This is a straightforward operation. Similarly, deploying the DHT backend
+requires adding certain key-value (perhaps cryptographically signed) to the
+OpenDHT network, which is trivial. Moreover, both DNS and DHT backends are
+performant and highly available. The Ring OpenDHT network is also free to use.
+In the case of DNS, the vast majority of web-facing providers and IT teams are
+already using it, already pay for their own DNS zones, and are already quite
+familiar with configuring and managing them. No expensive secondary system is
+necessary in either case. Additionally, we argue updating these backends
+automatically---by integrating a URN calculation and record insertion/update
+step into a modern development toolchain or resource deployment pipeline---is
+relatively low-effort and straightforward for providers.
 
 No application or website source code changes, costly user-facing server or web
 infrastructure customizations, or modifications to web standards are needed to
 enable our extension to protect a provider's resources. Given a production
-implementation of our frontend and the current prevalence of DNS, \SYSTEM{}
-could be deployed by providers immediately.
+implementation of our frontend and the current prevalence of DNS, \SYSTEM{} with
+a DNS backend could be deployed by interested providers immediately.
 
-\subsubsection{BD Derivation in Google Chrome}
+\subsubsection{URNs and BDs in Google Chrome}
 
-BD derivation in the browser is tricky. Users can initiate downloads through
-clicking links inside \emph{and outside} the browser (\eg{ in an email
+BD derivation in the browser is non-trivial. Users can initiate downloads
+through clicking links inside \emph{and outside} the browser (\eg{ in an email
 application}), through asynchronous JavaScript, and by entering URIs into the
 browser manually. To catch these and other edge cases, we implement our
 extension using the WebRequest API~\cite{ExtensionAPI}, which allows us to
 monitor all navigation events and associate new download items with the URI
 where they were initiated.
+
+The entire URN is then BASE32 encoded. The last 63 characters form the 
 
 For Domain Name System (DNS)-based backends, this might be the Second-Level
 Domain (2LD) or Third-Level Subdomain (3LD) based on the server URI's host

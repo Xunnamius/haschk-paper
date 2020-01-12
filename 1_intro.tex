@@ -141,50 +141,49 @@ extra burden on the user in the common case. Here, an optimal implementation
 avoids relying on the user to overcome apathy in the interest of security while
 accounting for the tendency of some users to click through security warnings so
 as to not be inconvenienced. The former is achieved through automation and the
-latter through careful design. (2) \SYSTEM{} must be low effort for providers
-to integrate and deploy in concert with the resource(s) they are meant to
-protect. There must be no requirement to configure a secondary system solely
-dedicated to hosting checksums. (3) The protocol is not tightly coupled with any
-particular high availability system. (4) No application or website source code
-changes or user-facing server or web infrastructure modifications are necessary.
+latter through careful design. (2) \SYSTEM{} must be low effort for providers to
+integrate and deploy in concert with the resource(s) they are meant to protect.
+There must be no requirement to configure a secondary system solely dedicated to
+hosting checksums. (3) The protocol is not tightly coupled with any particular
+high availability system. (4) No application or website source code changes or
+user-facing server or web infrastructure modifications are necessary.
 
 To demonstrate the general applicability of our protocol, we implement a
 frontend Google Chrome extension and two different high availability backends:
-one based on the public Domain Name System (DNS) via Google DNS and another
-based on the Ring OpenDHT network via a local Representational State Transfer
-(REST) API. Of course, these \SYSTEM{} component implementations should be
-considered proof-of-concept.
+one based on the public Domain Name System (DNS)~\cite{DNS1, DNS2} via Google
+DNS~\cite{GoogleDNS} and another based on the Ring OpenDHT
+network~\cite{OpenDHT, savoirfairelinux} via a custom Representational State
+Transfer (REST) API. Of course, these \SYSTEM{} component implementations should
+be considered proof-of-concept.
 
 We evaluate the security, performance, scalability, and deployment overhead of
-our implementation. While not a panacea, we find no practical obstacles to
-efficient deployment at scale or to security outside of those imposed by the
-Chrome V2 API.
+our implementation using a publicly available patched HotCRP instance. While not
+a panacea, we show that our implementation is capable of detecting real-world
+resource compromises, even when the server is under the attacker's control.
+Additionally, we find no practical obstacles to efficient deployment at scale or
+to security outside of those imposed by the Chrome V2 Extension API.
 
 In summary, our primary contributions are:
 
-First, we propose a practical automated approach to transparently mitigating the
-accidental consumption of compromised resources over the internet. Our protocol
-requires no modifications to web standards, web infrastructure, or source code,
-does not employ unreliable heuristics, does not expect checksums to be co-hosted
-on the same page as do other automated approaches, and can be transparently
-implemented and immediately deployed. \SYSTEM{}-aware clients will have their
-downloads secured while the user experience of clients unaware of \SYSTEM{}
-remain completely unaffected. Further, our protocol can be implemented in more
-than just browsers; \SYSTEM{} can be implemented to protect downloads in FTP
-clients, SSH (like rsync) clients, wget/curl clients, and others.
+First, we propose a practical automated approach to ensuring the integrity of
+arbitrary downloads. Our protocol requires no modifications to web
+standards/infrastructure or source code, does not employ unreliable heuristics,
+does not expect checksums to be co-hosted on the same page as do other automated
+approaches, and can be transparently implemented. Further, our protocol can be
+used by more than just browsers; \SYSTEM{} can protect downloads in FTP clients,
+wget/curl clients, and other software.
 
-Second, we present our proof-of-concept implementation, a Google Chrome extension,
-and demonstrate our protocol's effectiveness empirically using a publicly
-available patched HotCRP instance. We show that our implementation is capable of
-detecting real-world resource compromises in this instance, even when the entire
-server is compromised, significantly raising the bar for an attacker. We
-additionally make available our frontend implementation and OpenDHT backend open
-source (see \secref{availability}).
+Second, we present our proof-of-concept implementation, a Google Chrome
+extension, and demonstrate our protocol's effectiveness empirically. We show
+that our implementation is capable of detecting resource compromises when the
+server is under the attacker's control, thus significantly raising the bar for
+an attacker. We additionally make our frontend implementation and OpenDHT JSON
+API available open source (see \secref{availability}).
 
-Third, we evaluate our implementation and find no practical obstacles to
-efficient deployment outside of those imposed by the Chrome V2 API. To the best
-of our knowledge, this is the first approach that is not susceptible to the
-pitfalls of co-hosting. We conclude that \SYSTEM{} is more effective at
-detecting resource integrity attacks than manual checksum verification and prior
-automated verification schemes. Further, we provide this capability with
-marginal deployment overhead for providers.
+Third, we evaluate our implementation and find marginal integration and
+deployment overhead with no practical obstacles to scalability or security
+outside those imposed by the Chrome API. To the best of our knowledge,
+this is the first approach that is not susceptible to the pitfalls of
+co-hosting. Hence, we conclude that \SYSTEM{} is more effective at detecting
+resource integrity attacks than manual checksum verification and prior automated
+verification schemes.
