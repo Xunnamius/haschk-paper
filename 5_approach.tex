@@ -87,8 +87,9 @@ The BD is some identifier that allows the frontend to locate the backend. For
 Domain Name System (DNS)-based backends, this might be the Second-Level Domain
 (2LD) taken from the server URI's host subcomponent~\cite{RFC3986}. \\
 
-Example 1: an FTP frontend (\eg{Filezilla}) downloading a resource from an FTP
-server at \texttt{ftps://uname:passwd@ftp.example1.com:8080} has a host
+Example 1: an FTP frontend (\eg{Filezilla, Transmit, et cetera}) downloading a
+resource from an FTP server at
+\texttt{ftps://un:pw@ftp.example1.com:8080/some/resource} has a host
 subcomponent of \texttt{ftp.example1.com} and a BD of \texttt{ftp.example1.com}
 or \texttt{example1.com}. \\
 
@@ -104,7 +105,7 @@ Distributed Hash Table (DHT) based backend. In such a case, any derivation
 algorithm (or no derivation at all, \eg{the BD is hardcoded}) can be used as
 long as the BD is eventually known to the frontend.
 
-\subsubsection{Constructing Hash-Based Uniform Resource Names (URN)}
+\subsubsection{Constructing Uniform Resource Names (URN)}
 
 To ensure the integrity of arbitrary resources, we require some method to
 uniquely and durably identify those resources. We accomplish this through the
