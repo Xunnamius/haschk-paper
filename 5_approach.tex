@@ -154,7 +154,7 @@ make a final query to the backend. In effect, this query asks: \emph{is this
 resource compromised?} If the response to the query is negative (\ie{ a TXT
 record (DNS) or data value (DHT)}), the extension considers the resource
 validated. On the other hand, if the response to the query is positive (\ie{ no
-record found or bad value returned}), the extension considers the resource
+record found or bad data value returned}), the extension considers the resource
 compromised, deletes the resource file, and warns the user.
 
 In keeping with UX suggestions of prior work, our extension is virtually
@@ -183,11 +183,11 @@ Moreover, both DNS and DHT backends are performant and highly available. The
 Ring OpenDHT network is also free to use. In the case of DNS, the vast majority
 of web-facing providers and IT teams are already using it, already pay for their
 own DNS zones, and are already quite familiar with configuring and managing
-them. No expensive exotic secondary system is required. Additionally, we argue
-updating these backends automatically---by integrating a URN calculation and
-record insertion/update step into a modern development toolchain or resource
-deployment pipeline---is relatively low-effort and straightforward for
-providers.
+them. Hence, no exotic secondary backend system is required for providers with
+web servers. Additionally, we argue updating the URNs stored by these backends
+automatically---by integrating a URN calculation and record insertion/update
+step into a modern development toolchain or resource deployment pipeline---is
+relatively low-effort and straightforward for providers.
 
 No application or website source code changes, costly user-facing server or web
 infrastructure customizations, or modifications to web standards are needed to
@@ -211,7 +211,8 @@ To query the backend, we: (1) BASE32 encode the resource's URN. (2) Divide the
 112-character result into two 56-character strings \texttt{C1} and \texttt{C2}.
 (3) We calculate the BD, which is either the 3LD and 2LD from
 \texttt{details.originUrl}. We choose by issuing up to two queries of the form
-\texttt{AL.BD}, looking for a response containing the value \texttt{OK}. We
+\texttt{AL.BD}, where the Application Label (AL) is the constant string
+\texttt{\_haschk}, looking for a response containing the value \texttt{OK}. We
 first query the 3LD as BD and, if we don't receive the proper response there,
 query the 2LD as BD. If the proper response is not received from either query,
 the extension assumes \SYSTEM{} has not been properly deployed and terminates.
