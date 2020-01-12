@@ -14,7 +14,7 @@ distribution mirror, users who first ran the compromised HandBrake image through
 dozen popular anti-malware products---received a report claiming no infections
 were detected despite the presence of the Proton malware~\cite{SCA-HB1}. In the
 2012 compromise of SourceForge's CDN, the malicious changes to the phpmyAdmin
-image don't appear as malware to anti-malware software~\cite{SCA-PMA1}.
+image do not appear as malware to anti-malware software~\cite{SCA-PMA1}.
 
 Similarly, all modern browsers employ heuristic and blacklist-based detection
 and prevention schemes in an attempt to protect users from malicious content on
@@ -43,13 +43,11 @@ LF and SRI apply \emph{only to resources referenced by script and link HTML
 elements}; \SYSTEM{}, on the other hand, can ensure the integrity of \emph{any
 arbitrary resource downloaded over the internet}, even outside of HTML web pages
 and browser software. Further, the checksums contained in the HTML source must
-be accurate for SRI to work. Contingent on how the CDN is being used: if the
-provider system \emph{behind} the CDN is itself compromised, the attacker can
-alter the HTML and inject a malicious checksum to match a compromised resource,
-both of which would be dutifully distributed by the CDN without further effort.
-With \SYSTEM{}, however, an attacker would additionally have to compromise the
-separate backend system that advertises the provider's resources, thus raising
-the bar. \\
+be accurate for SRI to work. If the system \emph{behind} the CDN is compromised,
+the attacker can alter the HTML and inject a malicious checksum or even strip
+checksums from the HTML entirely. With \SYSTEM{}, however, an attacker would
+additionally have to compromise the separate backend system that advertises the
+provider's resources, thus raising the bar. \\
 
 \noindent\textbf{Content-MD5 Header.} The Content-MD5 header field is a
 deprecated email and HTTP header that delivers a checksum similar to those used
@@ -84,13 +82,12 @@ updates to binaries}; our protocol allows a user to verify the integrity of
 et al. is an automated JavaScript-based stand-in for SRI for protecting the
 integrity of web application files hosted on CDNs. Stickler does not require any
 modifications to the client (\ie{a frontend}), instead delivering a bootloader
-to load and verify resources before the fact. However, as it was designed to
-stand-in for SRI, Stickler inherits SRI's shortcomings. Specifically: Stickler
-was not designed to protect arbitrary resources and, if the content server
-behind the distribution system is compromised, it is trivial to modify the
-manifest file to inject corrupted checksums matching corrupted resources or to
-even strip the Stickler bootloader out of the HTTP response altogether. This is
-not possible with \SYSTEM{}.
+to load and verify resources signed before the fact. However, as it was designed
+to stand-in for SRI, Stickler inherits some of SRI's limitations. Specifically:
+Stickler was not designed to protect arbitrary resource downloads and, if the
+publisher's server is compromised, Stickler's bootloader can be stripped out of
+the initial HTTP response altogether. Something like this is not possible with
+\SYSTEM{}.
 
 The automated checksum verification approach described by Cherubini et
 al.~\cite{Cherubini}, also based on SRI, is similarly vulnerable to (and relies
