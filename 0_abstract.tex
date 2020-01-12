@@ -6,12 +6,12 @@ your desired resource with a compromised version. The de facto standard for
 addressing this risk is the use of \emph{checksums} coupled with a secure
 transport layer; users download a resource, compute its checksum, and compare
 that with an authoritative checksum. Problems with this approach include (1)
-\emph{user apathy}---for most users, calculating and validating the checksum is
+\emph{user apathy}---for most users, calculating and verifying the checksum is
 too tedious; and (2) \emph{co-hosting}---an attacker who compromises a resource
 can trivially compromise a checksum hosted on the same system. The co-hosting
 problem remains despite advancements in tools that automate checksum
 verification and generation. In this paper we propose \emph{\SYSTEM{}}, a
-resource validation protocol expanding on de facto checksum-based integrity
+resource verification protocol expanding on de facto checksum-based integrity
 protections to defeat co-hosting while automating the tedious parts of checksum
 verification. We evaluate \SYSTEM{}'s security, practicality, and ease of
 deployment of our approach by implementing a proof-of-concept Google Chrome

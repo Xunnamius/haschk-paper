@@ -34,9 +34,9 @@ or external, a single server or many, first-party or third-party. \\
 \noindent\textbf{\SYSTEM{} Backend.} The \emph{backend} is responsible for
 advertising a queryable listing of URNs that \SYSTEM{} frontends can use to
 judge the legitimacy of downloads. It is a high availability system that is
-wholly separate from the server and (hopefully) controlled by the provider.
+wholly separate from the server (not co-hosted) and controlled by the provider.
 
-\subsection{Overview}
+\subsection{Protocol Overview}
 
 When a user finishes downloading a resource from the provider's server, the
 frontend runs the resource's contents through a SHA-256 hashing function,
@@ -44,48 +44,81 @@ yielding a 256-bit digest. Any hashing function can be used so long as it is
 pre-image and collision resistant~\cite{Rogaway}. This digest is used to
 construct a hash-based Uniform Resource Name (URN) uniquely identifying the
 resource. Additionally, a Backend Domain (BD) is derived from the domain name of
-the server. The BD is used in an implementation-dependent manner to locate and
-query the backend (or skip integrity checking if the backend's location is
-unresolvable or the \SYSTEM{} protocol is not properly deployed). A positive
-response to the query indicates a compromised resource while a negative response
-indicates a verified resource.
+the server. The frontend uses the BD in an implementation-dependent manner to
+locate and query the backend, checking for the existence of the constructed URN
+and essentially asking: \emph{``is this a compromised resource?''} If the URN
+is found, a negative response is returned indicating a verified resource. If the
+URN is not found, a positive response is returned indicating a compromised
+resource.
 
-If the query returns a positive result: (1) the user is warned pursuant to the
-recommendations of Akhawe et al~\cite{Akhawe} (avoid warning fatigue, be
+If the query returns a positive response: (1) the user should be warned pursuant
+to the recommendations of Akhawe et al~\cite{Akhawe} (avoid warning fatigue, be
 invisible), Cherubini et al~\cite{Cherubini} (simple non-technical language,
 secure default action), Modic et al~\cite{Modic} (issue warnings from a position
-of authority), and others; (2) the download is deleted, renamed, or otherwise
-made inaccessible/quarantined by default; and (3) the user is still allowed to
-``click through'' and override the warning and the default quarantine behavior,
-though this should be less convenient than the default~\cite{Cherubini}. Google
-Chrome has implemented something similar as part of its redesigned dangerous
-download warning UX, empirically demonstrating it to be an effective
-countermeasure to click through in the context of
-downloads~\cite{ChromeClickThrough}.
+of authority), and others; (2) the download should be deleted, renamed, or
+otherwise made inaccessible/quarantined by default; and (3) the user should
+still be allowed to ``click through'' and override the warning and the default
+quarantine behavior, though this should be less convenient than the default
+action~\cite{Cherubini}. Google Chrome has implemented something similar as part
+of its redesigned dangerous download warning UX, empirically demonstrating it to
+be an effective countermeasure to click through in the context of
+potentially-compromised downloads~\cite{ChromeClickThrough}.
 
-If the query returns a negative result, the frontend should indicate this as
+If the query returns a negative response, the frontend should indicate this as
 inconspicuously as possible to avoid warning/popup fatigue~\cite{Akhawe,
 Cherubini} and habituation~\cite{Sunshine}. For example, our frontend
 implementation simply changes its icon when downloads are successfully verified
 and only issues popup warnings when compromised downloads are positively
 identified.
 
+To prevent false positives, integrity checking is skipped if the backend's
+location is unresolvable or \SYSTEM{} is not properly deployed. Determining when
+this is the case is implementation-dependent. To prevent false-negatives, when
+\SYSTEM{} is properly deployed and a URN is not found during lookup, the backend
+will always respond in the positive. As a result, it is not possible to only
+secure ``some'' resources on a server. When a provider adopts \SYSTEM{}, it is
+an all or nothing endeavor.
+
 \subsubsection{Deriving the Backend Domain (BD)}
 
-\TODO{Finish me.}
+Before we can communicate with a provider's backend, we require some scheme to
+locate it. We refer to this scheme as deriving the \emph{Backend Domain} (BD).
+The BD is some identifier that allows the frontend to locate the backend. For
+Domain Name System (DNS)-based backends, this might be the Second-Level Domain
+(2LD) taken from the server URI's host subcomponent~\cite{RFC3986}. \\
 
-\emph{Backend Domain} ...
+Example 1: an FTP frontend (\eg{Filezilla}) downloading a resource from an FTP
+server at \texttt{ftps://uname:passwd@ftp.example1.com:8080} has a host
+subcomponent of \texttt{ftp.example1.com} and a BD of \texttt{ftp.example1.com}
+or \texttt{example1.com}. \\
+
+Example 2: a browser frontend (\eg{wget, Internet Explorer, et cetera})
+downloading a resource from a web server at
+\texttt{https://s4.ll.cdn.example2.com/some/resource} has a host subcomponent of
+\texttt{s4.ll.cdn.example2.com} and a BD of \texttt{cdn.example2.com} or
+\texttt{example2.com}. \\
+
+Depending on the implementation, a frontend or backend may not be using URIs and
+DNS to transact information over the internet at all. An example of this is a
+Distributed Hash Table (DHT) based backend. In such a case, any derivation
+algorithm (or no derivation at all, \eg{the BD is hardcoded}) can be used as
+long as the BD is eventually known to the frontend.
 
 \subsubsection{Constructing Hash-Based Uniform Resource Names (URN)}
 
-Our goal is to ensure the integrity of arbitrary resources downloaded over the
-internet. To achieve this, we require some method to durably and uniquely
-identify individual resources. We accomplish this through the adoption of the
-informal IETF draft for hash-based \emph{Uniform Resource Name} (URN)
-namespace~\cite{draft-URN}. Combined with a BD, URNs make this association
-durable: a backend must advertise the URNs of resources they offer for download,
-even when those resources have unstable access paths or URI (\eg{resources
-hosted externally, on download mirrors, on CDNs, et cetera}).
+To ensure the integrity of arbitrary resources, we require some method to
+uniquely and durably identify those resources. We accomplish this through the
+adoption of the informal IETF draft for the construction of hash-based
+\emph{Uniform Resource Name} (URN) namespace~\cite{draft-URN}, which the
+frontend follows when calculating URNs for each resource downloaded. Through
+whatever implementation-specific method, the backend must ``advertise'' or allow
+lookups against a set of expected URNs corresponding to the resources hosted on
+the provider's server, even if those resources have unstable access paths or
+URIs; \eg{,when resources are hosted externally, on download mirrors, on CDNs,
+et cetera}. This requirement is satisfied by implementations combining URNs with
+the BD, thus durably associating the URNs calculated in the frontend with the
+URNs advertised by a provider's backend regardless of where the corresponding
+resources are hosted on the provider's server.
 
 Since the backend advertising URNs is \emph{never} co-hosted alongside the
 system that distributes the corresponding resources---like a web or FTP
@@ -94,11 +127,31 @@ server---\SYSTEM{} retains the ability to protect users from dangerous downloads
 compromised}. This is not true of prior approaches to automated checksum
 verification of arbitrary resources~\cite{Cherubini}.
 
-\subsection{Implementation}
+\subsection{Protocol Implementation}
 
 \TODO{Add Visio graphic 2 here.}
 
 \TODO{Add metrics about solution LoC and rewrite the rest of this subsection.}
+
+For Domain Name System (DNS)-based backends, this might be the Second-Level
+Domain (2LD) or Third-Level Subdomain (3LD) based on the server URI's host
+subcomponent~\cite{RFC3986}. What follows is a generic BD derivation and
+resolution algorithm for DNS-based backends:
+
+\begin{enumerate}
+    \item Derive 
+\end{enumerate}
+
+Finally, we choose between the 3LD and 2LD by issuing a query---first to the 3LD
+and then, if not found there, to the 2LD---to determine if \SYSTEM{} is properly
+deployed. ``Proper deployment'' here is implementation-specific: the backend
+should respond in a predetermined way to indicate the presence of \SYSTEM{} to
+the frontend. For example, a DNS-based backend might respond with a specially
+crafted TXT record to queries against the 3LD.
+
+We chose to include both 3LD and 2LD in the derivation and resolution process
+for added flexibility to providers who may want to host a backend on a subdomain
+rather than their root domain.
 
 Our \SYSTEM{} implementation consist of two parts: ...
 
@@ -111,25 +164,25 @@ implementation challenges.
 Foremost is determining which backend should be queried for a
 given resource. We refer \emph{backend domain} for a download. \TODO{Explain.}
 
-An additional challenge is the choice of backend to host an
-provider's URN mappings. There has been a lot of effort put into researching,
-designing, and standardizing several high availability high performance storage
-technologies, some of which web-facing providers and IT teams are already quite
-familiar with and pay for, \eg the Domain Name System (DNS). Other candidate
-backends include DHTs, storage clusters, relational and
-non-relational databases, and any high availability key-value store reasonably
-capable of guaranteeing the authenticity of its responses.
+An additional challenge is the choice of backend to host an provider's URN
+mappings. There has been a lot of effort put into researching, designing, and
+standardizing several high availability high performance storage technologies,
+some of which web-facing providers and IT teams are already quite familiar with
+and pay for, \eg{the Domain Name System (DNS)}. Other candidate backends include
+DHTs, storage clusters, relational and non-relational databases, and any high
+availability key-value store reasonably capable of guaranteeing the authenticity
+of its responses.
 
 We implement \SYSTEM{} as a proof-of-concept Google Chrome extension. It works
 with DNS and Ring OpenDHT as high availability backends. Our Chrome extension
 does not make any modifications to the Chrome user interface or viewport other
 than the extension icon in the toolbar. Further, the extension is virtually
 transparent to end users when downloads are matched to the backend or \SYSTEM{}
-has not been deployed to a domain. However, if a failure is experienced during
-NAC Validation (\ie a uncommon case), the extension will alert the user to the
-dangerous download via toolbar icon and popup interface.
+has not been deployed to a domain. However, if a failure is experienced (\ie{a
+uncommon case}), the extension will alert the user to the dangerous download via
+toolbar icon and popup interface.
 
-\TODO{Talk about deployment.}
+\TODO{Talk a bit about deployment.}
 
 An ideal implementation is able to rely on Google Chrome's dangerous download
 UI~\cite{ChromeClickThrough}.

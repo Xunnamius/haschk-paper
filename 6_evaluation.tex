@@ -40,7 +40,7 @@ Once again, we download each file and calculate a local checksum. Our
 implementation reported an ``unsafe'' judgement (a true positive) for each
 corrupted PDF file, as expected. Calculating the local checksum and checking it
 against the value reported by our HotCRP instance leads to a match (a false
-negative; \ie the result of co-location) as expected.
+negative; \ie{the result of co-location}) as expected.
 
 We ran this experiment three times and observed consistent results.
 
@@ -61,16 +61,13 @@ Since the OpenDHT software is implemented in C++, it could not be included
 directly in a JavaScript plugin. Therefore, for our implementation, we set up a
 local HTTP REST server wrapping the C++ implementation of OpenDHT. Our OpenDHT
 REST server provides an interface consistent with the one expected by our
-implementation (\ie Google DNS's REST API), allowing for code reuse (\eg
-redirection protection) between our two implementations. See
-\secref{availability}, where we make these implementations available open source
-for community consideration.
+implementation. See \secref{availability}, where we make these implementations
+available open source for community consideration.
 
-For our evaluation, we manually calculate a local checksum (\ie an AC) and an RI
-for 10 different \CONFERENCE{} PDFs. For the OD here we use a static locally
-resolved domain name corresponding to a location on a local server. We manually
-store these RI-to-AC mappings as key-value pairs on the Kademlia-based OpenDHT
-network.
+For our evaluation, we manually calculate a local checksum for 10 different
+\CONFERENCE{} PDFs. For the OD here we use a static locally resolved domain name
+corresponding to a location on a local server. We manually store these RI-to-AC
+mappings as key-value pairs on the Kademlia-based OpenDHT network.
 
 After installing the frontend into our Google Chrome browser, we download each
 file from our local server. For each observed download, we reported a ``safe''
@@ -152,7 +149,7 @@ under 10 lines of JavaScript.
 
 We note that, in the case where an entity's content distribution mechanism
 relies on, for instance, a mirroring service, third-party CDN, et cetera
-\emph{that randomly or disparately mangles resource URL paths}, our
+\emph{that randomly or disparately mangles resource URI paths}, our
 implementations currently require each ``mangled'' RI permutation representing a
 resource to be added to the backend, even if they all represent the same
 resource by a different name/path.
@@ -186,8 +183,8 @@ While still effective, our implementation would be even more effective as
 browser extensions if Chrome/Chromium or the WebExtensions API allowed for an
 explicit \texttt{onComplete} event hook in the downloads API. This hook would
 fire immediately before a file download completed and the file became
-executable, \ie had its \texttt{.crdownload} or \texttt{.download} extension
-removed. The hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that
+executable, \ie{had its \texttt{.crdownload} or \texttt{.download} extension
+removed}. The hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that
 kept the download in its non-complete state until said \texttt{Promise}
 completed. This would allow the extensions' background pages to do something
 like alter a download's \texttt{DangerType} property and alert the user to a

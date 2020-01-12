@@ -17,11 +17,11 @@ uploading their sensitive data to a remote server~\cite{SCA-HB1}. HandBrake
 developers recommended users perform \emph{checksum verification} to determine
 if their install was compromised~\cite{SCA-HB2}.
 
-Clearly, downloading resources over the internet comes with considerable risk.
-This risk can be divided into three broad concerns: response authentication,
-communication confidentiality, and resource integrity. Response authentication
-allows us to determine if a response received indeed originates from its
-purported source through, for instance, the adoption of a Public Key
+Clearly, downloading resources over the internet (TCP/IP) comes with
+considerable risk. This risk can be divided into three broad concerns: response
+authentication, communication confidentiality, and resource integrity. Response
+authentication allows us to determine if a response received indeed originates
+from its purported source through, for instance, the adoption of a Public Key
 Infrastructure (PKI) scheme~\cite{PKI}. Communication confidentiality allows us
 to keep the data transacted between two or more parties private through some
 form of encryption, such as AES~\cite{AES}. Finally, resource integrity allows
@@ -92,19 +92,20 @@ the right thing,'' whatever that happens to be in context.
 
 A major contributor to this confusion is the tradeoff made by
 \textbf{co-hosting} a resource and its authoritative checksum on the same
-distribution system (\eg{a web page from a server}). While cost-effective for
-the developer and less confusing for the user, an attacker that compromises a
-system hosting both a resource and its checksum together can mutate both,
-rendering the checksum irrelevant~\cite{Stickler}. This is true for automated
-checksum verification solutions as well~\cite{Cherubini}. The co-hosting problem
-was demonstrated by the 2016 hack of Linux Mint's distribution
-server~\cite{SCA-MINT1, SCA-MINT2}.
+distribution system, \eg{a web page hosting both a hyperlink pointing to a
+resource and that resource's authoritative checksum together}. While
+cost-effective for the developer and less confusing for the user, an attacker
+that compromises a system hosting both a resource and its checksum together can
+mutate both, rendering the checksum irrelevant~\cite{Stickler}. This is true for
+automated checksum verification solutions as well~\cite{Cherubini}. The
+co-hosting problem was demonstrated by the 2016 hack of Linux Mint's
+distribution server~\cite{SCA-MINT1, SCA-MINT2}.
 
 For these reasons, checksums as they are typically deployed are not very
 effective at guaranteeing resource integrity, even if automatic verification by
 web clients is attempted. Recognizing this, some corporations and large entities
-rely instead on approaches like digital signature validation, code signing, and
-Binary Transparency~\cite{PKI, BinaryTransparency}. These roll-your-own
+rely instead on approaches like digital signature verification, code signing,
+and Binary Transparency~\cite{PKI, BinaryTransparency}. These roll-your-own
 solutions, often proprietary, have been deployed successfully to mitigate
 resource integrity attacks in mature software package ecosystems like Debian/apt
 and Red Hat/yum and walled-garden app stores like Google Play, Apple App Store,
