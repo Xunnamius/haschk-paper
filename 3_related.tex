@@ -81,7 +81,7 @@ updates to binaries}; our protocol allows a user to verify the integrity of
 \noindent\textbf{Stickler and Cherubini et al.} Stickler~\cite{Stickler} by Levy
 et al. is an automated JavaScript-based stand-in for SRI for protecting the
 integrity of web application files hosted on CDNs. Stickler does not require any
-modifications to the client (\ie{a frontend}), instead delivering a bootloader
+modifications to the client (\ie{ a frontend}), instead delivering a bootloader
 to load and verify resources signed before the fact. However, as it was designed
 to stand-in for SRI, Stickler inherits some of SRI's limitations. Specifically:
 Stickler was not designed to protect arbitrary resource downloads and, if the
@@ -104,6 +104,6 @@ pass off compromised resources to users; (2) considers a download ``safe'' so
 long as \emph{any checksum found on the page matches it}, which means an
 attacker can just inject the compromised checksum somewhere in the HTML source
 alongside the legitimate checksum to similarly pass off compromised resources to
-users; (3) does not support direct downloads, \ie{when a user enters a
+users; (3) does not support direct downloads, \ie{ when a user enters a
 resource's URI into the browser manually rather than click a hyperlink}. None of
 this is a problem for \SYSTEM{}.

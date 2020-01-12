@@ -40,7 +40,7 @@ Once again, we download each file and calculate a local checksum. Our
 implementation reported an ``unsafe'' judgement (a true positive) for each
 corrupted PDF file, as expected. Calculating the local checksum and checking it
 against the value reported by our HotCRP instance leads to a match (a false
-negative; \ie{the result of co-location}) as expected.
+negative; \ie{ the result of co-location}) as expected.
 
 We ran this experiment three times and observed consistent results.
 
@@ -183,7 +183,7 @@ While still effective, our implementation would be even more effective as
 browser extensions if Chrome/Chromium or the WebExtensions API allowed for an
 explicit \texttt{onComplete} event hook in the downloads API. This hook would
 fire immediately before a file download completed and the file became
-executable, \ie{had its \texttt{.crdownload} or \texttt{.download} extension
+executable, \ie{ had its \texttt{.crdownload} or \texttt{.download} extension
 removed}. The hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that
 kept the download in its non-complete state until said \texttt{Promise}
 completed. This would allow the extensions' background pages to do something

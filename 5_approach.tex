@@ -62,7 +62,7 @@ quarantine behavior, though this should be less convenient than the default
 action~\cite{Cherubini}. Google Chrome has implemented something similar as part
 of its redesigned dangerous download warning UX, empirically demonstrating it to
 be an effective countermeasure to click through in the context of
-potentially-compromised downloads~\cite{ChromeClickThrough}.
+downloads~\cite{ChromeClickThrough}.
 
 If the query returns a negative response, the frontend should indicate this as
 inconspicuously as possible to avoid warning/popup fatigue~\cite{Akhawe,
@@ -75,29 +75,29 @@ To prevent false positives, integrity checking is skipped if the backend's
 location is unresolvable or \SYSTEM{} is not properly deployed. Determining when
 this is the case is implementation-dependent. To prevent false-negatives, when
 \SYSTEM{} is properly deployed and a URN is not found during lookup, the backend
-will always respond in the positive. As a result, it is not possible to only
-secure ``some'' resources on a server. When a provider adopts \SYSTEM{}, it is
-an all or nothing endeavor.
+response will always be interpreted as positive. As a result, it is not possible
+to only secure ``some'' resources on a server. When a provider adopts \SYSTEM{},
+it is an all or nothing endeavor.
 
 \subsubsection{Deriving the Backend Domain (BD)}
 
 Before we can communicate with a provider's backend, we require some scheme to
 locate it. We refer to this scheme as deriving the \emph{Backend Domain} (BD).
 The BD is some identifier that allows the frontend to locate the backend. For
-Domain Name System (DNS)-based backends, this might be the Second-Level Domain
-(2LD) taken from the server URI's host subcomponent~\cite{RFC3986}. \\
+Domain Name System (DNS) based backends, this might be the second or third level
+domain taken from the server URI's host subcomponent~\cite{RFC3986}. \\
 
-Example 1: an FTP frontend (\eg{Filezilla, Transmit, et cetera}) downloading a
+Example 1: an FTP frontend (\eg{ Filezilla, Transmit, et cetera}) downloading a
 resource from an FTP server at
 \texttt{ftps://un:pw@ftp.example1.com:8080/some/resource} has a host
 subcomponent of \texttt{ftp.example1.com} and a BD of \texttt{ftp.example1.com}
 or \texttt{example1.com}. \\
 
-Example 2: a browser frontend (\eg{lynx, Internet Explorer, et cetera})
-downloading a resource at \texttt{https://s4.l.cdn.example2.com/fl} from a
-hyperlink on the page \texttt{https://dl.app.example3.com/index/page} has a host
-subcomponent of \texttt{dl.app.example3.com} (\emph{not
-\texttt{s4.ll.cdn.example2.com}!}) and a BD of \texttt{app.example3.com} or
+Example 2: a browser frontend (\eg{ Lynx, Google Chrome, Internet Explorer, et
+cetera}) downloading a resource at \texttt{https://s4.l.cdn.example2.com/fl}
+from a hyperlink on the page \texttt{https://dl.app.example3.com/index/page} has
+a host subcomponent of \texttt{dl.app.example3.com} (\emph{not
+\texttt{s4.ll.cdn.example2.com}}) and a BD of \texttt{app.example3.com} or
 \texttt{example3.com}. \\
 
 It is important that the right BD is derived to ensure correct operation of the
@@ -113,7 +113,7 @@ negative.
 Further, depending on the implementation, a frontend or backend may not be using
 URIs and DNS to transact information over the internet at all. An example of
 this is a purely Distributed Hash Table (DHT) based backend. In such a case, any
-derivation algorithm (or no derivation at all, \eg{the BD is hardcoded}) can be
+derivation algorithm (or no derivation at all, \eg{ the BD is hardcoded}) can be
 used as long as correct operation of the protocol is ensured.
 
 \subsubsection{Constructing Uniform Resource Names (URN)}
@@ -126,7 +126,7 @@ frontend follows when calculating URNs for each resource downloaded. Through
 whatever implementation-specific method, the backend must ``advertise'' or allow
 lookups against a set of expected URNs corresponding to the resources hosted on
 the provider's server, even if those resources have unstable access paths or
-URIs; \eg{,when resources are hosted externally, on download mirrors, on CDNs,
+URIs; \eg{ ,when resources are hosted externally, on download mirrors, on CDNs,
 et cetera}. This requirement is satisfied by implementations combining URNs with
 the BD, thus durably associating the URNs calculated in the frontend with the
 URNs advertised by a provider's backend regardless of where the corresponding
@@ -182,7 +182,7 @@ could be deployed by providers immediately.
 \subsubsection{BD Derivation in Google Chrome}
 
 BD derivation in the browser is tricky. Users can initiate downloads through
-clicking links inside \emph{and outside} the browser (\eg{in an email
+clicking links inside \emph{and outside} the browser (\eg{ in an email
 application}), through asynchronous JavaScript, and by entering URIs into the
 browser manually. To catch these and other edge cases, we implement our
 extension using the WebRequest API~\cite{ExtensionAPI}, which allows us to
