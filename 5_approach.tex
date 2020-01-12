@@ -126,7 +126,7 @@ frontend follows when calculating URNs for each resource downloaded. Through
 whatever implementation-specific method, the backend must ``advertise'' or allow
 lookups against a set of expected URNs corresponding to the resources hosted on
 the provider's server, even if those resources have unstable access paths or
-URIs; \eg{ ,when resources are hosted externally, on download mirrors, on CDNs,
+URIs; \eg{, when resources are hosted externally, on download mirrors, on CDNs,
 et cetera}. This requirement is satisfied by implementations combining URNs with
 the BD, thus durably associating the URNs calculated in the frontend with the
 URNs advertised by a provider's backend regardless of where the corresponding
@@ -147,23 +147,25 @@ We implement a proof-of-concept \SYSTEM{} frontend as a Google Chrome extension.
 To demonstrate the general applicability of our approach, our frontend currently
 works with two backends: (1) directly with DNS via Google's JSON API for DNS
 over HTTPS (DoH) and (2) indirectly with DHT (Ring OpenDHT) via a local
-Representational State Transfer (REST) API we designed to mimic Google's DoH
-JSON API. Other candidate backends include storage clusters, relational and
-non-relational databases, and any high availability key-value store reasonably
-capable of guaranteeing the authenticity of its responses.
+Representational State Transfer (REST) API we designed to mimic the response
+syntax of Google's DoH JSON API. Other candidate backends include storage
+clusters, relational and non-relational databases, and any high availability
+key-value store reasonably capable of guaranteeing the authenticity of its
+responses.
 
 To reduce warning fatigue, our extension is virtually transparent to end users
 in the common case that a download is successfully verified by a provider's
 backend or when \SYSTEM{} has not been properly deployed by a provider. However,
 in the relatively uncommon case that a resource has been compromised, the
-extension will delete the file and alert the user with the single option to
+extension will delete the file and alert the user with the primary option to
 ``dismiss'' the alert, mimicking Chrome's own dangerous download
 warning~\cite{ChromeClickThrough}. Specifically: the user has the option of
-clicking through the warning to a low-key settings menu where they can force the
-extension to ignore the compromised nature of the resource \emph{the next time
-it is downloaded}. This inconvenience, favoring users' security over choice, is
-in keeping the security community's recommendations regarding security warning
-UX (see \secref{introduction}).
+clicking through the warning via a low-key secondary interface where they can
+force the extension to ignore the compromised nature of the resource \emph{the
+next time it is downloaded}, forcing the user to trigger the download again.
+This inconvenience, favoring users' security over choice, is in keeping with the
+security community's recommendations regarding security warning UX (see
+\secref{introduction}).
 
 Deployment to DNS, DHT is easy. Both of these systems are high performance and
 high availability. Ring OpenDHT is free to use. In the case of DNS, the vast
@@ -205,4 +207,4 @@ should respond in a predetermined way to indicate the presence of \SYSTEM{} to
 the frontend. Our frontend expects the backend to respond with a specially
 crafted TXT record to queries against the 2LD/3LD.
 
-\subsubsection{Handling Redirection in Chrome}
+And in the case of redirection, our extension...
