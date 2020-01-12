@@ -93,17 +93,28 @@ resource from an FTP server at
 subcomponent of \texttt{ftp.example1.com} and a BD of \texttt{ftp.example1.com}
 or \texttt{example1.com}. \\
 
-Example 2: a browser frontend (\eg{wget, Internet Explorer, et cetera})
-downloading a resource from a web server at
-\texttt{https://s4.ll.cdn.example2.com/some/resource} has a host subcomponent of
-\texttt{s4.ll.cdn.example2.com} and a BD of \texttt{cdn.example2.com} or
-\texttt{example2.com}. \\
+Example 2: a browser frontend (\eg{lynx, Internet Explorer, et cetera})
+downloading a resource at \texttt{https://s4.l.cdn.example2.com/fl} from a
+hyperlink on the page \texttt{https://dl.app.example3.com/index/page} has a host
+subcomponent of \texttt{dl.app.example3.com} (\emph{not
+\texttt{s4.ll.cdn.example2.com}!}) and a BD of \texttt{app.example3.com} or
+\texttt{example3.com}. \\
 
-Depending on the implementation, a frontend or backend may not be using URIs and
-DNS to transact information over the internet at all. An example of this is a
-Distributed Hash Table (DHT) based backend. In such a case, any derivation
-algorithm (or no derivation at all, \eg{the BD is hardcoded}) can be used as
-long as the BD is eventually known to the frontend.
+It is important that the right BD is derived to ensure correct operation of the
+protocol. This concern is implementation-dependent. Specifically, in the case of
+the browser frontend in example 2 (above), the BD is not derived from the
+resource's URI directly but from the URI of the HTML page containing the
+hyperlink pointing to that resource. This prevents an adversary from trivially
+fooling \SYSTEM{} by replacing \texttt{https://s4.l.cdn.example2.com} with a
+hyperlink pointing to \texttt{https://attacker.com} and hosting a conforming
+\SYSTEM{} backend that would cause the frontend to respond with a false
+negative.
+
+Further, depending on the implementation, a frontend or backend may not be using
+URIs and DNS to transact information over the internet at all. An example of
+this is a purely Distributed Hash Table (DHT) based backend. In such a case, any
+derivation algorithm (or no derivation at all, \eg{the BD is hardcoded}) can be
+used as long as correct operation of the protocol is ensured.
 
 \subsubsection{Constructing Uniform Resource Names (URN)}
 
@@ -132,25 +143,27 @@ verification of arbitrary resources~\cite{Cherubini}.
 
 \TODO{Add Visio graphic 2 here.}
 
-We implement a \SYSTEM{} frontend as a proof-of-concept Google Chrome extension.
-To demonstrate the general applicability of our protocol, our frontend currently
-works with two high availability backends: (1) directly with DNS via Google's
-JSON API for DNS over HTTPS and (2) indirectly with DHT (Ring OpenDHT) via a
-local Representational State Transfer (REST) API of our own design. Other
-candidate backends include storage clusters, relational and non-relational
-databases, and any high availability key-value store reasonably capable of
-guaranteeing the authenticity of its responses.
+We implement a proof-of-concept \SYSTEM{} frontend as a Google Chrome extension.
+To demonstrate the general applicability of our approach, our frontend currently
+works with two backends: (1) directly with DNS via Google's JSON API for DNS
+over HTTPS (DoH) and (2) indirectly with DHT (Ring OpenDHT) via a local
+Representational State Transfer (REST) API we designed to mimic Google's DoH
+JSON API. Other candidate backends include storage clusters, relational and
+non-relational databases, and any high availability key-value store reasonably
+capable of guaranteeing the authenticity of its responses.
 
-To reduce warning fatigue, the extension is virtually transparent to end users
+To reduce warning fatigue, our extension is virtually transparent to end users
 in the common case that a download is successfully verified by a provider's
 backend or when \SYSTEM{} has not been properly deployed by a provider. However,
 in the relatively uncommon case that a resource has been compromised, the
-extension will delete the file and alert the user to the dangerous download,
-mimicking Chrome's own dangerous download warning~\cite{ChromeClickThrough}. The
-user has the option of clicking through the warning, causing the extension to
-ignore the compromised nature of the resource \emph{the next time it's
-downloaded}. This inconvenience, favoring security over choice, is in keeping
-with our UX goals apropos security warnings.
+extension will delete the file and alert the user with the single option to
+``dismiss'' the alert, mimicking Chrome's own dangerous download
+warning~\cite{ChromeClickThrough}. Specifically: the user has the option of
+clicking through the warning to a low-key settings menu where they can force the
+extension to ignore the compromised nature of the resource \emph{the next time
+it is downloaded}. This inconvenience, favoring users' security over choice, is
+in keeping the security community's recommendations regarding security warning
+UX (see \secref{introduction}).
 
 Deployment to DNS, DHT is easy. Both of these systems are high performance and
 high availability. Ring OpenDHT is free to use. In the case of DNS, the vast
@@ -160,12 +173,21 @@ their own zones, and are quite familiar with configuring resource records.
 Adding a DNS updating phase to a modern development pipeline would be relatively
 straightforward.
 
-As long as the correct DNS records exist, no application or website source code
-changes or user-facing server or web infrastructure modifications are necessary.
-Given a production implementation of our frontend, \SYSTEM{} could be deployed
-by providers and their resources protected immediately.
+No application or website source code changes, costly user-facing server or web
+infrastructure customizations, or modifications to web standards are needed to
+enable our extension to protect a provider's resources. Given a production
+implementation of our frontend and the current prevalence of DNS, \SYSTEM{}
+could be deployed by providers immediately.
 
 \subsubsection{BD Derivation in Google Chrome}
+
+BD derivation in the browser is tricky. Users can initiate downloads through
+clicking links inside \emph{and outside} the browser (\eg{in an email
+application}), through asynchronous JavaScript, and by entering URIs into the
+browser manually. To catch these and other edge cases, we implement our
+extension using the WebRequest API~\cite{ExtensionAPI}, which allows us to
+monitor all navigation events and associate new download items with the URI
+where they were initiated.
 
 For Domain Name System (DNS)-based backends, this might be the Second-Level
 Domain (2LD) or Third-Level Subdomain (3LD) based on the server URI's host
@@ -180,7 +202,7 @@ Finally, we choose between the 3LD and 2LD by issuing a query---first to the 3LD
 and then, if not found there, to the 2LD---to determine if \SYSTEM{} is properly
 deployed. ``Proper deployment'' here is implementation-specific: the backend
 should respond in a predetermined way to indicate the presence of \SYSTEM{} to
-the frontend. For example, a DNS-based backend might respond with a specially
-crafted TXT record to queries against the 3LD.
+the frontend. Our frontend expects the backend to respond with a specially
+crafted TXT record to queries against the 2LD/3LD.
 
 \subsubsection{Handling Redirection in Chrome}
