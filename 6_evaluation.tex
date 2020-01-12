@@ -82,6 +82,10 @@ expected.
 the cryptographic operations involved, we observed no download performance
 impact compared to downloads without \SYSTEM{}.}
 
+\TODO{One para blurb about the implications of a compromised backend, i.e.
+potential denial of service. Much bigger problems if DNS is compromised,
+though.}
+
 \subsection{Deployment and Scalability}
 
 \TODO{Argue why \SYSTEM{} is scalable and rewrite all of this mess.}
@@ -117,11 +121,11 @@ use ``TXT'' records to map Resource Identifiers to Authoritative Checksums. In
 accordance with RFC 5507~\cite{RFC5507}, a production implementation
 implementation would necessitate the creation of a new DNS resource record type.
 
-As \SYSTEM{} is predicated on a high availability backend and
-requires no application/frontend source code changes to function, we conclude
-that the scalability of \SYSTEM{} can be reduced to the scalability of its
-backend. We are aware of no other obstacles to scalability beyond those
-inherited from the underlying backend system.
+As \SYSTEM{} is predicated on a high availability backend and requires no
+application/frontend source code changes to function, we conclude that the
+scalability of \SYSTEM{} can be reduced to the scalability of its backend. We
+are aware of no other obstacles to scalability beyond those inherited from the
+underlying backend system.
 
 In respect to DNS specifically, we are aware of no practical limits or
 protocol-based restrictions on the scalability of a backend file itself or its
@@ -203,8 +207,3 @@ excessive redirection.}
 dangerous download UI~\cite{ChromeClickThrough}. AcceptDanger does not work for
 downloads that have already finished, however. Suggestion to the Chrome dev team
 to implement something nicer.}
-
-\subsection{Implications of Backend Compromise}
-
-\TODO{Go over the implications of a compromised backend, i.e. potential denial
-of service. Much bigger problems if DNS is compromised, though.}
