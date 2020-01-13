@@ -1,23 +1,24 @@
 \section{Conclusion} \label{sec:conclusion}
 
-\TODO{Rewrite this section}
-
 Downloading resources over the internet is indeed a risky endeavor. Resource
-integrity attacks, and Supply Chain Attacks more broadly, are becoming more
-frequent and their impact more widely felt. This paper shows that the de facto
-standard for addressing resource integrity risk---the use of \emph{checksums}
-coupled with a secure transport layer---is an insufficient and often ineffective
-solution. We propose a novel practical resource verification approach meant as a
-complete replacement for checksum based approaches: \SYSTEM{}, which automates
-the tedious parts of verification to eliminate user apathy while leveraging high
-availability systems to ensure resources and checksums are not co-hosted.
-Further, we demonstrate the effectiveness and practicality of our approach
-versus resource integrity attacks in a real-world system.
+integrity and other Supply Chain Attacks are becoming more frequent and their
+impact more widely felt. In this work, we showed that the de facto standard for
+protecting the integrity of arbitrary resources on the internet---the use of
+\emph{checksums}---is insufficient and often ineffective. We presented
+\SYSTEM{}, a practical resource verification protocol that automates the tedious
+parts of checksum verification while leveraging pre-existing high availability
+systems to ensure resources and their checksums are not vulnerable to
+co-hosting. Further, we demonstrated the effectiveness and practicality of our
+approach versus real-world resource integrity attacks in a production
+application.
 
 The results of our evaluation show that our approach is more effective than
-checksums and other attempts at mitigating resource integrity attacks for
-arbitrary resources on the internet. Further, we show \SYSTEM{} is capable of
-detecting a wide variety of real-world integrity errors, significantly raising
-the bar for the attacker. \SYSTEM{} is deployable at scale for providers that
-already maintain a web presence; this can be done without fear of adversely
-affecting the user experience of non-compliant clients.
+checksums and prior work mitigating integrity attacks for arbitrary resources on
+the internet. Further, we show \SYSTEM{} is capable of guarding against a
+variety of attacks. \SYSTEM{} is deployable at scale for providers that already
+maintain a DNS presence and can be deployed without fear of adversely affecting
+the user experience of clients that are not \SYSTEM{}-aware.
+
+Though not a panacea, we believe \SYSTEM{} significantly raises the bar for the
+attacker. We intend to continue developing our extension and make them available
+to a wide audience (see \secref{availability}).
