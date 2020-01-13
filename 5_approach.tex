@@ -213,7 +213,7 @@ To query the backend, we: (1) BASE32 encode the resource's URN. (2) Divide the
 \texttt{details.originUrl}. We choose by issuing up to two queries of the form
 \texttt{AL.BD}, where the Application Label (AL) is the constant string
 \texttt{\_haschk}, looking for a response containing the value \texttt{OK}. We
-first query the 3LD as BD and, if we don't receive the proper response there,
+first query the 3LD as BD and, if we do not receive the proper response there,
 query the 2LD as BD. If the proper response is not received from either query,
 the extension assumes \SYSTEM{} has not been properly deployed and terminates.
 (4) Otherwise, concatenating C1, C2, AL, and BD, we issue a query of the form
