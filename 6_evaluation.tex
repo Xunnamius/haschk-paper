@@ -16,7 +16,7 @@ visiting the site to interactively corrupt submissions and manipulate relevant
 DNS entries at will.
 
 For our evaluation, we upload 10 different \CONFERENCE{} PDFs to our HotCRP
-instance. Upon their upload, HotCRP calculated and displayed the unique checksum
+instance. Upon their upload, HotCRP calculates and displays the unique checksum
 (a SHA-256 digest) of each PDF. After each PDF is uploaded, we immediately
 download it and manually calculate a checksum locally, matching each to the
 checksum displayed by the HotCRP software. Next, we utilize the custom
@@ -24,20 +24,20 @@ functionality we patched into HotCRP to populate our DNS backend with each
 file's expected URN.
 
 After installing the frontend into our Google Chrome browser, we again download
-each file. For each observed download, our extension indicated a ``safe''
+each file. For each observed download, our extension indicates a ``safe''
 judgement. We then utilize our patched functionality to add junk data onto the
 end of each of the uploaded PDFs, thus corrupting them. We also modified HotCRP
-so that it updated the displayed checksums to match their now-corrupted
+so that it updates the displayed checksums to match their now-corrupted
 counterparts.
 
-Once again, we download each file. Our extension reported an ``unsafe''
+Once again, we download each file. Our extension reports an ``unsafe''
 judgement (a true positive) for each corrupted PDF file. Calculating the local
 checksum and checking it against the value reported by our HotCRP instance leads
 to a match (a false negative; \ie{, the result of co-hosting}), defeating prior
 approaches to both manual and automated checksum verification.
 
-We ran this experiment three times, each with different sets of PDFs and using
-both the DNS and DHT based backends. We observed consistent results.
+We run this experiment three times, each with different sets of PDFs and using
+both the DNS and DHT based backends. We observe consistent results.
 
 Finally, we utilize our patched functionality to test a ``redirection'' attack
 where the hyperlink pointing to the correct PDF is replaced with a hyperlink to
@@ -46,11 +46,11 @@ a dummy malware file hosted in a distinct malicious DNS zone with conforming
 to download the PDF document from HotCRP but are instead navigated to a PHP
 script that redirects the request one or more times before landing on the dummy
 malware file. This process corrupts Chrome's \texttt{DownloadItem.referrer}
-property. Even in this case, our implementation correctly flagged this download
-as suspicious once the download began, successfully warning the user.
+property. Even in this case, our implementation correctly flags this download
+as suspicious as the download begins, successfully warning the user.
 
 While evaluating our implementation, we observe no additional network load or
-CPU usage with the extension loaded into Chrome. Measurements were taken using
+CPU usage with the extension loaded into Chrome. Measurements are taken using
 the Chrome developer tools. Intuitively, this makes sense given the lightweight
 nature of the cryptographic operations involved.
 
@@ -89,12 +89,12 @@ Additionally, using DNS as a backend does not add to the danger of amplification
 and other reflection attacks on DNS; these are generic DNS issues addressable at
 other layers of the protocol.
 
-With the HotCRP demo, our entire resource deployment scheme consisted of (1) the
+With the HotCRP demo, our entire resource deployment scheme consists of (1) the
 addition of a new TXT entry to our DNS backend and (2) a new value published to
 our DHT backend during the paper (resource) submission process. We argue
 updating DNS record (or DHT value) during the resource deployment process is
 simple enough for developers and providers to implement and presents no
-significant burden to deployment. For reference, we implemented the
+significant burden to deployment. For reference, we implement the
 functionality that automatically adds (and updates) the DNS TXT records
 advertising the URNs of papers uploaded to our HotCRP instance in under 10 lines
 of JavaScript.
