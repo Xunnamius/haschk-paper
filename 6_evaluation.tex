@@ -11,7 +11,7 @@ downloads over the internet.
 
 To empirically evaluate our implementation, we launch a lightly modified version
 of the popular open source research submission and peer review software, HotCRP
-(version 2.102; see \secref{sec:availability}). Our modifications allow anyone
+(version 2.102; see \secref{availability}). Our modifications allow anyone
 visiting the site to interactively corrupt submissions and manipulate relevant
 DNS entries at will.
 
@@ -96,61 +96,39 @@ updating DNS record (or DHT value) during the resource deployment process is
 simple enough for developers and providers to implement and presents no
 significant burden to deployment. For reference, we implemented the
 functionality that automatically adds (and updates) the DNS TXT records
-advertising URNs of papers uploaded to our HotCRP instance in under 10 lines of
-JavaScript.
+advertising the URNs of papers uploaded to our HotCRP instance in under 10 lines
+of JavaScript.
 
 \subsection{Limitations}
 
-\TODO{Rewrite and finish me.}
+While still effective, our extension would be even more effective if
+Chrome/Chromium or the more general WebExtensions API allowed for an explicit
+\texttt{onComplete} event hook in the downloads API. This hook would fire
+immediately before a file download completes and the file becomes executable,
+\ie{ has its \texttt{.crdownload} or \texttt{.download} extension removed}. The
+hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that kept the
+download in its fully-downloaded but non-complete state until said
+\texttt{Promise} completed. This would allow an extension to alter a download's
+\texttt{DangerType} property after some computation, prompting Chrome to handle
+alerting the user using its Dangerous Download UX~\cite{ChromeClickThrough}.
+This would have the advantage of communicating intent through the browser's
+familiar and authoritative UI and prevent the corrupted download from becoming
+immediately executable. Unfortunately, the closest the Chrome WebExtensions API
+comes to allowing \texttt{DangerType} mutations is the \texttt{acceptDanger}
+method on the downloads API, but it is not suitable for our purposes because it
+can only be called after the download completes while leaving the file in an
+accessible and executable state until the method is called.
 
-Our current JavaScript implementations, as Chrome extensions, are not allowed to
-touch the resource files downloaded by Chrome and so cannot prevent a
-potentially-malicious resource from being executed by the user---a feature
-Chrome/Chromium reserves for its own internal use. The Chrome \textit{app}
-API~\cite{AppAPI} might have been of assistance as it allowed for some limited
-filesystem traversal via a now deprecated native app API; there is also a
-non-standard HTML5/WebExtensions FileSystem API that would provide similar
-functionality were it to be widely considered~\cite{deadSpec}.
+Redirection services, like URI shortening apps, might still lead to false
+positives even with the fallthrough functionality of a domain on the request
+chain has deployed \SYSTEM{}. Further, our extension does not work for PDFs and
+other downloads handled directly by the browser. And, given the topology of the
+webrequest API, iframes and similar elements may require special consideration
+beyond examining \texttt{details.documentUrl}.
 
-While still effective, our implementation would be even more effective as
-browser extensions if Chrome/Chromium or the WebExtensions API allowed for an
-explicit \texttt{onComplete} event hook in the downloads API. This hook would
-fire immediately before a file download completed and the file became
-executable, \ie{ had its \texttt{.crdownload} or \texttt{.download} extension
-removed}. The hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that
-kept the download in its non-complete state until said \texttt{Promise}
-completed. This would allow the extensions' background pages to do something
-like alter a download's \texttt{DangerType} property and alert the user to a
-dangerous download naturally. These modifications would have the advantage of
-communicating intent through the browser's familiar UI and preventing the
-potentially-malicious download from becoming immediately executable.
-Unfortunately, the closest the Chrome/WebExtensions API comes to allowing
-\texttt{DangerType} mutations is the \texttt{acceptDanger} method on the
-downloads API, but it is not suitable for use with a background page based
-extension.
-
-While nice to have, we stress that none of the aforesaid functionality is
-critical to the ability of our implementations to more effectively mitigate SCA
-risk than checksums and other solutions (cf. \secref{evaluation}).
-
-\TODO{Redirection, like with URI shortening services, might still break things
-even with fallthrough functionality if a domain on the redirect chain has DNS
-entries \SYSTEM{} recognizes}
-
-\TODO{Does not work for PDFs and other downloads handled directly by the
-browser}
-
-\TODO{Given the topology of the webrequest API, iframes and the like may require
-special consideration. May need to compare documenturi with origin uri.}
-
-\TODO{Not all servers/backends on the internet use DNS. Direct IP not
-supported.}
-
-\TODO{Right now our PoC extension keeps 1000 requests in memory so that they can
-be mapped to download items. This might be vulnerable to attacks involving
-excessive redirection.}
-
-\TODO{An ideal implementation is able to rely on Google Chrome's effective
-dangerous download UI~\cite{ChromeClickThrough}. AcceptDanger does not work for
-downloads that have already finished, however. Suggestion to the Chrome dev team
-to implement something nicer.}
+Additionally, not all servers/backends on the internet use DNS, and our
+extension does not support downloads made that bypass DNS. In future work, our
+DHT backend would be able to handle such downloads. Further, our extension keeps
+1000 requests in memory so that they can be mapped to download items later in
+time. This might be vulnerable to attacks involving excessive redirection and
+overflow.
