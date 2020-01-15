@@ -156,11 +156,10 @@ if the backend does not exist or does not conform to the protocol, the protocol
 terminates. Otherwise, after the download completes, a URN is calculated and
 combined with the BD to make a final query to the backend. In effect, this query
 asks: \emph{is this resource compromised?} If the response to the query is
-negative (\ie{ a TXT record (DNS) or data value (DHT)}), the extension considers
-the resource validated. On the other hand, if the response to the query is
-positive (\ie{ no record found or bad data value returned}), the extension
-considers the resource compromised, deletes the resource file, and warns the
-user.
+negative (\ie{ a DNS TXT record or DHT data value}), the extension considers the
+resource validated. On the other hand, if the response to the query is positive
+(\ie{ no record found or bad data value returned}), the extension considers the
+resource compromised, deletes the resource file, and warns the user.
 
 In keeping with UX suggestions of prior work, our extension is virtually
 transparent to end users in the common case that a download is successfully
