@@ -34,13 +34,12 @@ server such as a CDN. Both are valid deployments in the context of \SYSTEM{}. We
 assume the adversary can manipulate the resource and web page wherever they are
 stored. The adversary may: (1) compromise the resource, (2) modify the hyperlink
 to point to a compromised resource anywhere on the internet, and/or (3) add,
-remove, or manipulate any checksums that appear on the web page or elsewhere
-(excluding the backend).
+remove, or manipulate any checksums that appear on the web page or elsewhere.
 
 Hence, we do not trust the integrity of the server's responses in any scenario.
-We do, however, trust the integrity (and authenticity) of the backend's
-responses. Further, we expect the backend to be highly available. In
-\secref{evaluation}, we go over the implications of a compromised backend.
+We do, however, trust the integrity and authenticity of the backend's responses.
+Further, we expect the backend to be highly available. In \secref{evaluation},
+we go over the implications of a compromised backend.
 
 As an aside, we consider here the standard non-\SYSTEM{} case where the resource
 is co-hosted alongside a web page containing both a hyperlink pointing to the

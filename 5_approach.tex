@@ -1,7 +1,7 @@
 \section{The \SYSTEM{} Protocol} \label{sec:approach}
 
 In this section, we describe the components of the \SYSTEM{} protocol, step
-through each in detail, and then introduce our proof-of-concept implementations
+through each in detail, and then introduce our proof-of-concept implementation
 of these components.
 
 \subsection{Participants}
@@ -37,10 +37,10 @@ wholly separate from the server (not co-hosted) and controlled by the provider.
 
 \figref{protocol} gives a high level overview of the \SYSTEM{} protocol.
 Initially, when a user finishes downloading a resource from the provider's
-server, the frontend runs the resource's contents through a SHA-256 hashing
+server, the frontend runs the resource's contents through the SHA-256 hashing
 function, yielding a 256-bit digest. Any hashing function can be used so long as
 it is pre-image and collision resistant~\cite{Rogaway}. This digest is used to
-construct a hash-based Uniform Resource Name (URN) uniquely identifying the
+construct a hash-based Uniform Resource Name~\cite{draft-URN} (URN) uniquely identifying the
 resource. Additionally, a Backend Domain (BD) is derived from the domain name of
 the server. The frontend uses the BD in an implementation-dependent manner to
 locate and query the backend, checking for the existence of the constructed URN
@@ -60,11 +60,11 @@ quarantine behavior, though ideally this should be less convenient than the
 default action~\cite{Cherubini}.
 
 If the query returns a negative response, the frontend should indicate this
-inconspicuously to mitigate the threat of warning/popup
-fatigue~\cite{Akhawe, Cherubini} and habituation~\cite{Sunshine}. For example,
-our frontend implementation simply changes its icon when downloads are
-successfully verified and only issues popup warnings when compromised downloads
-are positively identified.
+inconspicuously to mitigate the threat of warning/popup fatigue~\cite{Akhawe,
+Cherubini} and habituation~\cite{Sunshine}. For example, our frontend
+implementation simply changes its icon when downloads are successfully verified
+and only issues popup warnings when compromised downloads are positively
+identified.
 
 To prevent false positives, integrity checking is skipped if the backend's
 location is unresolvable or \SYSTEM{} is not properly deployed. Determining when
@@ -76,7 +76,7 @@ to only secure ``some'' resources on a server.
 \subsubsection{Deriving the Backend Domain (BD)}
 
 Before we can communicate with a provider's backend, we require some scheme to
-locate it. We refer to this scheme as deriving the \emph{Backend Domain} (BD).
+locate it. We refer to this scheme as \emph{deriving the Backend Domain} (BD).
 The BD is some identifier that allows the frontend to locate the backend. For
 our Domain Name System (DNS) based implementation (below), the BD is the
 Third-Level Subdomain (3LD) or Second-Level Domain (2LD) based on the server
@@ -116,13 +116,13 @@ used as long as correct operation of the protocol is ensured.
 To ensure the integrity of arbitrary resources, we require some method to
 uniquely and durably identify those resources. We accomplish this through the
 adoption of the informal IETF draft for the construction of hash-based
-\emph{Uniform Resource Name} (URN) namespace~\cite{draft-URN}, which the
-frontend follows when calculating URNs for each resource downloaded. Through
-whatever implementation-specific method, the backend must ``advertise'' or allow
-lookups against a set of expected URNs corresponding to the resources hosted on
-the provider's server, even if those resources have unstable access paths or
-URIs; \eg{, when resources are hosted externally, on download mirrors, on CDNs,
-et cetera}. This requirement is satisfied by implementations combining URNs with
+\emph{Uniform Resource Names} (URNs)~\cite{draft-URN}, which the frontend
+follows when calculating URNs for each resource downloaded. Through whatever
+implementation-specific method, the backend must ``advertise'' or allow lookups
+against a set of expected URNs corresponding to the resources hosted on the
+provider's server, even if those resources have unstable access paths or URIs;
+\eg{, when resources are hosted externally, on download mirrors, on CDNs, et
+cetera}. This requirement is satisfied by implementations combining URNs with
 the BD, thus durably associating the URNs calculated in the frontend with the
 URNs advertised by a provider's backend regardless of where the corresponding
 resources are hosted on the provider's server.
@@ -145,7 +145,7 @@ syntax of Google's DoH JSON API. Other candidate backends include storage
 clusters, relational and non-relational databases, and any high availability
 key-value store.
 
-Our extension operates following the high level overview in \figref{overview}
+Our extension operates following the high level overview in \figref{protocol}
 with some key implementation-specific functionality that we explore in the
 remainder of this subsection. After the user initiates a download either
 directly (\eg{ typing a URI manually}) or by following a hyperlink, our
@@ -183,16 +183,16 @@ would be baked directly into the extension.
 
 Deploying the DNS backend is as simple as adding certain TXT records to our DNS
 zone. This is a straightforward operation. Similarly, deploying the DHT backend
-requires adding certain key-value to the OpenDHT network, which is trivial.
-Moreover, both DNS and DHT backends are performant and highly available. The
-Ring OpenDHT network is also free to use. In the case of DNS, the vast majority
-of web-facing providers and IT teams are already using it, already pay for their
-own DNS zones, and are already quite familiar with configuring and managing
-them. Hence, no exotic secondary backend system is required for providers with
-web servers. Additionally, we argue updating the URNs stored by these backends
-automatically---by integrating a URN calculation and record insertion/update
-step into a modern development toolchain or resource deployment pipeline---is
-relatively low-effort and straightforward for providers.
+requires adding certain key-value pairs to the OpenDHT network, which is
+trivial. Moreover, both DNS and DHT backends are performant and highly
+available. The Ring OpenDHT network is also free to use. In the case of DNS, the
+vast majority of web-facing providers and IT teams are already using it, already
+pay for their own DNS zones, and are already quite familiar with configuring and
+managing them. Hence, no exotic secondary backend system is required for
+providers with web servers. Additionally, we argue updating the URNs stored by
+these backends automatically---by integrating a URN calculation and record
+insertion/update step into a modern development toolchain or resource deployment
+pipeline---is relatively low-effort and straightforward for providers.
 
 No application or website source code changes, costly user-facing server or web
 infrastructure customizations, or modifications to web standards are needed to
@@ -240,5 +240,5 @@ could then trivially force false negatives.
 Keeping a chain of associated requests also allows us to implement
 ``fallthrough'' functionality where, if the original request at the head of the
 chain has not deployed \SYSTEM{}, the extension can walk the chain, checking
-each point of redirection for a proper \SYSTEM{} deployment. This would ensure
-URL shorteners and other redirection services do not trigger false positives.
+each point of redirection for a proper \SYSTEM{} deployment. This ensures URL
+shorteners and other redirection services do not trigger false positives.

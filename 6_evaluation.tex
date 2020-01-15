@@ -30,10 +30,10 @@ end of each of the uploaded PDFs, thus corrupting them. We also modified HotCRP
 so that it updates the displayed checksums to match their now-corrupted
 counterparts.
 
-Once again, we download each file. Our extension reports an ``unsafe''
-judgement (a true positive) for each corrupted PDF file. Calculating the local
-checksum and checking it against the value reported by our HotCRP instance leads
-to a match (a false negative; \ie{, the result of co-hosting}), defeating prior
+Once again, we download each file. Our extension reports an ``unsafe'' judgement
+(a true positive) for each corrupted PDF file. Calculating the local checksum
+and checking it against the value reported by our HotCRP instance leads to a
+match (a false negative; \ie{, the result of co-hosting}), defeating prior
 approaches to both manual and automated checksum verification.
 
 We run this experiment three times, each with different sets of PDFs and using
@@ -46,8 +46,8 @@ a dummy malware file hosted in a distinct malicious DNS zone with conforming
 to download the PDF document from HotCRP but are instead navigated to a PHP
 script that redirects the request one or more times before landing on the dummy
 malware file. This process corrupts Chrome's \texttt{DownloadItem.referrer}
-property. Even in this case, our implementation correctly flags this download
-as suspicious as the download begins, successfully warning the user.
+property. Even in this case, our implementation correctly flags this download as
+suspicious as the download begins, successfully warning the user.
 
 While evaluating our implementation, we observe no additional network load or
 CPU usage with the extension loaded into Chrome. Measurements are taken using
@@ -94,10 +94,9 @@ addition of a new TXT entry to our DNS backend and (2) a new value published to
 our DHT backend during the paper (resource) submission process. We argue
 updating DNS record (or DHT value) during the resource deployment process is
 simple enough for developers and providers to implement and presents no
-significant burden to deployment. For reference, we implement the
-functionality that automatically adds (and updates) the DNS TXT records
-advertising the URNs of papers uploaded to our HotCRP instance in under 10 lines
-of JavaScript.
+significant burden to deployment. For reference, we implement the functionality
+that automatically adds (and updates) the DNS TXT records advertising the URNs
+of papers uploaded to our HotCRP instance in under 10 lines of JavaScript.
 
 \subsection{Limitations}
 
@@ -108,23 +107,25 @@ immediately before a file download completes and the file becomes executable,
 \ie{ has its \texttt{.crdownload} or \texttt{.download} extension removed}. The
 hook would consume a \texttt{Promise}/\texttt{AsyncFunction} that kept the
 download in its fully-downloaded but non-complete state until said
-\texttt{Promise} completed. This would allow an extension to alter a download's
-\texttt{DangerType} property after some computation, prompting Chrome to handle
-alerting the user using its Dangerous Download UX~\cite{ChromeClickThrough}.
-This would have the advantage of communicating intent through the browser's
-familiar and authoritative UI and prevent the corrupted download from becoming
-immediately executable. Unfortunately, the closest the Chrome WebExtensions API
-comes to allowing \texttt{DangerType} mutations is the \texttt{acceptDanger}
-method on the downloads API, but it is not suitable for our purposes because it
-can only be called after the download completes while leaving the file in an
-accessible and executable state until the method is called.
+\texttt{Promise} completed. Ideally, this would allow an extension to alter a
+download's \texttt{DangerType} property after some computation, prompting Chrome
+to handle alerting the user using its Dangerous Download
+UX~\cite{ChromeClickThrough}, which would have the advantage of communicating
+intent through the browser's familiar and authoritative UI and prevent the
+corrupted download from becoming immediately executable. Unfortunately, the
+closest the Chrome WebExtensions API comes to allowing \texttt{DangerType}
+mutations is the \texttt{acceptDanger} method on the downloads API, but it is
+not suitable for our purposes because it can only be called after the download
+completes while leaving the file in an accessible and executable state until the
+method is eventually called.
 
 Redirection services, like URI shortening apps, might still lead to false
-positives even with the fallthrough functionality of a domain on the request
-chain has deployed \SYSTEM{}. Further, our extension does not work for PDFs and
-other downloads handled directly by the browser. And, given the topology of the
-webrequest API, iframes and similar elements may require special consideration
-beyond examining \texttt{details.documentUrl}.
+positives even with the fallthrough functionality if a domain on the request
+chain has deployed \SYSTEM{}. We view this as a rare scenario, and it does not
+violate \SYSTEM{}'s security guarantees. Further, our extension does not work
+for PDFs and other downloads handled directly by the browser. And, given the
+topology of the webrequest API, iframes and similar elements may require special
+consideration beyond examining \texttt{details.documentUrl}.
 
 Additionally, not all servers/backends on the internet use DNS, and our
 extension does not support downloads made that bypass DNS. In future work, our
