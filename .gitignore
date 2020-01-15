@@ -10,5 +10,6 @@
 *blx.bib
 _minted*
 out
+*.~*
 !dickens-haschk.pdf
 !*.dni.*
