@@ -141,21 +141,21 @@ syntax of Google's DoH JSON API. Other candidate backends include storage
 clusters, relational and non-relational databases, and any high availability
 key-value store.
 
-\figref{implementation} gives a high level overview of how our implementation
-works. First, the user initiates a download either directly (\eg{ typing a URI
-manually}) or by following a hyperlink. Our extension, having observed the web
-request earlier, associates that request with the new download item. The
-original request may have directly triggered the download or the download may
-have been triggered after one or more redirections. Our extension derives the
-correct BD in both cases (see below). At this point, if the backend does not
-exist or does not conform to the protocol, the protocol terminates. Otherwise,
-after the download completes, a URN is calculated and combined with the BD to
-make a final query to the backend. In effect, this query asks: \emph{is this
-resource compromised?} If the response to the query is negative (\ie{ a TXT
-record (DNS) or data value (DHT)}), the extension considers the resource
-validated. On the other hand, if the response to the query is positive (\ie{ no
-record found or bad data value returned}), the extension considers the resource
-compromised, deletes the resource file, and warns the user.
+Our implementation follows the high level overview in \figref{overview} with a
+few important differences. First, the user initiates a download either directly
+(\eg{ typing a URI manually}) or by following a hyperlink. Our extension, having
+observed the web request earlier, associates that request with the new download
+item. The original request may have directly triggered the download or the
+download may have been triggered after one or more redirections. Our extension
+derives the correct BD in both cases (see below). At this point, if the backend
+does not exist or does not conform to the protocol, the protocol terminates.
+Otherwise, after the download completes, a URN is calculated and combined with
+the BD to make a final query to the backend. In effect, this query asks:
+\emph{is this resource compromised?} If the response to the query is negative
+(\ie{ a TXT record (DNS) or data value (DHT)}), the extension considers the
+resource validated. On the other hand, if the response to the query is positive
+(\ie{ no record found or bad data value returned}), the extension considers the
+resource compromised, deletes the resource file, and warns the user.
 
 In keeping with UX suggestions of prior work, our extension is virtually
 transparent to end users in the common case that a download is successfully
