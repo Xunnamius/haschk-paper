@@ -7,9 +7,13 @@
 *.bbl
 *.xml
 *.pdf
+*.toc
+*.lot
+*.lof
 *blx.bib
 _minted*
-out
-*.~*
-!dickens-haschk.pdf
+out/*
+!out/.gitkeep
+!dickens-*.pdf
+!slides-*.pdf
 !*.dni.*
